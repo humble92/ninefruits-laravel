@@ -2,7 +2,9 @@
 
 namespace App\Support\Database;
 
+use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
+use PDO;
 
 /**
  * Sets PostgreSQL session settings read by row level security policies and audit triggers
@@ -14,6 +16,12 @@ use Illuminate\Database\DatabaseManager;
 class DatabaseSessionContext
 {
     private const array KEYS = ['app.user_id', 'app.actor', 'app.request_id', 'app.locale', 'app.fallback_locale'];
+
+    /** @var array<int, array<string, string>> Settings not yet sent, per connection object */
+    private array $pending = [];
+
+    /** @var array<int, true> Connections with the beforeExecuting hook */
+    private array $hooked = [];
 
     public function __construct(private readonly DatabaseManager $database) {}
 
@@ -72,15 +80,46 @@ class DatabaseSessionContext
             return;
         }
 
-        $calls = implode(', ', array_fill(0, count($settings), 'set_config(?, ?, false)'));
+        $key = spl_object_id($connection);
+        $this->pending[$key] = array_merge($this->pending[$key] ?? [], $settings);
+
+        if ($connection->getRawPdo() instanceof PDO) {
+            $this->flush($connection);
+
+            return;
+        }
+
+        // Not connected yet: send the settings right before the first query, so commands
+        // that never use the database (key:generate, package:discover) need no database.
+        if (! isset($this->hooked[$key])) {
+            $this->hooked[$key] = true;
+            $connection->beforeExecuting(function () use ($connection): void {
+                $this->flush($connection);
+            });
+        }
+    }
+
+    private function flush(Connection $connection): void
+    {
+        $key = spl_object_id($connection);
+        $settings = $this->pending[$key] ?? [];
+
+        if ($settings === []) {
+            return;
+        }
+
+        unset($this->pending[$key]);
+
         $bindings = [];
 
-        foreach ($settings as $key => $value) {
-            $bindings[] = $key;
+        foreach ($settings as $name => $value) {
+            $bindings[] = $name;
             $bindings[] = $value;
         }
 
-        // @phpstan-ignore ninefruits.dynamicRawSql (only placeholders are interpolated; keys and values are bound)
-        $connection->select("SELECT {$calls}", $bindings);
+        // Directly on PDO so that it does not trigger beforeExecuting again.
+        $connection->getPdo()
+            ->prepare('SELECT '.implode(', ', array_fill(0, count($settings), 'set_config(?, ?, false)')))
+            ->execute($bindings);
     }
 }
