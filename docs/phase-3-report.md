@@ -10,7 +10,7 @@
 
 - 테스트 287개(단언 962개) 통과. Phase 2 대비 28개 추가. Larastan 레벨 6 오류 0, Pint 위반 0, 명명 검사 위반 0, 번역 누락 0, `composer audit` 통과
 - 빈 DB에서 `setup:install --force --profile=korean-university`, `setup:demo --size=small --seed=42` 성공. 데모 데이터에 `admission:matriculate`를 실제 실행해 등록 확정자 4명의 학적 생성 확인
-- CI 결과는 7절
+- CI(GitHub Actions) 통과 (7절)
 
 ## 2. 완료 기준
 
@@ -72,7 +72,9 @@
 
 ## 7. CI
 
-push 후 GitHub Actions 결과를 여기에 기록한다.
+| 실행 | 결과 | 내용 |
+|---|---|---|
+| `ef928df` | 통과 | 품질 작업 40초(audit, Pint, Larastan, 명명, 번역), 테스트 작업 2분 54초(PostgreSQL 18 서비스, 테스트 287개) |
 
 ## 8. 남은 일
 
