@@ -16,13 +16,18 @@ class DemoSeeder extends Seeder
     /** @var list<class-string<Seeder>> */
     public const array SEEDERS = [
         DemoAccountSeeder::class,
+        DemoReferenceSeeder::class,
     ];
 
     public function run(DatabaseSessionContext $context): void
     {
         DemoOptions::ensureNotProduction();
 
-        $options = app()->bound(DemoOptions::class) ? app(DemoOptions::class) : new DemoOptions;
+        if (! app()->bound(DemoOptions::class)) {
+            app()->instance(DemoOptions::class, new DemoOptions);
+        }
+
+        $options = app(DemoOptions::class);
 
         if ($options->seed !== null) {
             fake()->seed($options->seed);

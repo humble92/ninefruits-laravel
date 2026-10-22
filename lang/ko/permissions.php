@@ -2,6 +2,15 @@
 
 return [
     'resources' => [
+        'reference_data' => '기준정보',
+        'lookup_values' => '코드 데이터',
+        'org_units' => '조직 단위',
+        'programs' => '프로그램',
+        'facilities' => '건물과 강의실',
+        'terms' => '학년도와 학기',
+        'term_windows' => '업무 기간',
+        'course_categories' => '교과 구분',
+        'grade_scales' => '성적 척도',
         'admin_panel' => '관리 화면',
         'users' => '사용자',
         'roles' => '역할',
@@ -29,4 +38,13 @@ return [
     'security_settings' => ['manage' => '보안 설정 관리'],
     'institution_settings' => ['manage' => '기관 설정 관리'],
     'queue_monitor' => ['view' => '큐 모니터 조회'],
+    'reference_data' => ['view' => '기준정보 조회', 'import' => '기준정보 CSV 가져오기'],
+    'lookup_values' => ['manage' => '코드 데이터, 국가, 언어 관리'],
+    'org_units' => ['manage' => '조직 단위와 개편 관리'],
+    'programs' => ['manage' => '프로그램 관리'],
+    'facilities' => ['manage' => '건물과 강의실 관리'],
+    'terms' => ['manage' => '학년도, 학기, 학기 종류, 교시 관리'],
+    'term_windows' => ['manage' => '업무 기간 관리'],
+    'course_categories' => ['manage' => '교과 구분 관리'],
+    'grade_scales' => ['manage' => '성적 척도 관리'],
 ];

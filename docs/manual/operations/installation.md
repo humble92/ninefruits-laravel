@@ -54,6 +54,10 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 
 `setup:install`은 질문에 답하면서 진행한다. 배포 스크립트에서는 `--force`와 옵션으로 실행한다([명령 레퍼런스](commands.md#setupinstall)).
 
+설치 프로파일(`--profile=`): `korean-university` — 1학기/2학기/계절학기, 4.5 성적 척도, 교과 구분, 09:00부터 50분 교시, 강의실 용도. 적용하지 않으면 관리 화면에서 직접 입력한다. 나중에 다시 적용해도 관리자가 바꾼 값은 유지된다.
+
+설치 후 업무 관리자는 [관리자 매뉴얼 5장 초기 세팅 순서](../admin/05-institution-setup.md)에 따라 기준정보를 입력한다.
+
 ## 5. 설치 확인
 
 1. `/login`에서 최초 관리자로 로그인한다.

@@ -4,19 +4,21 @@ namespace App\Filament\Admin;
 
 use Filament\Navigation\NavigationGroup as FilamentNavigationGroup;
 use Filament\Support\Contracts\HasLabel;
+use Illuminate\Support\Str;
 
 /**
  * Admin panel navigation groups, in display order.
  */
 enum NavigationGroup implements HasLabel
 {
+    case ReferenceData;
     case Access;
     case Audit;
     case Settings;
 
     public function getLabel(): string
     {
-        return __('admin.navigation.'.strtolower($this->name));
+        return __('admin.navigation.'.Str::snake($this->name));
     }
 
     /**

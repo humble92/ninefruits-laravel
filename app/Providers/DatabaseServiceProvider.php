@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Support\Database\DatabaseSessionContext;
+use App\Support\Database\PostgresConnection;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
@@ -35,6 +37,8 @@ class DatabaseServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(DatabaseSessionContext::class);
+
+        Connection::resolverFor('pgsql', fn ($connection, string $database, string $prefix, array $config) => new PostgresConnection($connection, $database, $prefix, $config));
     }
 
     public function boot(): void

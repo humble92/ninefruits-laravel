@@ -1,5 +1,7 @@
 <?php
 
+use Database\Seeders\Profiles\KoreanUniversityProfileSeeder;
+
 /*
 | Installation (setup:install) and demo data (setup:demo).
 | docs/porting-plan.md section 13.4.
@@ -8,7 +10,7 @@
 return [
     // Profile seeders offered by setup:install. Each implements App\Support\Setup\SetupProfile.
     'profiles' => [
-        //
+        KoreanUniversityProfileSeeder::class,
     ],
 
     'demo' => [

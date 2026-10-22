@@ -60,7 +60,7 @@
 | 불리언은 `is_`, `has_`, `can_`, 또는 동사형 | `is_retake`, `counts_toward_credit_limit` |
 | 날짜(`date`)는 `_date` | `birth_date`, `admission_date` |
 | 시각(`timestamptz`)은 `_at` | `finalized_at`, `dropped_at` |
-| 기간(`daterange`/`tstzrange`)은 `_period` | `effective_period` |
+| 기간(`daterange`/`tstzrange`)은 `_period`. 시작/종료 날짜 컬럼에서 만든 생성 열로 둔다 | `effective_period`, `instruction_period` |
 | 상태는 `status` (PHP backed enum, snake_case 문자열 값) | `status = 'withdrawn'` |
 | 하나의 테이블에 상태가 둘 이상이면 `{대상}_status` | `grade_status` |
 | 다국어 값은 단수 명사 `jsonb`, 언어 코드 없음 | `name`, `title`, `description` |
@@ -153,6 +153,8 @@
 | 학년도 | academic year | |
 | 학기 | term | `semester` 쓰지 않음 (쿼터제 등 범용성) |
 | 업무 기간 | term window | 수강신청, 성적 입력 등 |
+| 대상 조건 | target criteria | 학년, 입학 연도, 프로그램, 조직 단위 등. 대상은 target subject |
+| 학기 상태 | term status | planned, published, grades_closed, archived |
 | 교과목 | course | |
 | 교과목 버전 | course version | 개편 이력 |
 | 교과 구분 | course category | 교양필수, 전공선택 등 |
@@ -186,6 +188,11 @@
 | 교원 | instructor | |
 | 조교 | department assistant | |
 | 조직 단위 | org unit | 대학, 학부, 학과, 전공 |
+| 조직 개편, 승계 | reorganization, org unit succession | 명칭 변경 renamed, 통합 merged, 분리 split, 소속 변경 moved |
+| 유효기간 | effective period | `effective_start_date`, `effective_end_date` + 생성 열 `effective_period` |
+| 코드 데이터 | lookup type / lookup value | 민족, 입학 구분 등 기관별 코드 목록 |
+| 건물, 강의실 | building, room | 호실은 room code |
+| 학기 종류 | term type | 정규 학기 regular, 계절학기 |
 | 프로그램 | program | 학위 과정, 전공 과정 |
 | 강의평가 | course evaluation | |
 | 증명서 | certificate | |

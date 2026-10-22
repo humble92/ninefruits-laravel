@@ -2,6 +2,15 @@
 
 return [
     'resources' => [
+        'reference_data' => '基础数据',
+        'lookup_values' => '代码数据',
+        'org_units' => '组织单位',
+        'programs' => '专业项目',
+        'facilities' => '楼宇与教室',
+        'terms' => '学年与学期',
+        'term_windows' => '业务期间',
+        'course_categories' => '课程类别',
+        'grade_scales' => '成绩等级',
         'admin_panel' => '管理界面',
         'users' => '用户',
         'roles' => '角色',
@@ -29,4 +38,13 @@ return [
     'security_settings' => ['manage' => '管理安全设置'],
     'institution_settings' => ['manage' => '管理机构设置'],
     'queue_monitor' => ['view' => '查看队列监控'],
+    'reference_data' => ['view' => '查看基础数据', 'import' => '通过 CSV 导入基础数据'],
+    'lookup_values' => ['manage' => '管理代码数据、国家和语言'],
+    'org_units' => ['manage' => '管理组织单位与重组'],
+    'programs' => ['manage' => '管理专业项目'],
+    'facilities' => ['manage' => '管理楼宇与教室'],
+    'terms' => ['manage' => '管理学年、学期、学期类型和节次'],
+    'term_windows' => ['manage' => '管理业务期间'],
+    'course_categories' => ['manage' => '管理课程类别'],
+    'grade_scales' => ['manage' => '管理成绩等级'],
 ];

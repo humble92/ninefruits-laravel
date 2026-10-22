@@ -3,6 +3,8 @@
 namespace App\Models\Security;
 
 use App\Domain\Security\Enums\ScopeType;
+use App\Models\Organization\OrgUnit;
+use App\Models\Organization\Program;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
@@ -81,6 +83,24 @@ class RoleAssignment extends Model
 
         $query->where(fn (Builder $query) => $query->whereNull('starts_at')->orWhere('starts_at', '<=', $at))
             ->where(fn (Builder $query) => $query->whereNull('ends_at')->orWhere('ends_at', '>', $at));
+    }
+
+    /**
+     * "All", or the scope type with the org unit / program code and name.
+     */
+    public function describeScope(): string
+    {
+        $target = match ($this->scope_type) {
+            ScopeType::Global => null,
+            ScopeType::OrgUnit => OrgUnit::query()->find($this->scope_id),
+            ScopeType::Program => Program::query()->find($this->scope_id),
+        };
+
+        if ($this->scope_type === ScopeType::Global) {
+            return $this->scope_type->label();
+        }
+
+        return $this->scope_type->label().': '.($target === null ? '#'.$this->scope_id : $target->getAttribute('code').' '.$target->getAttribute('name'));
     }
 
     public function isActive(?CarbonImmutable $at = null): bool

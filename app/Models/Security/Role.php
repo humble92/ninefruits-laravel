@@ -4,6 +4,7 @@ namespace App\Models\Security;
 
 use App\Domain\Security\Enums\Persona;
 use App\Models\Concerns\HasTranslatableAttributes;
+use App\Models\Contracts\Translatable;
 use Database\Factories\Security\RoleFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @property Persona|null $persona
  * @property bool $is_system
  */
-class Role extends SpatieRole
+class Role extends SpatieRole implements Translatable
 {
     /** @use HasFactory<RoleFactory> */
     use HasFactory, HasTranslatableAttributes;

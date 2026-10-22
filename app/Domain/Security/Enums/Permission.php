@@ -29,6 +29,17 @@ enum Permission: string
 
     case QueueMonitorView = 'queue_monitor.view';
 
+    case ReferenceDataView = 'reference_data.view';
+    case ReferenceDataImport = 'reference_data.import';
+    case LookupValuesManage = 'lookup_values.manage';
+    case OrgUnitsManage = 'org_units.manage';
+    case ProgramsManage = 'programs.manage';
+    case FacilitiesManage = 'facilities.manage';
+    case TermsManage = 'terms.manage';
+    case TermWindowsManage = 'term_windows.manage';
+    case CourseCategoriesManage = 'course_categories.manage';
+    case GradeScalesManage = 'grade_scales.manage';
+
     public function resource(): string
     {
         return explode('.', $this->value, 2)[0];

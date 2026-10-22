@@ -15,6 +15,10 @@ class EssentialSeeder extends Seeder
     {
         $this->call([
             RoleTemplateSeeder::class,
+            CountrySeeder::class,
+            LanguageSeeder::class,
+            LookupTypeSeeder::class,
+            OrgUnitTypeSeeder::class,
         ]);
     }
 }

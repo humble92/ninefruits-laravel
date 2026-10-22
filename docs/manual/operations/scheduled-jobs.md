@@ -21,5 +21,6 @@ Phase 0 기준 등록된 스케줄 작업은 없다. Phase마다 이 표에 추�
 | 작업 | 발생 | 비고 |
 |---|---|---|
 | `ReencryptPiiRecords` | `pii:reencrypt` | 배치. 실패한 작업은 Horizon에서 재시도 |
+| `ImportCsv` (Filament) | 관리 화면 CSV 가져오기, `reference:import` | 배치. 완료 알림은 관리 화면 알림(`notifications` 테이블). 실패 행은 `failed_import_rows` |
 
 큐 작업은 실행 중 DB 수행자가 `system:job:{클래스}`로 기록된다.

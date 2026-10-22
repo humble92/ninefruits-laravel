@@ -9,6 +9,8 @@ use App\Domain\Security\Enums\Persona;
 use App\Domain\Security\Enums\ScopeType;
 use App\Domain\Security\Services\AuthorizationService;
 use App\Domain\Security\Services\PersonaResolver;
+use App\Models\Organization\OrgUnit;
+use App\Models\Organization\Program;
 use App\Models\Security\Activity;
 use App\Models\Security\Role;
 use App\Models\User;
@@ -78,19 +80,23 @@ it('ignores assignments outside their validity period', function () {
     expect(app(AuthorizationService::class)->hasPermission($user, Permission::UsersView))->toBeTrue();
 });
 
-it('merges scopes from several assignments', function () {
+it('merges scopes from several assignments and includes units below an org unit', function () {
     $user = User::factory()->create();
     $role = Role::factory()->withPermissions([Permission::UsersView])->create();
+    $college = OrgUnit::factory()->create();
+    $department = OrgUnit::factory()->under($college)->create();
+    $other = OrgUnit::factory()->create();
+    $program = Program::factory()->create();
 
-    app(AssignRole::class)->handle($user, $role, 'dept 10', ScopeType::OrgUnit, 10);
-    app(AssignRole::class)->handle($user, $role, 'dept 20', ScopeType::OrgUnit, 20);
-    app(AssignRole::class)->handle($user, $role, 'program 5', ScopeType::Program, 5);
+    app(AssignRole::class)->handle($user, $role, 'college', ScopeType::OrgUnit, $college->id);
+    app(AssignRole::class)->handle($user, $role, 'other unit', ScopeType::OrgUnit, $other->id);
+    app(AssignRole::class)->handle($user, $role, 'program', ScopeType::Program, $program->id);
 
     $scope = app(AuthorizationService::class)->scopeFor($user, Permission::UsersView);
 
     expect($scope->isGlobal)->toBeFalse()
-        ->and($scope->orgUnitIds)->toEqualCanonicalizing([10, 20])
-        ->and($scope->programIds)->toBe([5]);
+        ->and($scope->orgUnitIds)->toEqualCanonicalizing([$college->id, $department->id, $other->id])
+        ->and($scope->programIds)->toBe([$program->id]);
 });
 
 it('gives deactivated users no permissions', function () {

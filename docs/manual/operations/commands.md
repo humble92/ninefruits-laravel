@@ -45,6 +45,25 @@
 - 예시: `php artisan setup:demo --size=small --seed=42`
 - 실패 시: 필수 데이터가 없으면 데모 계정의 역할이 없어 건너뛴다. 먼저 `setup:install`을 실행한다.
 
+## 기준정보와 학기
+
+### `reference:import`
+
+- 용도: 기준정보 CSV를 가져온다. 관리 화면의 **CSV 가져오기**와 같은 가져오기 규칙을 쓴다(코드로 기존 행을 찾아 갱신, 빈 번역 칸은 기존 값 유지, 실패한 행만 따로 기록).
+- 인수: `{type}` `org_units`, `programs`, `buildings`, `rooms`, `lookup_values` / `{file}` 머리글 행이 있는 UTF-8 CSV.
+- 옵션: `--actor=`(필수. 가져오기 기록과 완료 알림이 이 계정으로 간다), `--chunk=100`(큐 작업당 행 수), `--dry-run`(머리글 검사와 행 수만).
+- 감사: 기록 (유형, 파일 이름, 행 수, 실패 행 수)
+- 열 형식: [관리자 매뉴얼 9장](../admin/09-csv-import.md).
+- 종료 코드: 큐가 동기 실행이면 결과를 바로 출력하고 실패 행이 있으면 2. 비동기(Horizon)이면 접수만 하고 0. 결과는 `--actor` 계정의 관리 화면 알림에서 실패 행 CSV로 받는다.
+- 예시: `php artisan reference:import org_units storage/app/org-units.csv --actor=admin@example.ac.kr --dry-run`
+
+### `term:inspect`
+
+- 용도: 지정 시각에 수업 중인 학기와 열려 있는 업무 기간(종류, 학기, 대상 조건, 종료 시각)을 보여 준다. 학기와 업무 기간 설정을 점검하거나 "왜 수강신청이 안 열렸는가" 같은 문의에 쓴다.
+- 옵션: `--at=`(기본 현재. 예: `"2027-02-15 09:00"`. 시간대를 붙이지 않으면 서버 시간대(UTC)로 해석한다. `"2027-02-15 09:00 Asia/Seoul"`처럼 지정할 수 있다).
+- 감사: 기록 안 함
+- 출력 해석: 날짜 판단은 기관 시간대 기준이다. 계획(planned)이나 보관(archived) 상태 학기의 업무 기간은 열리지 않는다.
+
 ## 보안
 
 ### `security:create-administrator`

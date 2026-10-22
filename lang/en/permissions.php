@@ -2,6 +2,15 @@
 
 return [
     'resources' => [
+        'reference_data' => 'Reference data',
+        'lookup_values' => 'Code data',
+        'org_units' => 'Org units',
+        'programs' => 'Programs',
+        'facilities' => 'Buildings and rooms',
+        'terms' => 'Academic years and terms',
+        'term_windows' => 'Term windows',
+        'course_categories' => 'Course categories',
+        'grade_scales' => 'Grade scales',
         'admin_panel' => 'Administration panel',
         'users' => 'Users',
         'roles' => 'Roles',
@@ -29,4 +38,13 @@ return [
     'security_settings' => ['manage' => 'Manage security settings'],
     'institution_settings' => ['manage' => 'Manage institution settings'],
     'queue_monitor' => ['view' => 'View the queue monitor'],
+    'reference_data' => ['view' => 'View reference data', 'import' => 'Import reference data from CSV'],
+    'lookup_values' => ['manage' => 'Manage code data, countries and languages'],
+    'org_units' => ['manage' => 'Manage org units and reorganizations'],
+    'programs' => ['manage' => 'Manage programs'],
+    'facilities' => ['manage' => 'Manage buildings and rooms'],
+    'terms' => ['manage' => 'Manage academic years, terms, term types and time slots'],
+    'term_windows' => ['manage' => 'Manage term windows'],
+    'course_categories' => ['manage' => 'Manage course categories'],
+    'grade_scales' => ['manage' => 'Manage grade scales'],
 ];

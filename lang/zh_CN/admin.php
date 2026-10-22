@@ -2,6 +2,7 @@
 
 return [
     'navigation' => [
+        'reference_data' => '基础数据',
         'access' => '用户与权限',
         'audit' => '审计',
         'settings' => '设置',
@@ -49,7 +50,7 @@ return [
         'fields' => [
             'role' => '角色',
             'scope' => '范围',
-            'scope_id' => '范围对象 ID',
+            'scope_target' => '范围对象',
             'starts_at' => '开始',
             'ends_at' => '结束',
             'active' => '有效',

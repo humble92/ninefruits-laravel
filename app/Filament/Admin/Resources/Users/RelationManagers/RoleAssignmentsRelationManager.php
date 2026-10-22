@@ -5,6 +5,8 @@ namespace App\Filament\Admin\Resources\Users\RelationManagers;
 use App\Domain\Security\Actions\AssignRole;
 use App\Domain\Security\Actions\RevokeRoleAssignment;
 use App\Domain\Security\Enums\ScopeType;
+use App\Filament\Admin\Resources\Reference\OrgUnits\OrgUnitResource;
+use App\Models\Organization\Program;
 use App\Models\Security\Role;
 use App\Models\Security\RoleAssignment;
 use App\Models\User;
@@ -13,7 +15,6 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Utilities\Get;
@@ -51,9 +52,7 @@ class RoleAssignmentsRelationManager extends RelationManager
                 TextColumn::make('role.display_name')->label(__('admin.role_assignments.fields.role')),
                 TextColumn::make('scope_type')
                     ->label(__('admin.role_assignments.fields.scope'))
-                    ->formatStateUsing(fn (RoleAssignment $record) => $record->scope_type === ScopeType::Global
-                        ? $record->scope_type->label()
-                        : $record->scope_type->label().' #'.$record->scope_id),
+                    ->formatStateUsing(fn (RoleAssignment $record) => $record->describeScope()),
                 TextColumn::make('starts_at')->label(__('admin.role_assignments.fields.starts_at'))->dateTime()->placeholder('-'),
                 TextColumn::make('ends_at')->label(__('admin.role_assignments.fields.ends_at'))->dateTime()->placeholder('-'),
                 IconColumn::make('active')
@@ -79,10 +78,16 @@ class RoleAssignmentsRelationManager extends RelationManager
                             ->default(ScopeType::Global->value)
                             ->required()
                             ->live(),
-                        // Becomes an org unit / program picker once those exist (Phase 1).
-                        TextInput::make('scope_id')
-                            ->label(__('admin.role_assignments.fields.scope_id'))
-                            ->integer()
+                        Select::make('scope_id')
+                            ->label(__('admin.role_assignments.fields.scope_target'))
+                            ->options(fn (Get $get) => match ($get('scope_type')) {
+                                ScopeType::OrgUnit->value => OrgUnitResource::unitOptions(),
+                                ScopeType::Program->value => Program::query()->orderBy('code')->get()
+                                    ->mapWithKeys(fn (Program $program) => [$program->id => $program->code.' '.$program->name])->all(),
+                                default => [],
+                            })
+                            ->helperText(fn (Get $get) => $get('scope_type') === ScopeType::OrgUnit->value ? __('reference.help.org_unit_descendants') : null)
+                            ->searchable()
                             ->visible(fn (Get $get) => $get('scope_type') !== ScopeType::Global->value)
                             ->required(fn (Get $get) => $get('scope_type') !== ScopeType::Global->value),
                         DateTimePicker::make('starts_at')->label(__('admin.role_assignments.fields.starts_at')),

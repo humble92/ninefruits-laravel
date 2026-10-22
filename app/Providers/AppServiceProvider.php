@@ -10,12 +10,38 @@ use App\Domain\Security\Services\PersonaResolver;
 use App\Http\Middleware\EnforceMfaPolicy;
 use App\Http\Middleware\SetDatabaseSessionContext;
 use App\Http\Middleware\SetLocale;
+use App\Models\Curriculum\CourseCategory;
+use App\Models\Facility\Building;
+use App\Models\Facility\Room;
+use App\Models\Grading\GradeScale;
+use App\Models\Grading\GradeScaleItem;
+use App\Models\Institution\Country;
+use App\Models\Institution\Language;
+use App\Models\Institution\LookupType;
+use App\Models\Institution\LookupValue;
+use App\Models\Organization\OrgUnit;
+use App\Models\Organization\OrgUnitSuccession;
+use App\Models\Organization\OrgUnitType;
+use App\Models\Organization\Program;
 use App\Models\Security\Activity;
 use App\Models\Security\RecordChange;
 use App\Models\Security\Role;
 use App\Models\Security\RoleAssignment;
 use App\Models\Security\SecurityEvent;
+use App\Models\Term\AcademicYear;
+use App\Models\Term\Term;
+use App\Models\Term\TermType;
+use App\Models\Term\TermWindow;
+use App\Models\Term\TimeSlot;
 use App\Models\User;
+use App\Policies\Reference\CourseCategoryPolicy;
+use App\Policies\Reference\FacilityPolicy;
+use App\Policies\Reference\GradeScalePolicy;
+use App\Policies\Reference\LookupDataPolicy;
+use App\Policies\Reference\OrgUnitPolicy;
+use App\Policies\Reference\ProgramPolicy;
+use App\Policies\Reference\TermPolicy;
+use App\Policies\Reference\TermWindowPolicy;
 use App\Policies\Security\AuditRecordPolicy;
 use App\Policies\Security\RoleAssignmentPolicy;
 use App\Policies\Security\RolePolicy;
@@ -40,6 +66,30 @@ class AppServiceProvider extends ServiceProvider
      * @var list<class-string<PersonaDetector>>
      */
     private const array PERSONA_DETECTORS = [];
+
+    /**
+     * @var array<class-string, class-string>
+     */
+    private const array REFERENCE_POLICIES = [
+        Country::class => LookupDataPolicy::class,
+        Language::class => LookupDataPolicy::class,
+        LookupType::class => LookupDataPolicy::class,
+        LookupValue::class => LookupDataPolicy::class,
+        OrgUnitType::class => OrgUnitPolicy::class,
+        OrgUnit::class => OrgUnitPolicy::class,
+        OrgUnitSuccession::class => OrgUnitPolicy::class,
+        Program::class => ProgramPolicy::class,
+        Building::class => FacilityPolicy::class,
+        Room::class => FacilityPolicy::class,
+        TermType::class => TermPolicy::class,
+        AcademicYear::class => TermPolicy::class,
+        Term::class => TermPolicy::class,
+        TimeSlot::class => TermPolicy::class,
+        TermWindow::class => TermWindowPolicy::class,
+        CourseCategory::class => CourseCategoryPolicy::class,
+        GradeScale::class => GradeScalePolicy::class,
+        GradeScaleItem::class => GradeScalePolicy::class,
+    ];
 
     /**
      * Register any application services.
@@ -82,6 +132,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Activity::class, AuditRecordPolicy::class);
         Gate::policy(RecordChange::class, AuditRecordPolicy::class);
         Gate::policy(SecurityEvent::class, SecurityEventPolicy::class);
+
+        foreach (self::REFERENCE_POLICIES as $model => $policy) {
+            Gate::policy($model, $policy);
+        }
 
         // Abilities named after catalog permissions ("users.view") are answered from role
         // assignments and personas. Other abilities fall through to policies.

@@ -5,6 +5,7 @@ namespace App\Domain\Security\Services;
 use App\Domain\Security\Data\PermissionScope;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Security\Enums\ScopeType;
+use App\Models\Organization\OrgUnit;
 use App\Models\Security\Role;
 use App\Models\Security\RoleAssignment;
 use App\Models\User;
@@ -76,6 +77,24 @@ class AuthorizationService
         foreach ($assigned as $row) {
             $scope = PermissionScope::fromAssignment(ScopeType::from($row->scope_type), $row->scope_id);
             $grants[$row->name] = isset($grants[$row->name]) ? $grants[$row->name]->merge($scope) : $scope;
+        }
+
+        // An org unit scope covers the unit and everything below it.
+        $expanded = [];
+
+        foreach ($grants as $name => $scope) {
+            if ($scope->orgUnitIds !== []) {
+                $roots = $scope->orgUnitIds;
+                sort($roots);
+                $key = implode(',', $roots);
+
+                $grants[$name] = new PermissionScope(
+                    $scope->isGlobal,
+                    $expanded[$key] ??= OrgUnit::descendantIdsOf($roots),
+                    $scope->programIds,
+                    $scope->includesOwn,
+                );
+            }
         }
 
         $personas = $this->personas->personasFor($user);

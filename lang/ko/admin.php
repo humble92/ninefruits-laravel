@@ -2,6 +2,7 @@
 
 return [
     'navigation' => [
+        'reference_data' => '기준정보',
         'access' => '사용자와 권한',
         'audit' => '감사',
         'settings' => '설정',
@@ -49,7 +50,7 @@ return [
         'fields' => [
             'role' => '역할',
             'scope' => '범위',
-            'scope_id' => '범위 대상 ID',
+            'scope_target' => '범위 대상',
             'starts_at' => '시작',
             'ends_at' => '종료',
             'active' => '유효',

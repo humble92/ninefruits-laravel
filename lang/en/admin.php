@@ -2,6 +2,7 @@
 
 return [
     'navigation' => [
+        'reference_data' => 'Reference data',
         'access' => 'Users and access',
         'audit' => 'Audit',
         'settings' => 'Settings',
@@ -49,7 +50,7 @@ return [
         'fields' => [
             'role' => 'Role',
             'scope' => 'Scope',
-            'scope_id' => 'Scope target ID',
+            'scope_target' => 'Scope target',
             'starts_at' => 'Starts',
             'ends_at' => 'Ends',
             'active' => 'Active',

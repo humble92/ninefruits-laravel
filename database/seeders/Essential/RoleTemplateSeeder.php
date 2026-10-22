@@ -17,7 +17,7 @@ class RoleTemplateSeeder extends Seeder
 {
     public function run(SyncPermissionCatalog $syncPermissionCatalog): void
     {
-        $staff = [Permission::AdminPanelAccess, Permission::UsersView];
+        $staff = [Permission::AdminPanelAccess, Permission::UsersView, Permission::ReferenceDataView];
 
         $templates = [
             'system_administrator' => [
@@ -31,7 +31,18 @@ class RoleTemplateSeeder extends Seeder
             ],
             'academic_affairs' => [
                 'display_name' => ['en' => 'Academic Affairs', 'ko' => '교무 담당', 'zh_CN' => '教务管理员'],
-                'permissions' => $staff,
+                'permissions' => [
+                    ...$staff,
+                    Permission::ReferenceDataImport,
+                    Permission::LookupValuesManage,
+                    Permission::OrgUnitsManage,
+                    Permission::ProgramsManage,
+                    Permission::FacilitiesManage,
+                    Permission::TermsManage,
+                    Permission::TermWindowsManage,
+                    Permission::CourseCategoriesManage,
+                    Permission::GradeScalesManage,
+                ],
             ],
             'certificate_officer' => [
                 'display_name' => ['en' => 'Certificate Officer', 'ko' => '증명서 담당', 'zh_CN' => '证明书管理员'],
