@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property TargetCriteria $eligibility
  * @property CarbonImmutable|null $releases_at
  * @property int $sort_order
+ * @property int $enrolled_count
+ * @property CarbonImmutable|null $release_processed_at
  * @property-read Section $section
  */
 class SectionSeatGroup extends Model implements Translatable
@@ -31,11 +33,19 @@ class SectionSeatGroup extends Model implements Translatable
 
     protected $fillable = ['section_id', 'name', 'capacity', 'eligibility', 'releases_at', 'sort_order'];
 
-    protected $attributes = ['eligibility' => null, 'releases_at' => null, 'sort_order' => 0];
+    protected $attributes = ['eligibility' => null, 'releases_at' => null, 'sort_order' => 0, 'enrolled_count' => 0, 'release_processed_at' => null];
 
     protected function casts(): array
     {
-        return ['capacity' => 'integer', 'eligibility' => TargetCriteria::class, 'releases_at' => 'immutable_datetime', 'sort_order' => 'integer'];
+        return ['capacity' => 'integer', 'eligibility' => TargetCriteria::class, 'releases_at' => 'immutable_datetime', 'sort_order' => 'integer', 'enrolled_count' => 'integer', 'release_processed_at' => 'immutable_datetime'];
+    }
+
+    /**
+     * Still reserved for its group at the time (releases_at null: always reserved).
+     */
+    public function isReservedAt(CarbonImmutable $at): bool
+    {
+        return $this->releases_at === null || $this->releases_at->greaterThan($at);
     }
 
     /**

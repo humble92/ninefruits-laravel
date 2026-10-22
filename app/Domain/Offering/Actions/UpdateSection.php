@@ -49,7 +49,14 @@ class UpdateSection
                     });
                 }
 
-                $section->fill(Arr::only($data, ['section_code', 'capacity', 'org_unit_id', 'eligibility', 'exclusion', 'instruction_language', 'note']))->save();
+                // Registration takes seats under this row lock; capacity never drops below them.
+                $enrolled = (int) Section::query()->whereKey($section->id)->lockForUpdate()->value('enrolled_count');
+
+                if (isset($data['capacity']) && (int) $data['capacity'] < $enrolled) {
+                    throw ValidationException::withMessages(['capacity' => __('registration.errors.capacity_below_enrolled', ['count' => $enrolled])]);
+                }
+
+                $section->fill(Arr::only($data, ['section_code', 'capacity', 'waitlist_capacity', 'org_unit_id', 'eligibility', 'exclusion', 'instruction_language', 'note']))->save();
 
                 return $section;
             }, 'term_session_id');

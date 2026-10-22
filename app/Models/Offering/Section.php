@@ -13,6 +13,8 @@ use App\Models\Curriculum\CourseVersion;
 use App\Models\Organization\OrgUnit;
 use App\Models\Organization\Program;
 use App\Models\Person\Instructor;
+use App\Models\Registration\Enrollment;
+use App\Models\Registration\WaitlistEntry;
 use App\Models\Term\Term;
 use App\Models\Term\TermSession;
 use App\Models\User;
@@ -46,6 +48,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $instruction_language
  * @property string|null $note
  * @property int|null $copied_from_section_id
+ * @property int $enrolled_count
+ * @property int $waitlist_capacity
  * @property-read Term $term
  * @property-read TermSession $session
  * @property-read Course $course
@@ -67,18 +71,20 @@ class Section extends Model implements Translatable
 
     protected $fillable = [
         'term_id', 'term_session_id', 'course_id', 'course_version_id', 'section_code', 'org_unit_id', 'capacity',
-        'eligibility', 'exclusion', 'instruction_language', 'note',
+        'eligibility', 'exclusion', 'instruction_language', 'note', 'waitlist_capacity',
     ];
 
     protected $attributes = [
         'status' => 'draft', 'eligibility' => null, 'exclusion' => null, 'instruction_language' => null, 'note' => null,
-        'copied_from_section_id' => null,
+        'copied_from_section_id' => null, 'enrolled_count' => 0, 'waitlist_capacity' => 0,
     ];
 
     protected function casts(): array
     {
         return [
             'capacity' => 'integer',
+            'enrolled_count' => 'integer',
+            'waitlist_capacity' => 'integer',
             'status' => SectionStatus::class,
             'eligibility' => TargetCriteria::class,
             'exclusion' => TargetCriteria::class,
@@ -158,6 +164,22 @@ class Section extends Model implements Translatable
     }
 
     /**
+     * @return HasMany<Enrollment, $this>
+     */
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    /**
+     * @return HasMany<WaitlistEntry, $this>
+     */
+    public function waitlistEntries(): HasMany
+    {
+        return $this->hasMany(WaitlistEntry::class)->orderBy('requested_at');
+    }
+
+    /**
      * @return HasOne<Syllabus, $this>
      */
     public function syllabus(): HasOne
@@ -175,7 +197,7 @@ class Section extends Model implements Translatable
 
     /**
      * Whether a student may take the section by its include and exclude conditions (seat
-     * groups and registration rules are Phase 5).
+     * groups and the other registration rules are checked at registration).
      */
     public function admits(TargetSubject $subject): bool
     {
@@ -233,6 +255,17 @@ class Section extends Model implements Translatable
         $programUnits = $scope->programIds === [] ? [] : Program::query()->whereIn('id', $scope->programIds)->pluck('org_unit_id')->all();
 
         return array_values(array_unique([...$scope->orgUnitIds, ...$programUnits]));
+    }
+
+    /**
+     * Whether the user may change registrations in this section (registration.manage in a
+     * scope covering the offering unit).
+     */
+    public function isRegistrationManageableBy(User $user): bool
+    {
+        $scope = app(AuthorizationService::class)->scopeFor($user, Permission::RegistrationManage);
+
+        return $scope->isGlobal || in_array($this->org_unit_id, self::scopeOrgUnitIds($scope), true);
     }
 
     public function isTaughtBy(User $user): bool

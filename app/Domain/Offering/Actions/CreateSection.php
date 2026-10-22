@@ -25,7 +25,7 @@ class CreateSection
     public function __construct(private readonly AuditLogger $audit) {}
 
     /**
-     * @param  array{section_code: string, capacity: int, org_unit_id?: int|null, eligibility?: mixed, exclusion?: mixed, instruction_language?: string|null, note?: mixed}  $data
+     * @param  array{section_code: string, capacity: int, waitlist_capacity?: int, org_unit_id?: int|null, eligibility?: mixed, exclusion?: mixed, instruction_language?: string|null, note?: mixed}  $data
      */
     public function handle(TermSession $session, Course $course, array $data, User $createdBy): Section
     {
@@ -40,7 +40,7 @@ class CreateSection
 
         try {
             $section = DB::transaction(fn () => Section::query()->create([
-                ...Arr::only($data, ['section_code', 'capacity', 'eligibility', 'exclusion', 'instruction_language', 'note']),
+                ...Arr::only($data, ['section_code', 'capacity', 'waitlist_capacity', 'eligibility', 'exclusion', 'instruction_language', 'note']),
                 'term_id' => $session->term_id,
                 'term_session_id' => $session->id,
                 'course_id' => $course->id,

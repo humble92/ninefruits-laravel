@@ -15,6 +15,7 @@ use App\Livewire\Portal\Dashboard;
 use App\Livewire\Portal\MyProfile;
 use App\Livewire\Portal\MyRecords;
 use App\Livewire\Portal\MyTeaching;
+use App\Livewire\Portal\Registration;
 use App\Livewire\Portal\SectionDetail;
 use App\Livewire\Portal\SecuritySettings;
 use App\Livewire\Portal\SyllabusEditor;
@@ -47,6 +48,7 @@ Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(fun
     Route::livewire('/profile', MyProfile::class)->name('profile');
     Route::livewire('/advisees', Advisees::class)->name('advisees');
     Route::livewire('/catalog', CourseCatalog::class)->name('catalog');
+    Route::livewire('/registration', Registration::class)->name('registration');
     Route::livewire('/sections/{section}', SectionDetail::class)->name('sections.show');
     Route::livewire('/sections/{section}/syllabus', SyllabusEditor::class)->name('syllabus.edit');
     Route::livewire('/teaching', MyTeaching::class)->name('teaching');

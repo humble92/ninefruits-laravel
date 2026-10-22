@@ -10,6 +10,7 @@ return [
         'student_records' => '学生与教职工',
         'admissions' => '招生',
         'curriculum' => '培养方案与开课',
+        'registration' => '选课',
     ],
     'users' => [
         'label' => '用户',

@@ -35,6 +35,11 @@ use App\Models\Organization\OrgUnit;
 use App\Models\Organization\OrgUnitSuccession;
 use App\Models\Organization\OrgUnitType;
 use App\Models\Organization\Program;
+use App\Models\Registration\CreditLimitPolicy;
+use App\Models\Registration\RegistrationHold;
+use App\Models\Registration\RegistrationOverride;
+use App\Models\Registration\RegistrationRule;
+use App\Models\Registration\RegistrationRuleSet;
 use App\Models\Security\Activity;
 use App\Models\Security\RecordChange;
 use App\Models\Security\Role;
@@ -58,6 +63,8 @@ use App\Policies\Reference\OrgUnitPolicy;
 use App\Policies\Reference\ProgramPolicy;
 use App\Policies\Reference\TermPolicy;
 use App\Policies\Reference\TermWindowPolicy;
+use App\Policies\Registration\RegistrationHoldPolicy;
+use App\Policies\Registration\RegistrationRulePolicy;
 use App\Policies\Security\AuditRecordPolicy;
 use App\Policies\Security\RoleAssignmentPolicy;
 use App\Policies\Security\RolePolicy;
@@ -116,6 +123,11 @@ class AppServiceProvider extends ServiceProvider
         CurriculumRequirementSet::class => CurriculumPolicy::class,
         CurriculumRequirement::class => CurriculumPolicy::class,
         Section::class => SectionPolicy::class,
+        RegistrationHold::class => RegistrationHoldPolicy::class,
+        RegistrationOverride::class => RegistrationHoldPolicy::class,
+        RegistrationRuleSet::class => RegistrationRulePolicy::class,
+        RegistrationRule::class => RegistrationRulePolicy::class,
+        CreditLimitPolicy::class => RegistrationRulePolicy::class,
         CourseCategory::class => CourseCategoryPolicy::class,
         GradeScale::class => GradeScalePolicy::class,
         GradeScaleItem::class => GradeScalePolicy::class,

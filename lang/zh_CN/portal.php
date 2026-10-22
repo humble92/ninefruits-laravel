@@ -11,6 +11,7 @@ return [
         'applications' => '入学申请',
         'catalog' => '开课查询',
         'teaching' => '我的授课',
+        'registration' => '选课',
     ],
     'dashboard' => [
         'title' => '首页',

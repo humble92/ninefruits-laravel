@@ -6,6 +6,7 @@ use App\Domain\Term\Enums\TermStatus;
 use App\Models\Concerns\HasTranslatableAttributes;
 use App\Models\Contracts\Translatable;
 use App\Models\Offering\Section;
+use App\Models\Registration\RegistrationRuleSet;
 use Carbon\CarbonImmutable;
 use Database\Factories\Term\TermFactory;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -102,6 +104,14 @@ class Term extends Model implements Translatable
     public function sections(): HasMany
     {
         return $this->hasMany(Section::class);
+    }
+
+    /**
+     * @return HasOne<RegistrationRuleSet, $this>
+     */
+    public function registrationRuleSet(): HasOne
+    {
+        return $this->hasOne(RegistrationRuleSet::class);
     }
 
     public function fullTermSession(): TermSession

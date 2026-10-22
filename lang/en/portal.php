@@ -11,6 +11,7 @@ return [
         'applications' => 'Admissions',
         'catalog' => 'Course catalog',
         'teaching' => 'My teaching',
+        'registration' => 'Registration',
     ],
     'dashboard' => [
         'title' => 'Home',

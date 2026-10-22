@@ -73,6 +73,7 @@ return [
         'year_levels' => '학년',
         'admission_year_from' => '입학 연도부터',
         'admission_year_to' => '입학 연도까지',
+        'admission_years' => '입학 연도',
         'start_time' => '시작',
         'end_time' => '종료',
         'weekdays' => '요일',

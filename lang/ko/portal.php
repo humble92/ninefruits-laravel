@@ -11,6 +11,7 @@ return [
         'applications' => '입학 지원',
         'catalog' => '개설강좌',
         'teaching' => '담당 강좌',
+        'registration' => '수강신청',
     ],
     'dashboard' => [
         'title' => '홈',

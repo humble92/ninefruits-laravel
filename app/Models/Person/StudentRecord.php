@@ -9,6 +9,8 @@ use App\Domain\Security\Services\AuthorizationService;
 use App\Models\Institution\LookupValue;
 use App\Models\Organization\OrgUnit;
 use App\Models\Organization\Program;
+use App\Models\Registration\Enrollment;
+use App\Models\Registration\RegistrationHold;
 use App\Models\Term\Term;
 use App\Models\User;
 use App\Support\Targeting\TargetSubject;
@@ -119,6 +121,22 @@ class StudentRecord extends Model implements TargetSubject
     public function additionalPrograms(): HasMany
     {
         return $this->hasMany(StudentRecordProgram::class);
+    }
+
+    /**
+     * @return HasMany<Enrollment, $this>
+     */
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    /**
+     * @return HasMany<RegistrationHold, $this>
+     */
+    public function holds(): HasMany
+    {
+        return $this->hasMany(RegistrationHold::class);
     }
 
     /**

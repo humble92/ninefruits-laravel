@@ -16,6 +16,9 @@
             @php($personas = app(\App\Domain\Security\Services\PersonaResolver::class)->personasFor($portalUser))
             @if (in_array(\App\Domain\Security\Enums\Persona::Student, $personas, true) || in_array(\App\Domain\Security\Enums\Persona::Alumni, $personas, true))
                 <a href="{{ route('portal.records') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.records') }}</a>
+                @if (in_array(\App\Domain\Security\Enums\Persona::Student, $personas, true))
+                    <a href="{{ route('portal.registration') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.registration') }}</a>
+                @endif
             @endif
             @if ($portalUser->person_id !== null && (in_array(\App\Domain\Security\Enums\Persona::Applicant, $personas, true) || \App\Models\Admission\AdmissionCycle::query()->acceptingApplications()->exists()))
                 <a href="{{ route('portal.applications') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.applications') }}</a>

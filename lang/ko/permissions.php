@@ -33,6 +33,10 @@ return [
         'curriculum' => '졸업 요건',
         'sections' => '개설강좌',
         'additional_programs' => '복수전공·부전공',
+        'enrollments' => '수강 현황',
+        'registration' => '수강 조정',
+        'registration_rules' => '수강신청 규칙',
+        'registration_holds' => '수강신청 제한과 예외',
     ],
     'admin_panel' => ['access' => '관리 화면 사용'],
     'users' => [
@@ -73,4 +77,8 @@ return [
     'curriculum' => ['manage' => '졸업 요건 관리'],
     'sections' => ['view' => '개설강좌 조회', 'manage' => '개설강좌 편성(담당 교원, 시간, 강의실)'],
     'additional_programs' => ['approve' => '복수전공·부전공 신청 승인'],
+    'enrollments' => ['view' => '수강 현황과 수강생 명단 조회'],
+    'registration' => ['manage' => '학생 대신 수강신청·취소·철회(사유 필요)'],
+    'registration_rules' => ['manage' => '수강신청 규칙 세트와 학점 상한 관리'],
+    'registration_holds' => ['manage' => '수강신청 제한 설정·해제, 규칙 예외 허용'],
 ];

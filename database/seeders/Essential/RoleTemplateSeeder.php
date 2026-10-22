@@ -43,6 +43,10 @@ class RoleTemplateSeeder extends Seeder
                     Permission::ApplicationsMatriculate,
                     Permission::SectionsView,
                     Permission::AdditionalProgramsApprove,
+                    Permission::EnrollmentsView,
+                    Permission::RegistrationManage,
+                    Permission::RegistrationHoldsManage,
+                    Permission::RegistrationRulesManage,
                 ],
             ],
             'academic_affairs' => [
@@ -64,6 +68,8 @@ class RoleTemplateSeeder extends Seeder
                     Permission::CurriculumManage,
                     Permission::SectionsView,
                     Permission::SectionsManage,
+                    Permission::EnrollmentsView,
+                    Permission::RegistrationRulesManage,
                 ],
             ],
             'certificate_officer' => [
@@ -81,6 +87,8 @@ class RoleTemplateSeeder extends Seeder
                     Permission::SectionsView,
                     Permission::SectionsManage,
                     Permission::AdditionalProgramsApprove,
+                    Permission::EnrollmentsView,
+                    Permission::RegistrationManage,
                 ],
             ],
             'admissions_officer' => [

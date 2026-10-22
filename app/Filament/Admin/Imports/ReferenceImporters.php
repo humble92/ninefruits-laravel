@@ -21,6 +21,7 @@ final class ReferenceImporters
         'students' => StudentImporter::class,
         'instructors' => InstructorImporter::class,
         'courses' => CourseImporter::class,
+        'registration_holds' => RegistrationHoldImporter::class,
     ];
 
     /** Types whose screens need a permission other than reference_data.import. */
@@ -28,6 +29,7 @@ final class ReferenceImporters
         'students' => Permission::StudentRecordsManage,
         'instructors' => Permission::InstructorsManage,
         'courses' => Permission::CoursesManage,
+        'registration_holds' => Permission::RegistrationHoldsManage,
     ];
 
     public static function action(string $type): ImportAction

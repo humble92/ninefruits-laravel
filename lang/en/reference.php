@@ -73,6 +73,7 @@ return [
         'year_levels' => 'Year levels',
         'admission_year_from' => 'Admitted from (year)',
         'admission_year_to' => 'Admitted until (year)',
+        'admission_years' => 'Admitted',
         'start_time' => 'Start',
         'end_time' => 'End',
         'weekdays' => 'Days',

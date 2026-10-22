@@ -33,6 +33,10 @@ return [
         'curriculum' => 'Graduation requirements',
         'sections' => 'Sections',
         'additional_programs' => 'Second majors and minors',
+        'enrollments' => 'Registrations',
+        'registration' => 'Registration adjustments',
+        'registration_rules' => 'Registration rules',
+        'registration_holds' => 'Registration holds and overrides',
     ],
     'admin_panel' => ['access' => 'Open the administration panel'],
     'users' => [
@@ -73,4 +77,8 @@ return [
     'curriculum' => ['manage' => 'Manage graduation requirements'],
     'sections' => ['view' => 'View sections', 'manage' => 'Plan sections (instructors, times, rooms)'],
     'additional_programs' => ['approve' => 'Decide second major and minor applications'],
+    'enrollments' => ['view' => 'View registrations and rosters'],
+    'registration' => ['manage' => 'Register, drop and withdraw students for them (with a reason)'],
+    'registration_rules' => ['manage' => 'Manage registration rule sets and credit limits'],
+    'registration_holds' => ['manage' => 'Place and release holds, grant rule overrides'],
 ];

@@ -99,7 +99,7 @@ class CopySections
         }
 
         $section = new Section([
-            ...$source->only(['section_code', 'capacity', 'org_unit_id', 'eligibility', 'exclusion', 'instruction_language']),
+            ...$source->only(['section_code', 'capacity', 'waitlist_capacity', 'org_unit_id', 'eligibility', 'exclusion', 'instruction_language']),
             'note' => $source->getTranslations('note'),
             'term_id' => $to->id,
             'term_session_id' => $session->id,

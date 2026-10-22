@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Support;
 
 use App\Filament\Admin\Resources\Reference\OrgUnits\OrgUnitResource;
+use App\Models\Organization\OrgUnit;
 use App\Models\Organization\Program;
 use App\Support\Targeting\TargetCriteria;
 use Filament\Forms\Components\CheckboxList;
@@ -47,5 +48,25 @@ final class TargetCriteriaFields
     public static function fromState(mixed $state): TargetCriteria
     {
         return TargetCriteria::fromArray(is_array($state) ? $state : null);
+    }
+
+    /**
+     * A short description for tables, e.g. "Year 1, 2 · Admitted 2014~ · NURS".
+     */
+    public static function summary(TargetCriteria $criteria): string
+    {
+        $years = match (true) {
+            $criteria->admissionYearFrom !== null && $criteria->admissionYearTo !== null => $criteria->admissionYearFrom.'~'.$criteria->admissionYearTo,
+            $criteria->admissionYearFrom !== null => $criteria->admissionYearFrom.'~',
+            $criteria->admissionYearTo !== null => '~'.$criteria->admissionYearTo,
+            default => null,
+        };
+
+        return implode(' · ', array_filter([
+            $criteria->yearLevels === [] ? null : __('reference.fields.year_levels').' '.implode(', ', $criteria->yearLevels),
+            $years === null ? null : __('reference.fields.admission_years').' '.$years,
+            $criteria->programIds === [] ? null : Program::query()->whereKey($criteria->programIds)->orderBy('code')->pluck('code')->implode(', '),
+            $criteria->orgUnitIds === [] ? null : OrgUnit::query()->whereKey($criteria->orgUnitIds)->orderBy('code')->pluck('code')->implode(', '),
+        ]));
     }
 }

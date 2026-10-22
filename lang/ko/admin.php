@@ -10,6 +10,7 @@ return [
         'student_records' => '학생과 교직원',
         'admissions' => '입학',
         'curriculum' => '교육과정과 개설',
+        'registration' => '수강신청',
     ],
     'users' => [
         'label' => '사용자',

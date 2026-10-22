@@ -10,6 +10,7 @@ return [
         'student_records' => 'Students and staff',
         'admissions' => 'Admissions',
         'curriculum' => 'Curriculum and sections',
+        'registration' => 'Registration',
     ],
     'users' => [
         'label' => 'user',

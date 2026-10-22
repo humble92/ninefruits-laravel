@@ -97,7 +97,7 @@ class CheckNaming extends Command
                 $problems[] = "column [{$column}] uses {$type}(); use the Tz variant (timestamptz)";
             }
 
-            if ($type === 'boolean' && ! preg_match('/^(is|has|can|should|counts|allows|requires)_/', $column)) {
+            if ($type === 'boolean' && ! preg_match('/^(is|has|can|should|counts|allows|requires|blocks)_/', $column)) {
                 $problems[] = "boolean column [{$column}] should start with is_, has_, can_ or a verb";
             }
 

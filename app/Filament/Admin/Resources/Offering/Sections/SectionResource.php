@@ -11,7 +11,9 @@ use App\Filament\Admin\Resources\Offering\Sections\Pages\EditSection;
 use App\Filament\Admin\Resources\Offering\Sections\Pages\ListSections;
 use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\InstructorsRelationManager;
 use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\MeetingsRelationManager;
+use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\RosterRelationManager;
 use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\SeatGroupsRelationManager;
+use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\WaitlistRelationManager;
 use App\Filament\Admin\Resources\Reference\OrgUnits\OrgUnitResource;
 use App\Filament\Admin\Support\TargetCriteriaFields;
 use App\Filament\Admin\Support\TranslatableFields;
@@ -109,6 +111,8 @@ class SectionResource extends Resource
                     ->helperText(__('offering.help.change_session')),
                 TextInput::make('section_code')->label(__('offering.fields.section_code'))->required()->maxLength(16)->alphaDash(),
                 TextInput::make('capacity')->label(__('offering.fields.capacity'))->integer()->minValue(0)->maxValue(2000)->required(),
+                TextInput::make('waitlist_capacity')->label(__('registration.fields.waitlist_capacity'))->integer()->minValue(0)->maxValue(500)->default(0)
+                    ->helperText(__('registration.help.waitlist_capacity')),
                 Select::make('org_unit_id')->label(__('offering.fields.offering_unit'))->options(fn () => OrgUnitResource::unitOptions())->searchable()->required(),
                 TextInput::make('instruction_language')->label(__('offering.fields.instruction_language'))->maxLength(16)->helperText(__('offering.help.instruction_language')),
                 TranslatableFields::make('note', __('offering.fields.note'), required: false)->columnSpanFull(),
@@ -132,7 +136,7 @@ class SectionResource extends Resource
                 TextColumn::make('instructors')->label(__('offering.fields.instructors'))
                     ->state(fn (Section $record) => $record->instructors->map(fn (Instructor $instructor) => $instructor->person->displayName())->implode(', ') ?: '-'),
                 TextColumn::make('schedule')->label(__('offering.fields.schedule'))->state(fn (Section $record) => Timetable::summary($record->meetings) ?: '-')->wrap(),
-                TextColumn::make('capacity')->label(__('offering.fields.capacity'))->numeric(),
+                TextColumn::make('capacity')->label(__('offering.fields.capacity'))->state(fn (Section $record) => $record->enrolled_count.' / '.$record->capacity),
                 TextColumn::make('status')->label(__('offering.fields.status'))->formatStateUsing(fn (SectionStatus $state) => $state->label())->badge()
                     ->color(fn (SectionStatus $state) => match ($state) {
                         SectionStatus::Draft => 'gray',
@@ -154,7 +158,7 @@ class SectionResource extends Resource
 
     public static function getRelations(): array
     {
-        return [MeetingsRelationManager::class, InstructorsRelationManager::class, SeatGroupsRelationManager::class];
+        return [MeetingsRelationManager::class, InstructorsRelationManager::class, SeatGroupsRelationManager::class, RosterRelationManager::class, WaitlistRelationManager::class];
     }
 
     public static function getPages(): array

@@ -10,3 +10,5 @@ Artisan::command('inspire', function () {
 
 // Scheduled jobs (docs/manual/operations/scheduled-jobs.md).
 Schedule::command('admission:expire-drafts')->dailyAt('03:10')->withoutOverlapping()->onOneServer();
+Schedule::command('registration:release-reserved-seats')->everyFiveMinutes()->withoutOverlapping()->onOneServer();
+Schedule::command('waitlist:promote')->hourly()->withoutOverlapping()->onOneServer();

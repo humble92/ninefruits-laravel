@@ -74,3 +74,20 @@ code,org_unit,effective_start_date,effective_end_date,title_en,title_ko,credits,
 CSE2010,CSE,2015-03-01,2026-02-28,Data Structures,자료구조,3,MAJ_REQ
 CSE2010,,2026-03-01,,Data Structures,자료구조,4,MAJ_REQ
 ```
+
+## 수강신청 제한
+
+**수강신청 > 수강신청 제한** 목록 위쪽의 **CSV 가져오기**(`수강신청 제한 설정·해제, 규칙 예외 허용` 권한) 또는 `reference:import registration_holds`. 레거시 `SRDENY` 자료나 재무 부서의 미납자 명단을 넣을 때 쓴다.
+
+| 필수 열 | 선택 열 |
+|---|---|
+| `student_number`, `hold_type`(`unregistered`, `financial`, `academic`, `administrative`, `other`), `reason` | `starts_at`(기본: 가져온 시각), `ends_at`, `blocks_registration`(기본 1), `blocks_grades`, `blocks_certificates` |
+
+- 행마다 새 제한을 만든다(출처 `import`). 같은 파일을 두 번 가져오면 제한이 두 번 생기므로, 다시 가져오기 전에 목록을 확인한다.
+- 없는 학번의 행은 실패한다. 해제는 화면에서 사유와 함께 한다([20장](20-registration.md)).
+
+```csv
+student_number,hold_type,reason,ends_at
+202312345,financial,2027-1 등록금 미납,
+202254321,academic,학사경고 상담 필요,2027-03-15
+```

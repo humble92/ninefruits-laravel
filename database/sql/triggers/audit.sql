@@ -3,7 +3,8 @@
 --
 -- Enable per table (trigger name: {table}_after_write_audit):
 --   SELECT util.enable_audit('users', ARRAY['password', 'remember_token']);
--- Values of the listed columns are stored as "[redacted]".
+-- Values of the listed columns are stored as "[redacted]". A third argument lists columns
+-- whose changes alone are not recorded (see enable_audit).
 
 CREATE OR REPLACE FUNCTION audit.record_change() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
@@ -63,22 +64,43 @@ BEGIN
 END
 $$;
 
-CREATE OR REPLACE FUNCTION util.enable_audit(target regclass, redacted_columns text[] DEFAULT '{}') RETURNS void
+-- The two-argument version (before ignored_columns) would make calls ambiguous.
+DROP FUNCTION IF EXISTS util.enable_audit(regclass, text[]);
+
+-- ignored_columns: an UPDATE that changes only these columns is not recorded (e.g. seat
+-- counters changed on every registration). Other changes to the row are recorded in full.
+CREATE OR REPLACE FUNCTION util.enable_audit(target regclass, redacted_columns text[] DEFAULT '{}', ignored_columns text[] DEFAULT '{}') RETURNS void
     LANGUAGE plpgsql
 AS $$
 DECLARE
     table_name text;
     arguments text;
+    ignored text;
 BEGIN
     SELECT c.relname INTO table_name FROM pg_class AS c WHERE c.oid = target;
 
     SELECT COALESCE(string_agg(quote_literal(c), ', '), '') INTO arguments FROM unnest(redacted_columns) AS c;
 
     EXECUTE format('DROP TRIGGER IF EXISTS %I ON %s', table_name || '_after_write_audit', target);
-    EXECUTE format(
-        'CREATE TRIGGER %I AFTER INSERT OR UPDATE OR DELETE ON %s FOR EACH ROW EXECUTE FUNCTION audit.record_change(%s)',
-        table_name || '_after_write_audit', target, arguments
-    );
+    EXECUTE format('DROP TRIGGER IF EXISTS %I ON %s', table_name || '_after_update_audit', target);
+
+    IF cardinality(ignored_columns) = 0 THEN
+        EXECUTE format(
+            'CREATE TRIGGER %I AFTER INSERT OR UPDATE OR DELETE ON %s FOR EACH ROW EXECUTE FUNCTION audit.record_change(%s)',
+            table_name || '_after_write_audit', target, arguments
+        );
+    ELSE
+        ignored := quote_literal(ignored_columns::text) || '::text[]';
+
+        EXECUTE format(
+            'CREATE TRIGGER %I AFTER INSERT OR DELETE ON %s FOR EACH ROW EXECUTE FUNCTION audit.record_change(%s)',
+            table_name || '_after_write_audit', target, arguments
+        );
+        EXECUTE format(
+            'CREATE TRIGGER %I AFTER UPDATE ON %s FOR EACH ROW WHEN ((to_jsonb(OLD) - %s) IS DISTINCT FROM (to_jsonb(NEW) - %s)) EXECUTE FUNCTION audit.record_change(%s)',
+            table_name || '_after_update_audit', target, ignored, ignored, arguments
+        );
+    END IF;
 
     EXECUTE format('DROP TRIGGER IF EXISTS %I ON %s', table_name || '_after_truncate_audit', target);
     EXECUTE format(

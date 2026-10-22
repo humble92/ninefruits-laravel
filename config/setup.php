@@ -1,6 +1,7 @@
 <?php
 
 use Database\Seeders\Profiles\KoreanUniversityProfileSeeder;
+use Database\Seeders\Profiles\YustLegacyRegistrationProfileSeeder;
 
 /*
 | Installation (setup:install) and demo data (setup:demo).
@@ -11,6 +12,7 @@ return [
     // Profile seeders offered by setup:install. Each implements App\Support\Setup\SetupProfile.
     'profiles' => [
         KoreanUniversityProfileSeeder::class,
+        YustLegacyRegistrationProfileSeeder::class,
     ],
 
     'demo' => [

@@ -33,6 +33,8 @@ class CreateSection extends CreateRecord
                     ->afterStateUpdated(fn (Set $set, $state) => $set('org_unit_id', Course::query()->find($state)?->org_unit_id)),
                 TextInput::make('section_code')->label(__('offering.fields.section_code'))->required()->maxLength(16)->alphaDash()->default('01'),
                 TextInput::make('capacity')->label(__('offering.fields.capacity'))->integer()->minValue(0)->maxValue(2000)->required()->default(40),
+                TextInput::make('waitlist_capacity')->label(__('registration.fields.waitlist_capacity'))->integer()->minValue(0)->maxValue(500)->default(0)
+                    ->helperText(__('registration.help.waitlist_capacity')),
                 Select::make('org_unit_id')->label(__('offering.fields.offering_unit'))->options(fn () => OrgUnitResource::unitOptions())->searchable()->required()
                     ->helperText(__('offering.help.offering_unit')),
                 TextInput::make('instruction_language')->label(__('offering.fields.instruction_language'))->maxLength(16),

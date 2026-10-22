@@ -73,6 +73,7 @@ return [
         'year_levels' => '年级',
         'admission_year_from' => '入学年份起',
         'admission_year_to' => '入学年份止',
+        'admission_years' => '入学年份',
         'start_time' => '开始',
         'end_time' => '结束',
         'weekdays' => '星期',

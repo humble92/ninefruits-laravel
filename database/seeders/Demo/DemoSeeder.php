@@ -20,6 +20,7 @@ class DemoSeeder extends Seeder
         DemoPeopleSeeder::class,
         DemoAdmissionSeeder::class,
         DemoCurriculumSeeder::class,
+        DemoRegistrationSeeder::class,
     ];
 
     public function run(DatabaseSessionContext $context): void

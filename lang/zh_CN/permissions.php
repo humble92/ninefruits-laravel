@@ -33,6 +33,10 @@ return [
         'curriculum' => '毕业要求',
         'sections' => '开课',
         'additional_programs' => '第二专业与辅修',
+        'enrollments' => '选课情况',
+        'registration' => '选课调整',
+        'registration_rules' => '选课规则',
+        'registration_holds' => '选课限制与例外',
     ],
     'admin_panel' => ['access' => '使用管理界面'],
     'users' => [
@@ -73,4 +77,8 @@ return [
     'curriculum' => ['manage' => '管理毕业要求'],
     'sections' => ['view' => '查看开课', 'manage' => '编排开课（任课教师、时间、教室）'],
     'additional_programs' => ['approve' => '审批第二专业与辅修申请'],
+    'enrollments' => ['view' => '查看选课情况和课程名单'],
+    'registration' => ['manage' => '代学生选课、退课、撤课（需填写理由）'],
+    'registration_rules' => ['manage' => '管理选课规则集和学分上限'],
+    'registration_holds' => ['manage' => '设置和解除选课限制，批准规则例外'],
 ];
