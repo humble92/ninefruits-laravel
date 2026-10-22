@@ -27,6 +27,8 @@ return [
         'security_settings' => '安全设置',
         'queue_monitor' => '队列监控 (Horizon)',
         'institution_settings' => '机构设置',
+        'admission_cycles' => '招生批次',
+        'applications' => '申请',
     ],
     'admin_panel' => ['access' => '使用管理界面'],
     'users' => [
@@ -61,4 +63,6 @@ return [
     'instructors' => ['manage' => '管理教师'],
     'advisors' => ['manage' => '分配导师'],
     'authentication_settings' => ['manage' => '管理登录方式和 SSO'],
+    'admission_cycles' => ['manage' => '管理招生批次和招生设置'],
+    'applications' => ['view' => '查看申请', 'review' => '审核申请并作出录取决定', 'matriculate' => '为录取者创建学籍'],
 ];

@@ -146,6 +146,7 @@ return [
         'instructor_not_current' => '该教师不在职。',
         'merge_invalid' => '请选择另一位未合并的人员。',
         'merge_two_instructors' => '两位人员都有教师信息，请先整理教师信息。',
+        'merge_two_open_applications' => '两位人员在同一招生批次都有进行中的申请，请先放弃其中一份。',
         'already_has_account' => '该人员已有账户。',
         'email_in_use' => '该邮箱已被其他账户使用。',
     ],

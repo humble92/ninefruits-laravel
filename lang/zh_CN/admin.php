@@ -8,6 +8,7 @@ return [
         'settings' => '设置',
         'portal' => '门户',
         'student_records' => '学生与教职工',
+        'admissions' => '招生',
     ],
     'users' => [
         'label' => '用户',
@@ -162,6 +163,14 @@ return [
             'student_number_pattern' => '学号格式',
             'student_number_pattern_help' => '{YYYY} 入学年份，{YY} 年份后两位，{SEQ:n} n 位序号。例：{YYYY}{SEQ:5} → 202600001',
             'invitation_valid_days' => '邀请链接有效期（天）',
+        ],
+        'admissions' => [
+            'title' => '招生',
+            'applicant_registration_enabled' => '允许申请人创建账户',
+            'applicant_registration_enabled_help' => '在登录页和招生页显示"创建账户"。不受理网上申请时请关闭。',
+            'draft_expiry_days' => '草稿过期天数',
+            'draft_expiry_days_help' => '已截止批次中的草稿无论天数都会过期。',
+            'max_document_size_mb' => '材料最大大小（MB）',
         ],
     ],
 ];

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Profiles;
 
+use App\Models\Admission\Application;
 use App\Models\Curriculum\CourseCategory;
 use App\Models\Facility\Room;
 use App\Models\Grading\GradeScale;
@@ -17,8 +18,8 @@ use Illuminate\Database\Seeder;
 
 /**
  * Typical Korean four-year university: spring/summer/fall/winter terms, general education
- * and major categories, a 4.5 grade scale, 50-minute periods from 09:00 and common room
- * types. Idempotent; values administrators changed are kept.
+ * and major categories, a 4.5 grade scale, 50-minute periods from 09:00, common room
+ * types, admission types and application documents. Idempotent; values administrators changed are kept.
  */
 class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
 {
@@ -36,7 +37,7 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
 
     public static function description(): string
     {
-        return 'Spring/summer/fall/winter terms, 4.5 grade scale, course categories, periods from 09:00, room types';
+        return 'Spring/summer/fall/winter terms, 4.5 grade scale, course categories, periods from 09:00, room types, admission types and application documents';
     }
 
     public function run(): void
@@ -48,6 +49,18 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         $this->gradeScale();
         $this->timeSlots();
         $this->roomTypes();
+        $this->lookupValues(Application::ADMISSION_TYPE_LOOKUP, [
+            'freshman' => ['en' => 'Freshman admission', 'ko' => '신입학', 'zh_CN' => '新生入学'],
+            'transfer' => ['en' => 'Transfer admission', 'ko' => '편입학', 'zh_CN' => '插班入学'],
+            'readmission' => ['en' => 'Readmission', 'ko' => '재입학', 'zh_CN' => '重新入学'],
+            'international' => ['en' => 'International student admission', 'ko' => '외국인 특별전형', 'zh_CN' => '外国留学生入学'],
+        ]);
+        $this->lookupValues(Application::DOCUMENT_TYPE_LOOKUP, [
+            'diploma' => ['en' => 'Diploma or certificate of expected graduation', 'ko' => '졸업(예정)증명서', 'zh_CN' => '毕业（预计毕业）证明'],
+            'transcript' => ['en' => 'Transcript', 'ko' => '성적증명서', 'zh_CN' => '成绩证明'],
+            'identity' => ['en' => 'Copy of ID or passport', 'ko' => '신분증 또는 여권 사본', 'zh_CN' => '身份证或护照复印件'],
+            'language_test' => ['en' => 'Language test score', 'ko' => '어학 성적', 'zh_CN' => '语言成绩'],
+        ]);
     }
 
     private function termTypes(): void
@@ -140,6 +153,19 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
                 'weekdays' => [1, 2, 3, 4, 5],
                 'sort_order' => $period,
             ]);
+        }
+    }
+
+    /**
+     * @param  array<string, array<string, string>>  $values
+     */
+    private function lookupValues(string $typeCode, array $values): void
+    {
+        $type = LookupType::query()->where('code', $typeCode)->sole();
+        $order = 0;
+
+        foreach ($values as $code => $name) {
+            $this->seedRow(LookupValue::class, ['lookup_type_id' => $type->id, 'code' => $code], ['name' => $name], ['sort_order' => $order += 10]);
         }
     }
 

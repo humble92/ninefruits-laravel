@@ -8,6 +8,7 @@ return [
         'records' => '내 학적',
         'profile' => '내 정보',
         'advisees' => '지도 학생',
+        'applications' => '입학 지원',
     ],
     'dashboard' => [
         'title' => '홈',

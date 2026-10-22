@@ -27,6 +27,8 @@ return [
         'security_settings' => '보안 설정',
         'queue_monitor' => '큐 모니터 (Horizon)',
         'institution_settings' => '기관 설정',
+        'admission_cycles' => '모집 회차',
+        'applications' => '지원서',
     ],
     'admin_panel' => ['access' => '관리 화면 사용'],
     'users' => [
@@ -61,4 +63,6 @@ return [
     'instructors' => ['manage' => '교원 관리'],
     'advisors' => ['manage' => '지도교수 배정'],
     'authentication_settings' => ['manage' => '로그인 수단과 SSO 관리'],
+    'admission_cycles' => ['manage' => '모집 회차와 입학 설정 관리'],
+    'applications' => ['view' => '지원서 조회', 'review' => '지원서 검토와 합격 결정', 'matriculate' => '합격자 학적 생성'],
 ];

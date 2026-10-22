@@ -1,6 +1,9 @@
 <?php
 
+use App\Domain\Admission\Settings\AdmissionSettings;
 use App\Domain\Institution\Settings\InstitutionSettings;
+use App\Domain\Person\Settings\StudentRecordSettings;
+use App\Domain\Security\Settings\AuthenticationSettings;
 use App\Domain\Security\Settings\SecuritySettings;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeInterfaceCast;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeZoneCast;
@@ -16,6 +19,9 @@ return [
     'settings' => [
         InstitutionSettings::class,
         SecuritySettings::class,
+        AuthenticationSettings::class,
+        StudentRecordSettings::class,
+        AdmissionSettings::class,
     ],
 
     /*

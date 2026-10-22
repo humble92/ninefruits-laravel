@@ -30,6 +30,15 @@ final readonly class PermissionScope
         return ! $this->isGlobal && $this->orgUnitIds === [] && $this->programIds === [] && ! $this->includesOwn;
     }
 
+    /**
+     * Whether a row with this org unit (descendants already expanded) and program is in
+     * scope.
+     */
+    public function covers(int $orgUnitId, int $programId): bool
+    {
+        return $this->isGlobal || in_array($orgUnitId, $this->orgUnitIds, true) || in_array($programId, $this->programIds, true);
+    }
+
     public function merge(self $other): self
     {
         return new self(

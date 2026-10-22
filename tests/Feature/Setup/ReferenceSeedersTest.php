@@ -26,7 +26,7 @@ it('seeds ISO countries and languages with names in every installed language', f
         ->and($korea->numeric_code)->toBe('410')
         ->and($korea->getTranslations('name'))->toHaveKeys(['en', 'ko', 'zh_CN'])
         ->and(Language::query()->where('code', 'ko')->sole()->getTranslation('name', 'zh_CN'))->toBe('韩语')
-        ->and(LookupType::query()->where('is_system', true)->pluck('code')->sort()->values()->all())->toBe(['admission_type', 'ethnicity', 'room_type']);
+        ->and(LookupType::query()->where('is_system', true)->pluck('code')->sort()->values()->all())->toBe(['admission_type', 'application_document_type', 'ethnicity', 'room_type']);
 });
 
 it('keeps administrator edits and only adds missing translations when run again', function () {

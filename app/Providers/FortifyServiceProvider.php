@@ -6,6 +6,8 @@ use App\Actions\Fortify\RedirectIfTwoFactorChallengeRequired;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Domain\Admission\Actions\RegisterApplicant;
+use App\Domain\Admission\Settings\AdmissionSettings;
 use App\Domain\Security\Enums\MfaMethod;
 use App\Domain\Security\Services\AccountLockout;
 use App\Domain\Security\Services\LoginIdentifierResolver;
@@ -45,6 +47,14 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+
+        Fortify::createUsersUsing(RegisterApplicant::class);
+        Fortify::registerView(function () {
+            abort_unless(app(AdmissionSettings::class)->applicant_registration_enabled, 404);
+
+            return view('auth.register');
+        });
+        Fortify::verifyEmailView(fn () => view('auth.verify-email'));
 
         Fortify::loginView(fn () => view('auth.login'));
         Fortify::twoFactorChallengeView(function (Request $request) {

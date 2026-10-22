@@ -8,6 +8,7 @@ return [
         'records' => 'My records',
         'profile' => 'My details',
         'advisees' => 'Advisees',
+        'applications' => 'Admissions',
     ],
     'dashboard' => [
         'title' => 'Home',

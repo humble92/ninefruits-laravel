@@ -23,6 +23,9 @@ class DatabaseSessionContext
     /** @var array<string, string> */
     private array $baseline = [];
 
+    /** @var array<string, string> Settings last applied (sent or pending) */
+    private array $state = [];
+
     /** @var array<int, true> Connections with the beforeExecuting hook */
     private array $hooked = [];
 
@@ -47,6 +50,31 @@ class DatabaseSessionContext
             'app.actor' => "system:{$name}",
             'app.request_id' => (string) $requestId,
         ]);
+    }
+
+    /**
+     * Runs a step that crosses the caller's row level security scope as a system actor,
+     * then restores the previous context. The caller must have checked authorization
+     * first. The initiating user stays in app.user_id, so audit triggers still name them.
+     * Used for applicant self registration (no user yet) and matriculation (admissions
+     * staff create a student record).
+     *
+     * @template TResult
+     *
+     * @param  callable(): TResult  $callback
+     * @return TResult
+     */
+    public function asSystem(string $name, callable $callback): mixed
+    {
+        $previous = $this->state;
+        $userId = ($previous['app.user_id'] ?? '') === '' ? null : (int) $previous['app.user_id'];
+        $this->forSystem($name, $userId, $previous['app.request_id'] ?? null);
+
+        try {
+            return $callback();
+        } finally {
+            $this->apply(array_merge(array_fill_keys(self::KEYS, ''), $previous));
+        }
     }
 
     public function setLocale(string $locale, string $fallbackLocale): void
@@ -95,6 +123,7 @@ class DatabaseSessionContext
             return;
         }
 
+        $this->state = array_merge($this->state, $settings);
         $key = spl_object_id($connection);
         $this->pending[$key] = array_merge($this->pending[$key] ?? [], $settings);
 

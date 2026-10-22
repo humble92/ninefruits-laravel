@@ -27,6 +27,8 @@ return [
         'security_settings' => 'Security settings',
         'queue_monitor' => 'Queue monitor (Horizon)',
         'institution_settings' => 'Institution settings',
+        'admission_cycles' => 'Admission cycles',
+        'applications' => 'Applications',
     ],
     'admin_panel' => ['access' => 'Open the administration panel'],
     'users' => [
@@ -61,4 +63,6 @@ return [
     'instructors' => ['manage' => 'Manage instructors'],
     'advisors' => ['manage' => 'Assign advisors'],
     'authentication_settings' => ['manage' => 'Manage sign-in methods and SSO'],
+    'admission_cycles' => ['manage' => 'Manage admission cycles and admission settings'],
+    'applications' => ['view' => 'View applications', 'review' => 'Review and decide applications', 'matriculate' => 'Create student records for admitted applicants'],
 ];

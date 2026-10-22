@@ -8,6 +8,7 @@ return [
         'settings' => '설정',
         'portal' => '포털',
         'student_records' => '학생과 교직원',
+        'admissions' => '입학',
     ],
     'users' => [
         'label' => '사용자',
@@ -162,6 +163,14 @@ return [
             'student_number_pattern' => '학번 형식',
             'student_number_pattern_help' => '{YYYY} 입학 연도, {YY} 연도 끝 두 자리, {SEQ:n} n자리 일련번호. 예: {YYYY}{SEQ:5} → 202600001',
             'invitation_valid_days' => '가입 안내 링크 유효 기간(일)',
+        ],
+        'admissions' => [
+            'title' => '입학',
+            'applicant_registration_enabled' => '지원자 계정 만들기 허용',
+            'applicant_registration_enabled_help' => '로그인 화면과 모집 안내 화면에 "계정 만들기"를 보여 줍니다. 온라인 접수를 하지 않으면 끄세요.',
+            'draft_expiry_days' => '작성 중 지원서 만료(일)',
+            'draft_expiry_days_help' => '마감된 회차의 작성 중 지원서는 기간과 관계없이 만료됩니다.',
+            'max_document_size_mb' => '서류 최대 크기(MB)',
         ],
     ],
 ];

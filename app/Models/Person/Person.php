@@ -4,6 +4,7 @@ namespace App\Models\Person;
 
 use App\Domain\Person\Enums\Gender;
 use App\Domain\Security\Enums\Permission;
+use App\Models\Admission\Application;
 use App\Models\Concerns\HasEncryptedPii;
 use App\Models\Contracts\EncryptsPersonalData;
 use App\Models\Institution\Country;
@@ -129,6 +130,14 @@ class Person extends Model implements EncryptsPersonalData, HasMedia
     }
 
     /**
+     * @return HasMany<Application, $this>
+     */
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    /**
      * @return HasOne<Instructor, $this>
      */
     public function instructor(): HasOne
@@ -186,7 +195,7 @@ class Person extends Model implements EncryptsPersonalData, HasMedia
 
     /**
      * People the user may see: everyone with people.view, otherwise themselves, people they
-     * created, people whose student records they can see, and instructors. Mirrors the row
+     * created, people whose student records or applications they can see, and instructors. Mirrors the row
      * level security policies on people.
      *
      * @template TModel of Model
@@ -203,6 +212,7 @@ class Person extends Model implements EncryptsPersonalData, HasMedia
             ->when($user->person_id !== null, fn (Builder $query) => $query->orWhere('people.id', $user->person_id))
             ->orWhere('people.created_by_id', $user->id)
             ->orWhereHas('studentRecords', fn (Builder $records) => StudentRecord::constrainVisibleTo($records, $user))
+            ->orWhereHas('applications', fn (Builder $applications) => Application::constrainVisibleTo($applications, $user))
             ->orWhereHas('instructor'));
     }
 

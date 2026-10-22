@@ -146,6 +146,7 @@ return [
         'instructor_not_current' => 'This instructor is not currently employed.',
         'merge_invalid' => 'Choose a different person who has not been merged.',
         'merge_two_instructors' => 'Both people have instructor records. Merge the instructor records first.',
+        'merge_two_open_applications' => 'Both people have an open application in the same admission cycle. Withdraw one first.',
         'already_has_account' => 'This person already has an account.',
         'email_in_use' => 'Another account uses this email.',
     ],

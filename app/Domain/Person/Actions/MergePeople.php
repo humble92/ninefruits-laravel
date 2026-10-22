@@ -2,8 +2,10 @@
 
 namespace App\Domain\Person\Actions;
 
+use App\Domain\Admission\Enums\ApplicationStatus;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Security\Services\AuditLogger;
+use App\Models\Admission\Application;
 use App\Models\Person\AccountInvitation;
 use App\Models\Person\Guardian;
 use App\Models\Person\Instructor;
@@ -11,19 +13,23 @@ use App\Models\Person\Person;
 use App\Models\Person\StudentRecord;
 use App\Models\Security\UserIdentity;
 use App\Models\User;
+use App\Support\Database\DatabaseSessionContext;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Merges a duplicate person into another: student records, guardians, the instructor
- * record and the account move to the target; the duplicate stays as a pointer
+ * Merges a duplicate person into another: student records, applications, guardians, the
+ * instructor record and the account move to the target; the duplicate stays as a pointer
  * (merged_into_person_id) so old references resolve. When both have an account, the
  * duplicate's account is deactivated and its SSO identities move where possible.
  */
 class MergePeople
 {
-    public function __construct(private readonly AuditLogger $audit) {}
+    public function __construct(
+        private readonly AuditLogger $audit,
+        private readonly DatabaseSessionContext $context,
+    ) {}
 
     public function handle(Person $duplicate, Person $target, string $reason, User $mergedBy): Person
     {
@@ -39,11 +45,22 @@ class MergePeople
             throw ValidationException::withMessages(['target_id' => __('people.errors.merge_two_instructors')]);
         }
 
+        // Both cannot keep an open application in the same cycle (one open per person and cycle).
+        $openCycles = fn (Person $person) => Application::query()->where('person_id', $person->id)
+            ->whereIn('status', ApplicationStatus::openValues())->pluck('admission_cycle_id')->all();
+
+        if (array_intersect($openCycles($duplicate), $openCycles($target)) !== []) {
+            throw ValidationException::withMessages(['target_id' => __('people.errors.merge_two_open_applications')]);
+        }
+
         return DB::transaction(function () use ($duplicate, $target, $reason, $mergedBy) {
             $moved = [
                 'student_records' => StudentRecord::query()->where('person_id', $duplicate->id)->update(['person_id' => $target->id]),
                 'guardians' => Guardian::query()->where('person_id', $duplicate->id)->update(['person_id' => $target->id]),
                 'instructor' => Instructor::query()->where('person_id', $duplicate->id)->update(['person_id' => $target->id]),
+                // Staff who merge people may not manage applications; moving them is part of
+                // the merge, which was authorized above.
+                'applications' => $this->context->asSystem('person_merge', fn () => Application::query()->where('person_id', $duplicate->id)->update(['person_id' => $target->id])),
                 'invitations' => AccountInvitation::query()->where('person_id', $duplicate->id)->whereNull('accepted_at')->delete(),
             ];
 

@@ -8,6 +8,7 @@ return [
         'settings' => 'Settings',
         'portal' => 'Portal',
         'student_records' => 'Students and staff',
+        'admissions' => 'Admissions',
     ],
     'users' => [
         'label' => 'user',
@@ -162,6 +163,14 @@ return [
             'student_number_pattern' => 'Student number pattern',
             'student_number_pattern_help' => '{YYYY} admission year, {YY} last two digits, {SEQ:n} sequence padded to n digits. Example: {YYYY}{SEQ:5} gives 202600001.',
             'invitation_valid_days' => 'Invitation links valid for (days)',
+        ],
+        'admissions' => [
+            'title' => 'Admissions',
+            'applicant_registration_enabled' => 'Applicants can create an account',
+            'applicant_registration_enabled_help' => 'Shows "Create an account" on the sign-in and admissions pages. Turn off when you do not take online applications.',
+            'draft_expiry_days' => 'Expire untouched drafts after (days)',
+            'draft_expiry_days_help' => 'Drafts in closed cycles expire regardless.',
+            'max_document_size_mb' => 'Largest document (MB)',
         ],
     ],
 ];

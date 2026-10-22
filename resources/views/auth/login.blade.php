@@ -1,5 +1,6 @@
 @php($identifiers = app(\App\Domain\Security\Services\LoginIdentifierResolver::class))
 @php($providers = app(\App\Domain\Security\Services\Sso\OidcClient::class)->enabledProviders())
+@php($registration = app(\App\Domain\Admission\Settings\AdmissionSettings::class)->applicant_registration_enabled)
 <x-layouts.guest :title="__('authentication.login.title')">
     <h1 class="mb-6 text-xl font-semibold">{{ __('authentication.login.title') }}</h1>
 
@@ -40,5 +41,12 @@
                 </a>
             @endforeach
         </div>
+    @endif
+
+    @if ($registration)
+        <p class="mt-6 border-t border-zinc-200 pt-6 text-sm text-zinc-600">
+            {{ __('admissions.register.prompt') }}
+            <a href="{{ route('admissions.index') }}" class="underline">{{ __('admissions.register.see_cycles') }}</a>
+        </p>
     @endif
 </x-layouts.guest>

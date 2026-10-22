@@ -8,6 +8,7 @@ return [
         'records' => '我的学籍',
         'profile' => '我的信息',
         'advisees' => '指导学生',
+        'applications' => '入学申请',
     ],
     'dashboard' => [
         'title' => '首页',

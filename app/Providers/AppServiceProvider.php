@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Admission\Personas\ApplicantPersonaDetector;
 use App\Domain\Person\Personas\AdvisorPersonaDetector;
 use App\Domain\Person\Personas\AlumniPersonaDetector;
 use App\Domain\Person\Personas\InstructorPersonaDetector;
@@ -70,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
      * @var list<class-string<PersonaDetector>>
      */
     private const array PERSONA_DETECTORS = [
+        ApplicantPersonaDetector::class,
         StudentPersonaDetector::class,
         AlumniPersonaDetector::class,
         InstructorPersonaDetector::class,

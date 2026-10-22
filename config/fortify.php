@@ -160,9 +160,12 @@ return [
     |
     */
 
-    // Self registration is not offered: staff accounts are created by administrators and
-    // applicant accounts by the admission module (Phase 3).
+    // Registration is for applicants only (App\Domain\Admission\Actions\RegisterApplicant,
+    // can be turned off in the admission settings). Staff accounts are created by
+    // administrators, other people get an invitation.
     'features' => [
+        Features::registration(),
+        Features::emailVerification(),
         Features::resetPasswords(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),

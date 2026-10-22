@@ -146,6 +146,7 @@ return [
         'instructor_not_current' => '재직 중인 교원이 아닙니다.',
         'merge_invalid' => '병합되지 않은 다른 인물을 선택하세요.',
         'merge_two_instructors' => '두 인물 모두 교원 정보가 있습니다. 교원 정보를 먼저 정리하세요.',
+        'merge_two_open_applications' => '두 인물 모두 같은 모집 회차에 진행 중인 지원서가 있습니다. 하나를 먼저 포기 처리하세요.',
         'already_has_account' => '이미 계정이 있는 인물입니다.',
         'email_in_use' => '다른 계정이 사용 중인 이메일입니다.',
     ],
