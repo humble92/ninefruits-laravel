@@ -30,6 +30,22 @@ class NoDynamicRawSqlRuleTest extends RuleTestCase
     }
 
     /**
+     * On a fresh machine PHPStan reads its directory listing cache before writing it,
+     * which PHPUnit reports as a warning. Start with an empty cache.
+     */
+    public static function setUpBeforeClass(): void
+    {
+        $cache = sys_get_temp_dir().'/phpstan-tests/cache/directory-listings.bin';
+
+        if (! is_file($cache)) {
+            @mkdir(dirname($cache), 0777, true);
+            file_put_contents($cache, serialize([]));
+        }
+
+        parent::setUpBeforeClass();
+    }
+
+    /**
      * Larastan boots a Laravel application during analysis, which registers error and
      * exception handlers.
      */

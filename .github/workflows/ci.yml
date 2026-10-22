@@ -18,7 +18,7 @@ jobs:
     name: Style, static analysis, conventions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -80,7 +80,7 @@ jobs:
       GOTENBERG_URL: http://127.0.0.1:3000
       PGPASSWORD: postgres
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:

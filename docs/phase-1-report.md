@@ -10,7 +10,7 @@ Phase 1 착수 전 검토 사항을 먼저 처리하고(별도 커밋), 기준�
 
 - 테스트 197개(단언 569개) 통과. Larastan 레벨 6 오류 0, Pint 위반 0, 명명 검사 위반 0, 번역 누락 0, `composer audit` 통과
 - 빈 DB에서 `setup:install --force --profile=korean-university`와 `setup:demo --size=small` 성공 확인
-- CI(GitHub Actions)는 push 후 결과를 이 문서 7절에 기록
+- CI(GitHub Actions) 통과 (7절)
 
 ## 2. 착수 전 검토와 수정 (개정 4)
 
@@ -77,7 +77,14 @@ Phase 1 착수 전 검토 사항을 먼저 처리하고(별도 커밋), 기준�
 
 ## 7. CI
 
-push 후 GitHub Actions 결과를 기록한다.
+Phase 0 이후 처음으로 GitHub Actions에서 실행했다(Phase 0 완료 기준 "CI 통과"도 이로써 충족).
+
+| 실행 | 결과 | 내용 |
+|---|---|---|
+| 1차 (`a9a74e5`) | 실패 | 두 작업 모두 `Prepare environment`(`key:generate`)에서 DB 연결 실패. 모든 Artisan 명령이 시작 시 DB 세션 컨텍스트를 설정하느라 DB에 접속했다. 로컬에서는 DB가 항상 떠 있어 드러나지 않았다. DB 없이 실행되는 이미지 빌드나 `composer install`(package:discover)도 같은 문제가 있었다 |
+| 수정 | — | 세션 설정을 보류했다가 첫 쿼리 직전에 보내도록 변경(`DatabaseSessionContext`). DB 없이 `key:generate`, `package:discover`, `config:cache`, `naming:check`, `i18n:missing` 실행 확인 |
+| 2차 (`8fa9a45`) | 통과 | 품질 작업 31초(audit, Pint, Larastan, 명명, 번역), 테스트 작업 1분 38초(PostgreSQL 18 서비스, 테스트 197개) |
+| 정리 | — | 새 러너에서 PHPStan 규칙 테스트가 내는 캐시 경고 제거, `actions/checkout@v5`(Node 24)로 변경 |
 
 ## 8. 남은 일
 

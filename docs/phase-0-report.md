@@ -57,7 +57,7 @@ Phase 0 작업 항목 11개를 모두 구현했고, 완료 기준 5개 중 4개�
 
 | 항목 | 내용 | 시점 |
 |---|---|---|
-| CI 실제 실행 | 원격 저장소 생성 후 GitHub Actions 첫 실행 확인 | Phase 1 시작 전 |
+| CI 실제 실행 | 2026-10-22 GitHub Actions 통과 ([Phase 1 결과 7절](phase-1-report.md#7-ci)) | 완료 |
 | 이메일 일회용 코드 | 2026-10-22 구현 완료 ([0001](decisions/0001-shared-authentication.md)) | 완료 |
 | 감사 해시 체인 | 선택 사항. 미구현 | Phase 13 |
 | 감사 보존 기간 정리 | 수정 차단 트리거를 우회하는 운영 절차 필요 | Phase 13 |
