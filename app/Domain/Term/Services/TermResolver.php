@@ -6,6 +6,7 @@ use App\Domain\Institution\Settings\InstitutionSettings;
 use App\Domain\Term\Enums\TermStatus;
 use App\Domain\Term\Enums\TermWindowType;
 use App\Models\Term\Term;
+use App\Models\Term\TermSession;
 use App\Models\Term\TermWindow;
 use App\Support\Targeting\TargetSubject;
 use Carbon\CarbonImmutable;
@@ -18,6 +19,8 @@ use Illuminate\Support\Collection;
  * term registration can all be active at the same time.
  *
  * Dates are judged in the institution time zone; window times are absolute (timestamptz).
+ * Windows about courses belong to a term session; ask isOpenInSession() with the section's
+ * session for them.
  */
 class TermResolver
 {
@@ -49,7 +52,7 @@ class TermResolver
     public function openWindows(TermWindowType $type, ?CarbonImmutable $at = null): Collection
     {
         return TermWindow::query()
-            ->with('term')
+            ->with(['term', 'session'])
             ->where('window_type', $type)
             ->openAt($at ?? CarbonImmutable::now())
             ->whereHas('term', fn (Builder $term) => $term->whereIn('status', [TermStatus::Published, TermStatus::GradesClosed]))
@@ -71,6 +74,18 @@ class TermResolver
             ->unique('id')
             ->sortBy('start_date')
             ->values();
+    }
+
+    /**
+     * Whether a course window of the type is open for a session, e.g. "can this student
+     * still drop a course of the second-half session?". The session of a section decides
+     * its deadlines; the subject, if given, must match the window's eligibility.
+     */
+    public function isOpenInSession(TermWindowType $type, TermSession $session, ?TargetSubject $subject = null, ?CarbonImmutable $at = null): bool
+    {
+        return $this->openWindows($type, $at)
+            ->where('term_session_id', $session->id)
+            ->contains(fn (TermWindow $window) => $subject === null || $window->eligibility->matches($subject));
     }
 
     /**

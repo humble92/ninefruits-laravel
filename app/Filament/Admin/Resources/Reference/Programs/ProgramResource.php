@@ -14,6 +14,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -51,6 +52,8 @@ class ProgramResource extends ReferenceResource
             TextInput::make('standard_duration_years')->label(__('reference.fields.standard_duration_years'))->numeric()->minValue(0.5)->maxValue(10),
             DatePicker::make('effective_start_date')->label(__('reference.fields.effective_start_date'))->required()->default(now()),
             DatePicker::make('effective_end_date')->label(__('reference.fields.effective_end_date'))->afterOrEqual('effective_start_date'),
+            Toggle::make('allows_second_major')->label(__('reference.fields.allows_second_major')),
+            Toggle::make('allows_minor')->label(__('reference.fields.allows_minor')),
         ]);
     }
 

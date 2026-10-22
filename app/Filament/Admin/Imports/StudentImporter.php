@@ -66,7 +66,7 @@ class StudentImporter extends ReferenceImporter
         return $record;
     }
 
-    protected function beforeSave(): void
+    protected function beforeSaveInRowTransaction(): void
     {
         /** @var StudentRecord $record */
         $record = $this->record;

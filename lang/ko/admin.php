@@ -9,6 +9,7 @@ return [
         'portal' => '포털',
         'student_records' => '학생과 교직원',
         'admissions' => '입학',
+        'curriculum' => '교육과정과 개설',
     ],
     'users' => [
         'label' => '사용자',
@@ -163,6 +164,8 @@ return [
             'student_number_pattern' => '학번 형식',
             'student_number_pattern_help' => '{YYYY} 입학 연도, {YY} 연도 끝 두 자리, {SEQ:n} n자리 일련번호. 예: {YYYY}{SEQ:5} → 202600001',
             'invitation_valid_days' => '가입 안내 링크 유효 기간(일)',
+            'max_second_majors' => '동시 복수전공 수',
+            'max_minors' => '동시 부전공 수',
         ],
         'admissions' => [
             'title' => '입학',

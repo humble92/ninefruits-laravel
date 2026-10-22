@@ -57,6 +57,12 @@ enum Permission: string
     case ApplicationsReview = 'applications.review';
     case ApplicationsMatriculate = 'applications.matriculate';
 
+    case CoursesManage = 'courses.manage';
+    case CurriculumManage = 'curriculum.manage';
+    case SectionsView = 'sections.view';
+    case SectionsManage = 'sections.manage';
+    case AdditionalProgramsApprove = 'additional_programs.approve';
+
     public function resource(): string
     {
         return explode('.', $this->value, 2)[0];

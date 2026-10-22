@@ -9,6 +9,7 @@ return [
         'portal' => 'Portal',
         'student_records' => 'Students and staff',
         'admissions' => 'Admissions',
+        'curriculum' => 'Curriculum and sections',
     ],
     'users' => [
         'label' => 'user',
@@ -163,6 +164,8 @@ return [
             'student_number_pattern' => 'Student number pattern',
             'student_number_pattern_help' => '{YYYY} admission year, {YY} last two digits, {SEQ:n} sequence padded to n digits. Example: {YYYY}{SEQ:5} gives 202600001.',
             'invitation_valid_days' => 'Invitation links valid for (days)',
+            'max_second_majors' => 'Second majors at a time',
+            'max_minors' => 'Minors at a time',
         ],
         'admissions' => [
             'title' => 'Admissions',

@@ -81,8 +81,11 @@ class Instructor extends Model implements Translatable
         $query->where(fn (Builder $query) => $query->whereNull('end_date')->orWhereDate('end_date', '>=', CarbonImmutable::today()));
     }
 
-    public function isCurrent(): bool
+    /**
+     * Employed on the date (today by default).
+     */
+    public function isCurrent(?CarbonImmutable $on = null): bool
     {
-        return $this->end_date === null || $this->end_date->greaterThanOrEqualTo(CarbonImmutable::today());
+        return $this->end_date === null || $this->end_date->greaterThanOrEqualTo($on ?? CarbonImmutable::today());
     }
 }

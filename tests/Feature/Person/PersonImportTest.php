@@ -98,3 +98,13 @@ it('imports instructors with translated titles', function () {
         ->and($instructor->getTranslations('academic_title'))->toBe(['en' => 'Professor', 'ko' => '교수'])
         ->and($instructor->person->family_name)->toBe('Choi');
 });
+
+it('leaves no person behind when the database rejects a row', function () {
+    importPeople('students', peopleCsv($this->directory, [
+        ['student_number', 'program', 'admission_date', 'status', 'family_name'],
+        ['201800077', 'B-CSE', '2018-03-01', 'graduated', 'Orphan'], // graduated needs a graduation_date (CHECK)
+    ]))->assertExitCode(2);
+
+    expect(StudentRecord::query()->where('student_number', '201800077')->exists())->toBeFalse()
+        ->and(Person::query()->where('family_name', 'Orphan')->exists())->toBeFalse();
+});

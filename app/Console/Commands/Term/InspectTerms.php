@@ -31,6 +31,7 @@ class InspectTerms extends Command
                 $rows[] = [
                     $type->value,
                     $window->term->code,
+                    $window->session->code ?? '-',
                     $window->name ?? '',
                     $window->eligibility->isEveryone() ? 'everyone' : json_encode($window->eligibility->toArray()),
                     $window->closes_at->setTimezone($resolver->timezone())->format('Y-m-d H:i').' '.$resolver->timezone(),
@@ -43,7 +44,7 @@ class InspectTerms extends Command
         if ($rows === []) {
             $this->components->info('No business window is open.');
         } else {
-            $this->table(['Window', 'Term', 'Name', 'Eligibility', 'Closes'], $rows);
+            $this->table(['Window', 'Term', 'Session', 'Name', 'Eligibility', 'Closes'], $rows);
         }
 
         return self::SUCCESS;

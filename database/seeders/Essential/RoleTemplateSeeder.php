@@ -41,6 +41,8 @@ class RoleTemplateSeeder extends Seeder
                     Permission::ReferenceDataImport,
                     Permission::ApplicationsView,
                     Permission::ApplicationsMatriculate,
+                    Permission::SectionsView,
+                    Permission::AdditionalProgramsApprove,
                 ],
             ],
             'academic_affairs' => [
@@ -58,6 +60,10 @@ class RoleTemplateSeeder extends Seeder
                     Permission::GradeScalesManage,
                     Permission::InstructorsManage,
                     Permission::StudentRecordsView,
+                    Permission::CoursesManage,
+                    Permission::CurriculumManage,
+                    Permission::SectionsView,
+                    Permission::SectionsManage,
                 ],
             ],
             'certificate_officer' => [
@@ -67,7 +73,15 @@ class RoleTemplateSeeder extends Seeder
             // Assign with an org unit scope: the assistant sees that unit's students.
             'department_assistant' => [
                 'display_name' => ['en' => 'Department Assistant', 'ko' => '학과 조교', 'zh_CN' => '院系助理'],
-                'permissions' => [...$staff, Permission::StudentRecordsView, Permission::AdvisorsManage, Permission::ApplicationsView],
+                'permissions' => [
+                    ...$staff,
+                    Permission::StudentRecordsView,
+                    Permission::AdvisorsManage,
+                    Permission::ApplicationsView,
+                    Permission::SectionsView,
+                    Permission::SectionsManage,
+                    Permission::AdditionalProgramsApprove,
+                ],
             ],
             'admissions_officer' => [
                 'display_name' => ['en' => 'Admissions Officer', 'ko' => '입학 담당', 'zh_CN' => '招生管理员'],

@@ -29,6 +29,10 @@ return [
         'institution_settings' => '机构设置',
         'admission_cycles' => '招生批次',
         'applications' => '申请',
+        'courses' => '课程',
+        'curriculum' => '毕业要求',
+        'sections' => '开课',
+        'additional_programs' => '第二专业与辅修',
     ],
     'admin_panel' => ['access' => '使用管理界面'],
     'users' => [
@@ -65,4 +69,8 @@ return [
     'authentication_settings' => ['manage' => '管理登录方式和 SSO'],
     'admission_cycles' => ['manage' => '管理招生批次和招生设置'],
     'applications' => ['view' => '查看申请', 'review' => '审核申请并作出录取决定', 'matriculate' => '为录取者创建学籍'],
+    'courses' => ['manage' => '管理课程、版本和先修课程'],
+    'curriculum' => ['manage' => '管理毕业要求'],
+    'sections' => ['view' => '查看开课', 'manage' => '编排开课（任课教师、时间、教室）'],
+    'additional_programs' => ['approve' => '审批第二专业与辅修申请'],
 ];

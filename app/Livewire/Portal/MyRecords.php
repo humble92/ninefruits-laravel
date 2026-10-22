@@ -2,10 +2,17 @@
 
 namespace App\Livewire\Portal;
 
+use App\Domain\Person\Actions\CancelAdditionalProgramRequest;
 use App\Domain\Person\Actions\CancelStatusChange;
+use App\Domain\Person\Actions\RequestAdditionalProgram;
 use App\Domain\Person\Actions\RequestStatusChange;
+use App\Domain\Person\Enums\AdditionalProgramRole;
 use App\Domain\Person\Enums\StatusChangeStatus;
 use App\Domain\Person\Services\CurrentStudentRecord;
+use App\Domain\Term\Enums\TermWindowType;
+use App\Domain\Term\Services\TermResolver;
+use App\Models\Organization\Program;
+use App\Models\Person\AdditionalProgramRequest;
 use App\Models\Person\StudentRecord;
 use App\Models\Person\StudentStatusChange;
 use App\Models\Person\StudentStatusChangeType;
@@ -14,6 +21,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -29,6 +37,12 @@ class MyRecords extends Component
     public string $effectiveDate = '';
 
     public string $reason = '';
+
+    public ?int $additionalProgramId = null;
+
+    public string $additionalRole = 'second_major';
+
+    public string $additionalStatement = '';
 
     public function mount(): void
     {
@@ -67,16 +81,44 @@ class MyRecords extends Component
         $cancel->handle($change, $this->user());
     }
 
+    public function applyAdditionalProgram(CurrentStudentRecord $current, RequestAdditionalProgram $request): void
+    {
+        $this->validate([
+            'additionalProgramId' => ['required', 'integer'],
+            'additionalRole' => ['required', Rule::enum(AdditionalProgramRole::class)],
+            'additionalStatement' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        $record = $current->get($this->user()) ?? abort(404);
+        $request->handle($record, Program::query()->findOrFail($this->additionalProgramId), AdditionalProgramRole::from($this->additionalRole), $this->additionalStatement ?: null, $this->user());
+
+        $this->reset('additionalProgramId', 'additionalStatement');
+        session()->flash('status', __('portal.records.additional_program_requested'));
+    }
+
+    public function cancelAdditionalProgram(int $requestId, CancelAdditionalProgramRequest $cancel): void
+    {
+        $cancel->handle(AdditionalProgramRequest::query()->findOrFail($requestId), $this->user());
+    }
+
     public function render(CurrentStudentRecord $current): View
     {
         $record = $current->get($this->user());
-        $record?->load(['program', 'orgUnit', 'advisorAssignments.instructor.person', 'statusChanges.type']);
+        $record?->load(['program', 'orgUnit', 'advisorAssignments.instructor.person', 'statusChanges.type', 'additionalPrograms.program']);
+        $applicationTerm = $record !== null && $record->status->isActive()
+            ? app(TermResolver::class)->termsOpenFor(TermWindowType::AdditionalProgramApplication, $record)->first()
+            : null;
 
         return view('livewire.portal.my-records', [
             'records' => $current->all($this->user()),
             'record' => $record,
             'requestableTypes' => $record !== null && $record->status->isActive() ? $this->requestableTypes($record) : collect(),
             'pending' => $record?->statusChanges->firstWhere('status', StatusChangeStatus::Requested),
+            'additionalRequests' => $record === null ? collect() : AdditionalProgramRequest::query()->where('student_record_id', $record->id)->with(['program', 'term'])->latest('requested_at')->get(),
+            'applicationTerm' => $applicationTerm,
+            'additionalOptions' => $applicationTerm === null ? collect() : Program::query()->effectiveOn()
+                ->where($this->additionalRole === AdditionalProgramRole::Minor->value ? 'allows_minor' : 'allows_second_major', true)
+                ->whereKeyNot($record->program_id)->get()->sortBy('name'),
         ])->title(__('portal.records.title'));
     }
 

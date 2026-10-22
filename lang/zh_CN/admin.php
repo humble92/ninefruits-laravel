@@ -9,6 +9,7 @@ return [
         'portal' => '门户',
         'student_records' => '学生与教职工',
         'admissions' => '招生',
+        'curriculum' => '培养方案与开课',
     ],
     'users' => [
         'label' => '用户',
@@ -163,6 +164,8 @@ return [
             'student_number_pattern' => '学号格式',
             'student_number_pattern_help' => '{YYYY} 入学年份，{YY} 年份后两位，{SEQ:n} n 位序号。例：{YYYY}{SEQ:5} → 202600001',
             'invitation_valid_days' => '邀请链接有效期（天）',
+            'max_second_majors' => '同时第二专业数',
+            'max_minors' => '同时辅修数',
         ],
         'admissions' => [
             'title' => '招生',

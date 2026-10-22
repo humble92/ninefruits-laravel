@@ -45,6 +45,10 @@ class ManageStudentRecordSettings extends SettingsPage
                     ->required()->regex('/^[^{}]*(\{(YYYY|YY)\}[^{}]*)*\{SEQ:\d{1,2}\}[^{}]*$/')->maxLength(32),
                 TextInput::make('invitation_valid_days')->label(__('admin.settings.student_records.invitation_valid_days'))
                     ->integer()->minValue(1)->maxValue(90)->required(),
+                TextInput::make('max_second_majors')->label(__('admin.settings.student_records.max_second_majors'))
+                    ->integer()->minValue(0)->maxValue(3)->required(),
+                TextInput::make('max_minors')->label(__('admin.settings.student_records.max_minors'))
+                    ->integer()->minValue(0)->maxValue(3)->required(),
             ]),
         ]);
     }
@@ -54,6 +58,8 @@ class ManageStudentRecordSettings extends SettingsPage
         return [
             'student_number_pattern' => (string) $state['student_number_pattern'],
             'invitation_valid_days' => (int) $state['invitation_valid_days'],
+            'max_second_majors' => (int) $state['max_second_majors'],
+            'max_minors' => (int) $state['max_minors'],
         ];
     }
 }

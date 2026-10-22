@@ -3,20 +3,18 @@
 namespace App\Filament\Admin\Resources\Reference\Terms\RelationManagers;
 
 use App\Domain\Term\Enums\TermWindowType;
-use App\Filament\Admin\Resources\Reference\OrgUnits\OrgUnitResource;
 use App\Filament\Admin\Support\SafeDeleteAction;
+use App\Filament\Admin\Support\TargetCriteriaFields;
 use App\Filament\Admin\Support\TranslatableFields;
-use App\Models\Organization\Program;
+use App\Models\Term\TermSession;
 use App\Models\Term\TermWindow;
 use App\Support\Targeting\TargetCriteria;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -24,7 +22,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Business windows of a term. Several windows of one type with different eligibility make
- * a staggered opening (e.g. fourth-year students first).
+ * a staggered opening (e.g. fourth-year students first). Windows about courses belong to a
+ * session.
  */
 class WindowsRelationManager extends RelationManager
 {
@@ -45,34 +44,28 @@ class WindowsRelationManager extends RelationManager
         return $schema->components([
             Select::make('window_type')->label(__('reference.fields.window_type'))
                 ->options(collect(TermWindowType::cases())->mapWithKeys(fn (TermWindowType $type) => [$type->value => $type->label()]))
-                ->required(),
+                ->required()->live(),
+            Select::make('term_session_id')->label(__('reference.fields.term_session'))
+                ->options(fn () => TermSession::query()->where('term_id', $this->getOwnerRecord()->getKey())->get()->pluck('name', 'id'))
+                ->default(fn () => TermSession::query()->where('term_id', $this->getOwnerRecord()->getKey())->where('is_full_term', true)->value('id'))
+                ->visible(fn (Get $get) => TermWindowType::tryFrom((string) $get('window_type'))?->isCourseScoped() ?? false)
+                ->required(fn (Get $get) => TermWindowType::tryFrom((string) $get('window_type'))?->isCourseScoped() ?? false)
+                ->helperText(__('reference.help.term_session')),
             TranslatableFields::make('name', __('reference.fields.window_name'), required: false),
             DateTimePicker::make('opens_at')->label(__('reference.fields.opens_at'))->seconds(false)->required(),
             DateTimePicker::make('closes_at')->label(__('reference.fields.closes_at'))->seconds(false)->required()->after('opens_at'),
-            Section::make(__('reference.fields.eligibility'))
-                ->description(__('reference.help.eligibility'))
-                ->statePath('eligibility')
-                ->columns(2)
-                ->schema([
-                    CheckboxList::make('year_levels')->label(__('reference.fields.year_levels'))
-                        ->options(collect(range(1, 6))->mapWithKeys(fn (int $level) => [$level => (string) $level])->all())->columns(6),
-                    TextInput::make('admission_year_from')->label(__('reference.fields.admission_year_from'))->integer()->minValue(1900)->maxValue(2200),
-                    TextInput::make('admission_year_to')->label(__('reference.fields.admission_year_to'))->integer()->minValue(1900)->maxValue(2200)->gte('admission_year_from'),
-                    Select::make('program_ids')->label(__('reference.fields.programs'))->multiple()
-                        ->options(fn () => Program::query()->effectiveOn()->orderBy('code')->get()->mapWithKeys(fn (Program $program) => [$program->id => $program->code.' '.$program->name])),
-                    Select::make('org_unit_ids')->label(__('reference.fields.org_units'))->multiple()
-                        ->options(fn () => OrgUnitResource::unitOptions())
-                        ->helperText(__('reference.help.org_unit_descendants')),
-                ]),
+            TargetCriteriaFields::make('eligibility', __('reference.fields.eligibility'), __('reference.help.eligibility')),
         ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('session'))
             ->columns([
                 TextColumn::make('window_type')->label(__('reference.fields.window_type'))
                     ->formatStateUsing(fn (TermWindowType $state) => $state->label())->badge(),
+                TextColumn::make('session.name')->label(__('reference.fields.term_session'))->placeholder('-'),
                 TextColumn::make('name')->label(__('reference.fields.window_name'))->placeholder('-'),
                 TextColumn::make('opens_at')->label(__('reference.fields.opens_at'))->dateTime()->sortable(),
                 TextColumn::make('closes_at')->label(__('reference.fields.closes_at'))->dateTime(),

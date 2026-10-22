@@ -9,6 +9,8 @@ return [
         'profile' => '我的信息',
         'advisees' => '指导学生',
         'applications' => '入学申请',
+        'catalog' => '开课查询',
+        'teaching' => '我的授课',
     ],
     'dashboard' => [
         'title' => '首页',
@@ -27,6 +29,10 @@ return [
         'request_title' => '申请学籍异动',
         'submit_request' => '提交申请',
         'request_submitted' => '申请已提交，学籍管理部门将进行审核。',
+        'additional_program_open' => '第二专业与辅修申请开放中（自 :term 开始修读）。',
+        'additional_program_request' => ':program :role 申请：:status',
+        'additional_program_requested' => '已提交申请，相关院系将进行审核。',
+        'apply_additional_program' => '申请',
     ],
     'profile' => [
         'title' => '我的信息',

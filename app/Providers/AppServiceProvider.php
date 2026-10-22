@@ -15,7 +15,13 @@ use App\Domain\Security\Services\PersonaResolver;
 use App\Http\Middleware\EnforceMfaPolicy;
 use App\Http\Middleware\SetDatabaseSessionContext;
 use App\Http\Middleware\SetLocale;
+use App\Models\Curriculum\Course;
 use App\Models\Curriculum\CourseCategory;
+use App\Models\Curriculum\CourseEquivalency;
+use App\Models\Curriculum\CourseRequisite;
+use App\Models\Curriculum\CourseVersion;
+use App\Models\Curriculum\CurriculumRequirement;
+use App\Models\Curriculum\CurriculumRequirementSet;
 use App\Models\Facility\Building;
 use App\Models\Facility\Room;
 use App\Models\Grading\GradeScale;
@@ -24,6 +30,7 @@ use App\Models\Institution\Country;
 use App\Models\Institution\Language;
 use App\Models\Institution\LookupType;
 use App\Models\Institution\LookupValue;
+use App\Models\Offering\Section;
 use App\Models\Organization\OrgUnit;
 use App\Models\Organization\OrgUnitSuccession;
 use App\Models\Organization\OrgUnitType;
@@ -35,10 +42,14 @@ use App\Models\Security\RoleAssignment;
 use App\Models\Security\SecurityEvent;
 use App\Models\Term\AcademicYear;
 use App\Models\Term\Term;
+use App\Models\Term\TermSession;
 use App\Models\Term\TermType;
 use App\Models\Term\TermWindow;
 use App\Models\Term\TimeSlot;
 use App\Models\User;
+use App\Policies\Curriculum\CoursePolicy;
+use App\Policies\Curriculum\CurriculumPolicy;
+use App\Policies\Offering\SectionPolicy;
 use App\Policies\Reference\CourseCategoryPolicy;
 use App\Policies\Reference\FacilityPolicy;
 use App\Policies\Reference\GradeScalePolicy;
@@ -81,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * @var array<class-string, class-string>
      */
-    private const array REFERENCE_POLICIES = [
+    private const array MODEL_POLICIES = [
         Country::class => LookupDataPolicy::class,
         Language::class => LookupDataPolicy::class,
         LookupType::class => LookupDataPolicy::class,
@@ -97,6 +108,14 @@ class AppServiceProvider extends ServiceProvider
         Term::class => TermPolicy::class,
         TimeSlot::class => TermPolicy::class,
         TermWindow::class => TermWindowPolicy::class,
+        TermSession::class => TermPolicy::class,
+        Course::class => CoursePolicy::class,
+        CourseVersion::class => CoursePolicy::class,
+        CourseRequisite::class => CoursePolicy::class,
+        CourseEquivalency::class => CoursePolicy::class,
+        CurriculumRequirementSet::class => CurriculumPolicy::class,
+        CurriculumRequirement::class => CurriculumPolicy::class,
+        Section::class => SectionPolicy::class,
         CourseCategory::class => CourseCategoryPolicy::class,
         GradeScale::class => GradeScalePolicy::class,
         GradeScaleItem::class => GradeScalePolicy::class,
@@ -144,7 +163,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(RecordChange::class, AuditRecordPolicy::class);
         Gate::policy(SecurityEvent::class, SecurityEventPolicy::class);
 
-        foreach (self::REFERENCE_POLICIES as $model => $policy) {
+        foreach (self::MODEL_POLICIES as $model => $policy) {
             Gate::policy($model, $policy);
         }
 

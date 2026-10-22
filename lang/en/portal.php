@@ -9,6 +9,8 @@ return [
         'profile' => 'My details',
         'advisees' => 'Advisees',
         'applications' => 'Admissions',
+        'catalog' => 'Course catalog',
+        'teaching' => 'My teaching',
     ],
     'dashboard' => [
         'title' => 'Home',
@@ -27,6 +29,10 @@ return [
         'request_title' => 'Request a status change',
         'submit_request' => 'Submit request',
         'request_submitted' => 'Your request was submitted. The registrar\'s office will review it.',
+        'additional_program_open' => 'Applications for a second major or minor are open (starting :term).',
+        'additional_program_request' => ':role application for :program: :status',
+        'additional_program_requested' => 'Your application was submitted. The program\'s office will review it.',
+        'apply_additional_program' => 'Apply',
     ],
     'profile' => [
         'title' => 'My details',

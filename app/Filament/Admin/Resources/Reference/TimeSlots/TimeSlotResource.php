@@ -37,8 +37,9 @@ class TimeSlotResource extends ReferenceResource
         return $schema->components([
             TextInput::make('code')->label(__('reference.fields.code'))->required()->maxLength(64)->unique(ignoreRecord: true),
             TranslatableFields::make('name', __('reference.fields.name')),
-            TimePicker::make('start_time')->label(__('reference.fields.start_time'))->seconds(false)->required(),
-            TimePicker::make('end_time')->label(__('reference.fields.end_time'))->seconds(false)->required()->after('start_time'),
+            // Wall-clock times, not instants: no conversion to the institution time zone.
+            TimePicker::make('start_time')->label(__('reference.fields.start_time'))->seconds(false)->required()->timezone((string) config('app.timezone')),
+            TimePicker::make('end_time')->label(__('reference.fields.end_time'))->seconds(false)->required()->after('start_time')->timezone((string) config('app.timezone')),
             CheckboxList::make('weekdays')->label(__('reference.fields.weekdays'))
                 ->options(fn () => collect(range(1, 7))->mapWithKeys(fn (int $day) => [$day => now()->startOfWeek()->addDays($day - 1)->isoFormat('ddd')]))
                 ->columns(7)

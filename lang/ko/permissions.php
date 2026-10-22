@@ -29,6 +29,10 @@ return [
         'institution_settings' => '기관 설정',
         'admission_cycles' => '모집 회차',
         'applications' => '지원서',
+        'courses' => '교과목',
+        'curriculum' => '졸업 요건',
+        'sections' => '개설강좌',
+        'additional_programs' => '복수전공·부전공',
     ],
     'admin_panel' => ['access' => '관리 화면 사용'],
     'users' => [
@@ -65,4 +69,8 @@ return [
     'authentication_settings' => ['manage' => '로그인 수단과 SSO 관리'],
     'admission_cycles' => ['manage' => '모집 회차와 입학 설정 관리'],
     'applications' => ['view' => '지원서 조회', 'review' => '지원서 검토와 합격 결정', 'matriculate' => '합격자 학적 생성'],
+    'courses' => ['manage' => '교과목, 버전, 선수과목 관리'],
+    'curriculum' => ['manage' => '졸업 요건 관리'],
+    'sections' => ['view' => '개설강좌 조회', 'manage' => '개설강좌 편성(담당 교원, 시간, 강의실)'],
+    'additional_programs' => ['approve' => '복수전공·부전공 신청 승인'],
 ];

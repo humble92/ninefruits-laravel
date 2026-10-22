@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\Reference\ReferenceResource;
 use App\Filament\Admin\Resources\Reference\Terms\Pages\CreateTerm;
 use App\Filament\Admin\Resources\Reference\Terms\Pages\EditTerm;
 use App\Filament\Admin\Resources\Reference\Terms\Pages\ListTerms;
+use App\Filament\Admin\Resources\Reference\Terms\RelationManagers\SessionsRelationManager;
 use App\Filament\Admin\Resources\Reference\Terms\RelationManagers\WindowsRelationManager;
 use App\Filament\Admin\Support\TranslatableFields;
 use App\Models\Term\AcademicYear;
@@ -84,7 +85,7 @@ class TermResource extends ReferenceResource
 
     public static function getRelations(): array
     {
-        return [WindowsRelationManager::class];
+        return [SessionsRelationManager::class, WindowsRelationManager::class];
     }
 
     public static function getPages(): array

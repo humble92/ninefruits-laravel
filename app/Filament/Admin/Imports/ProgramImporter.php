@@ -10,7 +10,8 @@ use Illuminate\Validation\Rule;
 
 /**
  * Columns: code, org_unit (code), degree_level, name_{locale}, degree_title_{locale},
- * standard_duration_years, effective_start_date, effective_end_date.
+ * standard_duration_years, effective_start_date, effective_end_date, allows_second_major,
+ * allows_minor.
  */
 class ProgramImporter extends ReferenceImporter
 {
@@ -28,6 +29,8 @@ class ProgramImporter extends ReferenceImporter
             ImportColumn::make('standard_duration_years')->numeric()->rules(['nullable', 'numeric', 'between:0.5,10']),
             ImportColumn::make('effective_start_date')->requiredMapping()->rules(['required', 'date']),
             ImportColumn::make('effective_end_date')->rules(['nullable', 'date', 'after_or_equal:effective_start_date']),
+            ImportColumn::make('allows_second_major')->boolean()->rules(['nullable', 'boolean']),
+            ImportColumn::make('allows_minor')->boolean()->rules(['nullable', 'boolean']),
         ];
     }
 

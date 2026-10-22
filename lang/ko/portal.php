@@ -9,6 +9,8 @@ return [
         'profile' => '내 정보',
         'advisees' => '지도 학생',
         'applications' => '입학 지원',
+        'catalog' => '개설강좌',
+        'teaching' => '담당 강좌',
     ],
     'dashboard' => [
         'title' => '홈',
@@ -27,6 +29,10 @@ return [
         'request_title' => '학적 변동 신청',
         'submit_request' => '신청',
         'request_submitted' => '신청했습니다. 학적 담당 부서에서 검토합니다.',
+        'additional_program_open' => '복수전공·부전공 신청 기간입니다(:term부터 이수).',
+        'additional_program_request' => ':program :role 신청: :status',
+        'additional_program_requested' => '신청했습니다. 해당 학과에서 검토합니다.',
+        'apply_additional_program' => '신청',
     ],
     'profile' => [
         'title' => '내 정보',

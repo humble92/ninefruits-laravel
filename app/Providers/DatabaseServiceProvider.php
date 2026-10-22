@@ -14,6 +14,7 @@ use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class DatabaseServiceProvider extends ServiceProvider
 {
@@ -77,9 +78,15 @@ class DatabaseServiceProvider extends ServiceProvider
     {
         // Registered after the migrator switch, so migration and seed commands get the
         // context on the migrator connection.
+        // Each run gets an id in the request_id slot, so the command's audit entry, the
+        // row changes it makes and the jobs it dispatches can be tied together.
         Event::listen(CommandStarting::class, function (CommandStarting $event): void {
             if ($event->command !== '') {
-                $this->app->make(DatabaseSessionContext::class)->forSystem('command:'.$event->command);
+                if (! Context::has('request_id')) {
+                    Context::add('request_id', 'cmd-'.Str::uuid());
+                }
+
+                $this->app->make(DatabaseSessionContext::class)->forSystem('command:'.$event->command, requestId: Context::get('request_id'));
             }
         });
 
@@ -92,17 +99,19 @@ class DatabaseServiceProvider extends ServiceProvider
 
     private function setSystemContextForQueuedJobs(): void
     {
+        // Context (user_id, request_id) is restored from the job payload by Laravel's own
+        // JobProcessing listener, which is registered before this one.
         Event::listen(JobProcessing::class, function (JobProcessing $event): void {
-            $this->app->make(DatabaseSessionContext::class)->forSystem(
+            $this->app->make(DatabaseSessionContext::class)->enterSystem(
                 'job:'.$event->job->resolveName(),
                 Context::get('user_id'),
                 Context::get('request_id'),
             );
         });
 
-        $reset = fn () => $this->app->make(DatabaseSessionContext::class)->reset();
+        $leave = fn () => $this->app->make(DatabaseSessionContext::class)->leave();
 
-        Event::listen(JobProcessed::class, $reset);
-        Event::listen(JobFailed::class, $reset);
+        Event::listen(JobProcessed::class, $leave);
+        Event::listen(JobFailed::class, $leave);
     }
 }

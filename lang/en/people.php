@@ -30,6 +30,14 @@ return [
             'label' => 'advisor',
             'plural_label' => 'advisors',
         ],
+        'additional_program_requests' => [
+            'label' => 'second major or minor application',
+            'plural_label' => 'second major and minor applications',
+        ],
+        'additional_programs' => [
+            'label' => 'second major or minor',
+            'plural_label' => 'second majors and minors',
+        ],
     ],
     'sections' => [
         'name' => 'Name',
@@ -95,6 +103,11 @@ return [
         'academic_title' => 'Academic title',
         'hire_date' => 'Hire date',
         'end_date' => 'End date',
+        'primary_program' => 'Primary program',
+        'requested_program' => 'Applied program',
+        'program_role' => 'Kind',
+        'start_term' => 'Starting term',
+        'statement' => 'Statement',
     ],
     'help' => [
         'romanized' => 'Legal name in Latin letters, as in the passport. Add the name as written in other languages below.',
@@ -119,6 +132,7 @@ return [
         'open' => 'Open',
         'reveal_national_id' => 'Show national ID number',
         'reveal_passport_number' => 'Show passport number',
+        'end_additional_program' => 'End',
     ],
     'notifications' => [
         'status_changed' => 'Status change recorded.',
@@ -127,6 +141,7 @@ return [
         'rejected' => 'Request rejected.',
         'invited' => 'Invitation sent.',
         'merged' => 'People merged.',
+        'additional_program_ended' => 'Program ended.',
     ],
     'filters' => [
         'merged' => 'Merged',
@@ -149,6 +164,13 @@ return [
         'merge_two_open_applications' => 'Both people have an open application in the same admission cycle. Withdraw one first.',
         'already_has_account' => 'This person already has an account.',
         'email_in_use' => 'Another account uses this email.',
+        'additional_program_inactive_record' => 'Only current students can apply.',
+        'additional_program_window_closed' => 'Applications for a second major or minor are not open for you now.',
+        'additional_program_not_offered' => 'This program does not accept that kind of application.',
+        'additional_program_already_held' => 'You already follow this program.',
+        'additional_program_limit' => 'You can have at most :count at a time (including pending applications).',
+        'additional_program_pending' => 'There is already a pending application for this program.',
+        'additional_program_end_invalid' => 'This program has already ended, or the date is before it started.',
     ],
     'invitations' => [
         'mail_subject' => 'Create your :app account',
@@ -206,5 +228,11 @@ return [
         'adjunct' => 'Adjunct',
         'visiting' => 'Visiting',
         'emeritus' => 'Emeritus',
+    ],
+    'additional_program_request_statuses' => [
+        'requested' => 'Pending',
+        'approved' => 'Approved',
+        'rejected' => 'Rejected',
+        'cancelled' => 'Cancelled',
     ],
 ];

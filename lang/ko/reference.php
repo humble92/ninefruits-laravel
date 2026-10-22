@@ -20,6 +20,7 @@ return [
         'course_categories' => ['label' => '교과 구분', 'plural_label' => '교과 구분'],
         'grade_scales' => ['label' => '성적 척도', 'plural_label' => '성적 척도'],
         'grade_scale_items' => ['label' => '등급', 'plural_label' => '등급'],
+        'term_sessions' => ['label' => '세션', 'plural_label' => '세션'],
     ],
     'fields' => [
         'code' => '코드',
@@ -84,6 +85,11 @@ return [
         'max_percentage' => '상한(%)',
         'counts_in_gpa' => '평점 계산 포함',
         'is_passing' => '이수',
+        'is_full_term' => '전체 학기',
+        'term_session' => '세션',
+        'source_session' => '복사할 세션',
+        'allows_second_major' => '복수전공 허용',
+        'allows_minor' => '부전공 허용',
     ],
     'help' => [
         'is_regular' => '정규 학기와 계절학기는 학점 상한 등 이후 규칙이 다르게 적용됩니다.',
@@ -93,6 +99,8 @@ return [
         'eligibility' => '비워 두면 전체가 대상입니다. 같은 업무에 조건이 다른 기간을 여러 개 두면 단계적으로 열립니다.',
         'org_unit_descendants' => '선택한 조직 아래의 모든 조직을 포함합니다.',
         'is_default_scale' => '프로그램이나 교과목에 척도가 지정되지 않으면 사용합니다.',
+        'term_session' => '과목의 일정은 과목이 속한 세션을 따른다. 짧은 세션용 기간이 아니면 전체 학기 세션이다.',
+        'copy_session_windows' => '다른 세션의 과목 업무 기간(정정, 수강 철회, 성적, 강의평가)을 이 세션 날짜에 맞춰 복사한다. 앞쪽 기간은 시작일 기준, 뒤쪽 기간은 종료일 기준으로 옮긴다. 복사 후 확인하고 고친다.',
     ],
     'degree_levels' => [
         'associate' => '전문학사',
@@ -123,22 +131,20 @@ return [
         'grade_appeal' => '성적 이의',
         'course_evaluation' => '강의평가',
         'graduation_application' => '졸업 신청',
+        'additional_program_application' => '복수전공·부전공 신청',
     ],
     'actions' => [
         'reorganize' => '조직 개편',
         'change_status' => '상태 변경',
         'import_csv' => 'CSV 가져오기',
+        'copy_session_windows' => '업무 기간 복사',
     ],
-    'filters' => [
-        'current_only' => '현재 유효한 조직만',
-    ],
-    'eligibility' => [
-        'everyone' => '전체',
-        'restricted' => '조건 있음',
-    ],
+    'filters' => ['current_only' => '현재 유효한 조직만'],
+    'eligibility' => ['everyone' => '전체', 'restricted' => '조건 있음'],
     'notifications' => [
         'reorganized' => '조직 개편을 기록했습니다.',
         'term_status_changed' => '학기 상태를 변경했습니다.',
+        'session_windows_copied' => '{0} 복사할 업무 기간이 없습니다.|[1,*] 업무 기간 :count개를 복사했습니다.',
     ],
     'errors' => [
         'in_use_title' => '사용 중입니다',
@@ -148,6 +154,9 @@ return [
         'single_successor' => '분리 개편만 승계 조직을 여러 개 가질 수 있습니다.',
         'successor_is_self' => '자기 자신을 승계 조직으로 지정할 수 없습니다.',
         'reorganization_before_start' => '개편 적용일은 조직 적용 시작일 이후여야 합니다.',
+        'sessions_outside_term' => '새 기간 밖으로 나가는 세션이 있습니다. 세션을 먼저 고치세요.',
+        'invalid_session_copy' => '같은 학기의 다른 세션을 고르세요.',
+        'session_has_windows' => '이 세션에는 이미 업무 기간이 있습니다.',
     ],
     'import' => [
         'title' => ':type 가져오기 완료',
@@ -156,4 +165,5 @@ return [
         'row_rejected' => '데이터베이스가 거부했습니다: :message',
         'unknown_code' => ':column 코드 ":code"이(가) 없습니다.',
     ],
+    'term_sessions' => ['full_term' => '전체 학기'],
 ];

@@ -48,11 +48,20 @@ abstract class ReferenceImporter extends Importer
     public function saveRecord(): void
     {
         try {
-            DB::transaction(fn () => parent::saveRecord());
+            DB::transaction(function () {
+                $this->beforeSaveInRowTransaction();
+                parent::saveRecord();
+            });
         } catch (QueryException $exception) {
             throw new RowImportFailedException(__('reference.import.row_rejected', ['message' => strtok($exception->getPrevious()?->getMessage() ?? $exception->getMessage(), "\n")]));
         }
     }
+
+    /**
+     * Runs inside the row's savepoint before the record is saved, so related rows created
+     * here are rolled back with a failed row (Filament's beforeSave hook runs outside it).
+     */
+    protected function beforeSaveInRowTransaction(): void {}
 
     public static function getCompletedNotificationBody(Import $import): string
     {

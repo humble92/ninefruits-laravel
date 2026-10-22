@@ -26,6 +26,9 @@ class DatabaseSessionContext
     /** @var array<string, string> Settings last applied (sent or pending) */
     private array $state = [];
 
+    /** @var list<array<string, string>> Contexts saved by enterSystem() */
+    private array $stack = [];
+
     /** @var array<int, true> Connections with the beforeExecuting hook */
     private array $hooked = [];
 
@@ -56,8 +59,8 @@ class DatabaseSessionContext
      * Runs a step that crosses the caller's row level security scope as a system actor,
      * then restores the previous context. The caller must have checked authorization
      * first. The initiating user stays in app.user_id, so audit triggers still name them.
-     * Used for applicant self registration (no user yet) and matriculation (admissions
-     * staff create a student record).
+     * Used for applicant self registration (no user yet), matriculation (admissions staff
+     * create a student record) and moving applications in a person merge.
      *
      * @template TResult
      *
@@ -66,15 +69,42 @@ class DatabaseSessionContext
      */
     public function asSystem(string $name, callable $callback): mixed
     {
-        $previous = $this->state;
-        $userId = ($previous['app.user_id'] ?? '') === '' ? null : (int) $previous['app.user_id'];
-        $this->forSystem($name, $userId, $previous['app.request_id'] ?? null);
+        $userId = ($this->state['app.user_id'] ?? '') === '' ? null : (int) $this->state['app.user_id'];
+        $this->enterSystem($name, $userId, $this->state['app.request_id'] ?? null);
 
         try {
             return $callback();
         } finally {
-            $this->apply(array_merge(array_fill_keys(self::KEYS, ''), $previous));
+            $this->leave();
         }
+    }
+
+    /**
+     * Switches to a system actor and remembers the current context for leave(). Queued
+     * jobs use this, so a job run synchronously inside a request (sync queue) gives the
+     * request its user context back when it ends.
+     */
+    public function enterSystem(string $name, ?int $initiatedByUserId = null, ?string $requestId = null): void
+    {
+        $this->stack[] = $this->state;
+        $this->forSystem($name, $initiatedByUserId, $requestId);
+    }
+
+    /**
+     * Restores the context from before the matching enterSystem(), or resets when there
+     * is none.
+     */
+    public function leave(): void
+    {
+        $previous = array_pop($this->stack);
+
+        if ($previous === null) {
+            $this->reset();
+
+            return;
+        }
+
+        $this->apply(array_merge(array_fill_keys(self::KEYS, ''), $previous));
     }
 
     public function setLocale(string $locale, string $fallbackLocale): void

@@ -30,6 +30,14 @@ return [
             'label' => '지도교수',
             'plural_label' => '지도교수',
         ],
+        'additional_program_requests' => [
+            'label' => '복수전공·부전공 신청',
+            'plural_label' => '복수전공·부전공 신청',
+        ],
+        'additional_programs' => [
+            'label' => '복수전공·부전공',
+            'plural_label' => '복수전공·부전공',
+        ],
     ],
     'sections' => [
         'name' => '이름',
@@ -95,6 +103,11 @@ return [
         'academic_title' => '직위',
         'hire_date' => '임용일',
         'end_date' => '종료일',
+        'primary_program' => '주전공',
+        'requested_program' => '신청 프로그램',
+        'program_role' => '구분',
+        'start_term' => '시작 학기',
+        'statement' => '신청 사유',
     ],
     'help' => [
         'romanized' => '여권과 같은 로마자 법적 이름. 한글 등 다른 언어 이름은 아래 언어별 이름에 입력한다.',
@@ -119,6 +132,7 @@ return [
         'open' => '열기',
         'reveal_national_id' => '주민등록번호 보기',
         'reveal_passport_number' => '여권번호 보기',
+        'end_additional_program' => '종료',
     ],
     'notifications' => [
         'status_changed' => '학적 변동을 처리했습니다.',
@@ -127,6 +141,7 @@ return [
         'rejected' => '신청을 반려했습니다.',
         'invited' => '가입 안내를 보냈습니다.',
         'merged' => '인물을 병합했습니다.',
+        'additional_program_ended' => '종료했습니다.',
     ],
     'filters' => [
         'merged' => '병합됨',
@@ -149,6 +164,13 @@ return [
         'merge_two_open_applications' => '두 인물 모두 같은 모집 회차에 진행 중인 지원서가 있습니다. 하나를 먼저 포기 처리하세요.',
         'already_has_account' => '이미 계정이 있는 인물입니다.',
         'email_in_use' => '다른 계정이 사용 중인 이메일입니다.',
+        'additional_program_inactive_record' => '재학 중인 학생만 신청할 수 있습니다.',
+        'additional_program_window_closed' => '지금은 복수전공·부전공 신청 기간이 아닙니다.',
+        'additional_program_not_offered' => '이 프로그램은 해당 신청을 받지 않습니다.',
+        'additional_program_already_held' => '이미 이수 중인 프로그램입니다.',
+        'additional_program_limit' => '동시에 :count개까지 가능합니다(처리 중인 신청 포함).',
+        'additional_program_pending' => '이 프로그램에 처리 중인 신청이 이미 있습니다.',
+        'additional_program_end_invalid' => '이미 종료되었거나 시작일보다 이른 날짜입니다.',
     ],
     'invitations' => [
         'mail_subject' => ':app 계정 만들기',
@@ -206,5 +228,11 @@ return [
         'adjunct' => '겸임',
         'visiting' => '초빙',
         'emeritus' => '명예',
+    ],
+    'additional_program_request_statuses' => [
+        'requested' => '처리 중',
+        'approved' => '승인',
+        'rejected' => '반려',
+        'cancelled' => '취소',
     ],
 ];

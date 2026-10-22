@@ -14,6 +14,7 @@ use App\Filament\Admin\Resources\Reference\OrgUnits\Pages\EditOrgUnit;
 use App\Filament\Admin\Resources\Reference\Terms\Pages\EditTerm;
 use App\Filament\Admin\Resources\Reference\Terms\RelationManagers\WindowsRelationManager;
 use App\Filament\Admin\Resources\Reference\Terms\TermResource;
+use App\Filament\Admin\Resources\Reference\TimeSlots\Pages\ManageTimeSlots;
 use App\Filament\Admin\Resources\Users\Pages\ViewUser;
 use App\Filament\Admin\Resources\Users\RelationManagers\RoleAssignmentsRelationManager;
 use App\Models\Facility\Building;
@@ -23,6 +24,7 @@ use App\Models\Organization\OrgUnit;
 use App\Models\Organization\OrgUnitType;
 use App\Models\Security\Role;
 use App\Models\Term\Term;
+use App\Models\Term\TimeSlot;
 use App\Models\User;
 use Database\Seeders\Demo\DemoReferenceSeeder;
 use Database\Seeders\Essential\EssentialSeeder;
@@ -168,4 +170,22 @@ it('enters window times in the institution time zone and stores them in UTC', fu
         ->assertHasNoActionErrors();
 
     expect($term->windows()->sole()->opens_at->utc()->format('Y-m-d H:i'))->toBe('2026-11-02 01:00');
+});
+
+it('keeps class period times as entered, without time zone conversion', function () {
+    $settings = app(InstitutionSettings::class);
+    $settings->timezone = 'Asia/Seoul';
+    $settings->save();
+
+    Livewire::actingAs($this->manager)->test(ManageTimeSlots::class)
+        ->callAction(TestAction::make('create'), [
+            'code' => 'P1',
+            'name' => ['en' => 'Period 1'],
+            'start_time' => '09:00',
+            'end_time' => '09:50',
+            'weekdays' => [1, 2, 3, 4, 5],
+        ])
+        ->assertHasNoActionErrors();
+
+    expect(TimeSlot::query()->where('code', 'P1')->sole()->start_time)->toBe('09:00:00');
 });

@@ -9,6 +9,7 @@ use App\Filament\Admin\Resources\StudentRecords\Pages\EditStudentRecord;
 use App\Filament\Admin\Resources\StudentRecords\Pages\ListStudentRecords;
 use App\Filament\Admin\Resources\StudentRecords\Pages\RegisterStudentRecord;
 use App\Filament\Admin\Resources\StudentRecords\Pages\ViewStudentRecord;
+use App\Filament\Admin\Resources\StudentRecords\RelationManagers\AdditionalProgramsRelationManager;
 use App\Filament\Admin\Resources\StudentRecords\RelationManagers\AdvisorAssignmentsRelationManager;
 use App\Filament\Admin\Resources\StudentRecords\RelationManagers\StatusChangesRelationManager;
 use App\Models\Institution\LookupValue;
@@ -148,7 +149,7 @@ class StudentRecordResource extends Resource
 
     public static function getRelations(): array
     {
-        return [StatusChangesRelationManager::class, AdvisorAssignmentsRelationManager::class];
+        return [StatusChangesRelationManager::class, AdvisorAssignmentsRelationManager::class, AdditionalProgramsRelationManager::class];
     }
 
     public static function getPages(): array

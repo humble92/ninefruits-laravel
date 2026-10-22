@@ -20,6 +20,7 @@ return [
         'course_categories' => ['label' => 'course category', 'plural_label' => 'course categories'],
         'grade_scales' => ['label' => 'grade scale', 'plural_label' => 'grade scales'],
         'grade_scale_items' => ['label' => 'grade', 'plural_label' => 'grades'],
+        'term_sessions' => ['label' => 'session', 'plural_label' => 'sessions'],
     ],
     'fields' => [
         'code' => 'Code',
@@ -84,6 +85,11 @@ return [
         'max_percentage' => 'To (%)',
         'counts_in_gpa' => 'Counts in GPA',
         'is_passing' => 'Passing',
+        'is_full_term' => 'Full term',
+        'term_session' => 'Session',
+        'source_session' => 'Copy from session',
+        'allows_second_major' => 'Accepts second majors',
+        'allows_minor' => 'Accepts minors',
     ],
     'help' => [
         'is_regular' => 'Regular terms (e.g. spring, fall) and intensive sessions follow different rules later, such as credit limits.',
@@ -93,6 +99,8 @@ return [
         'eligibility' => 'Leave empty for everyone. Several windows of the same type with different conditions open in stages.',
         'org_unit_descendants' => 'Includes all units below the selected ones.',
         'is_default_scale' => 'Used when a program or course does not name a scale.',
+        'term_session' => 'Course deadlines follow the session of the course: the full term unless the window is for a shorter session.',
+        'copy_session_windows' => 'Copies the course windows (add/drop, withdrawal, grading, evaluation) of another session, moved to this session\'s dates: early windows keep their distance from the start, late ones from the end. Adjust them after copying.',
     ],
     'degree_levels' => [
         'associate' => 'Associate',
@@ -123,22 +131,20 @@ return [
         'grade_appeal' => 'Grade appeal',
         'course_evaluation' => 'Course evaluation',
         'graduation_application' => 'Graduation application',
+        'additional_program_application' => 'Second major and minor applications',
     ],
     'actions' => [
         'reorganize' => 'Reorganize',
         'change_status' => 'Change status',
         'import_csv' => 'Import CSV',
+        'copy_session_windows' => 'Copy windows',
     ],
-    'filters' => [
-        'current_only' => 'Currently valid only',
-    ],
-    'eligibility' => [
-        'everyone' => 'Everyone',
-        'restricted' => 'Restricted',
-    ],
+    'filters' => ['current_only' => 'Currently valid only'],
+    'eligibility' => ['everyone' => 'Everyone', 'restricted' => 'Restricted'],
     'notifications' => [
         'reorganized' => 'Reorganization recorded.',
         'term_status_changed' => 'Term status changed.',
+        'session_windows_copied' => '{0} No windows to copy.|{1} One window copied.|[2,*] :count windows copied.',
     ],
     'errors' => [
         'in_use_title' => 'Still in use',
@@ -148,6 +154,9 @@ return [
         'single_successor' => 'Only a split can have several successors.',
         'successor_is_self' => 'A unit cannot succeed itself.',
         'reorganization_before_start' => 'The effective date must be after the unit started.',
+        'sessions_outside_term' => 'Some sessions would fall outside the new dates. Change them first.',
+        'invalid_session_copy' => 'Choose another session of the same term.',
+        'session_has_windows' => 'This session already has windows.',
     ],
     'import' => [
         'title' => ':type import finished',
@@ -156,4 +165,5 @@ return [
         'row_rejected' => 'Rejected by the database: :message',
         'unknown_code' => 'Unknown :column code ":code".',
     ],
+    'term_sessions' => ['full_term' => 'Full term'],
 ];

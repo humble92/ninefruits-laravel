@@ -10,10 +10,14 @@ use App\Http\Controllers\UpdateLocaleController;
 use App\Livewire\Portal\Advisees;
 use App\Livewire\Portal\ApplicationDetail;
 use App\Livewire\Portal\Applications;
+use App\Livewire\Portal\CourseCatalog;
 use App\Livewire\Portal\Dashboard;
 use App\Livewire\Portal\MyProfile;
 use App\Livewire\Portal\MyRecords;
+use App\Livewire\Portal\MyTeaching;
+use App\Livewire\Portal\SectionDetail;
 use App\Livewire\Portal\SecuritySettings;
+use App\Livewire\Portal\SyllabusEditor;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/portal');
@@ -42,6 +46,10 @@ Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(fun
     Route::livewire('/records', MyRecords::class)->name('records');
     Route::livewire('/profile', MyProfile::class)->name('profile');
     Route::livewire('/advisees', Advisees::class)->name('advisees');
+    Route::livewire('/catalog', CourseCatalog::class)->name('catalog');
+    Route::livewire('/sections/{section}', SectionDetail::class)->name('sections.show');
+    Route::livewire('/sections/{section}/syllabus', SyllabusEditor::class)->name('syllabus.edit');
+    Route::livewire('/teaching', MyTeaching::class)->name('teaching');
 
     // Applying needs a verified personal email (docs/porting-plan.md section 7.1).
     Route::middleware('verified')->group(function () {

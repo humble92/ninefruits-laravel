@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property AdditionalProgramRole $role
  * @property CarbonImmutable $start_date
  * @property CarbonImmutable|null $end_date
+ * @property-read StudentRecord $studentRecord
+ * @property-read Program $program
  */
 class StudentRecordProgram extends Model
 {
@@ -27,6 +29,14 @@ class StudentRecordProgram extends Model
     protected function casts(): array
     {
         return ['role' => AdditionalProgramRole::class, 'start_date' => 'immutable_date', 'end_date' => 'immutable_date'];
+    }
+
+    /**
+     * @return BelongsTo<StudentRecord, $this>
+     */
+    public function studentRecord(): BelongsTo
+    {
+        return $this->belongsTo(StudentRecord::class);
     }
 
     /**

@@ -16,7 +16,7 @@
 | 종류 | 필수 열 | 선택 열 |
 |---|---|---|
 | 조직 단위 | `code`, `type`(조직 단위 유형 코드), `name_en`, `effective_start_date` | `parent`(상위 코드), `name_ko` 등, `short_name_*`, `effective_end_date`, `sort_order` |
-| 프로그램 | `code`, `org_unit`(조직 코드), `degree_level`, `name_en`, `effective_start_date` | `degree_title_*`, `standard_duration_years`, `effective_end_date` |
+| 프로그램 | `code`, `org_unit`(조직 코드), `degree_level`, `name_en`, `effective_start_date` | `degree_title_*`, `standard_duration_years`, `effective_end_date`, `allows_second_major`, `allows_minor` |
 | 건물 | `code`, `name_en` | `name_*`, `address`, `is_active` |
 | 강의실 | `building`(건물 코드), `code`(호실) | `name_*`, `room_type`(용도 코드), `org_unit`, `capacity`, `is_schedulable`, `is_active` |
 | 코드 값 | `type`(목록 코드), `code`, `name_en` | `name_*`, `sort_order`, `is_active` |
@@ -54,4 +54,23 @@ CSE,department,ENG,Computer Science,컴퓨터공학과,1995-03-01
 ```csv
 student_number,program,admission_date,year_level,status,family_name,given_name,name_ko,birth_date
 202600001,B-CSE,2026-03-02,1,enrolled,Kim,Minsu,김민수,2007-05-01
+```
+
+## 교과목
+
+교과목 목록 위쪽의 **CSV 가져오기**(`교과목, 버전, 선수과목 관리` 권한) 또는 `reference:import courses`. 한 행이 교과목 버전 하나다.
+
+| 필수 열 | 선택 열 |
+|---|---|
+| `code`, `effective_start_date`, `title_en`, `credits`(새 버전) | `org_unit`(새 교과목에 필수. 관리 조직 코드), `effective_end_date`, `title_*`, `lecture_hours`, `lab_hours`, `category`(교과 구분 코드), `grading_basis`(`graded`, `pass_fail`), `counts_toward_credit_limit` |
+
+- 교과목은 `code`로, 버전은 `code` + `effective_start_date`로 찾는다. 같은 파일을 다시 가져오면 갱신된다.
+- 개정 이력을 한 파일로 넣을 수 있다: 같은 코드의 행을 기간별로 나열한다(앞 버전에 `effective_end_date`를 넣는다).
+- 기간이 다른 버전과 겹치는 행은 실패한다. 새 교과목 행이 실패하면 교과목도 만들어지지 않는다.
+- 선수과목, 대체과목, 졸업 요건은 화면에서 입력한다([17장](17-courses-and-curriculum.md)).
+
+```csv
+code,org_unit,effective_start_date,effective_end_date,title_en,title_ko,credits,category
+CSE2010,CSE,2015-03-01,2026-02-28,Data Structures,자료구조,3,MAJ_REQ
+CSE2010,,2026-03-01,,Data Structures,자료구조,4,MAJ_REQ
 ```

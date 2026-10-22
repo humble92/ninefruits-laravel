@@ -68,6 +68,49 @@
             </section>
         @endif
 
+        <section class="space-y-3 rounded-lg border border-zinc-200 bg-white p-6">
+            <h2 class="font-medium">{{ __('people.resources.additional_programs.plural_label') }}</h2>
+            @forelse ($record->additionalPrograms as $additional)
+                <p class="text-sm">{{ $additional->role->label() }} · {{ $additional->program->name }} · {{ $additional->start_date->toDateString() }} ~ {{ $additional->end_date?->toDateString() }}</p>
+            @empty
+                <p class="text-sm text-zinc-500">{{ __('common.none') }}</p>
+            @endforelse
+
+            @foreach ($additionalRequests as $additionalRequest)
+                <p class="text-sm text-zinc-600">
+                    {{ __('portal.records.additional_program_request', ['role' => $additionalRequest->role->label(), 'program' => $additionalRequest->program->name, 'status' => $additionalRequest->status->label()]) }}
+                    @if ($additionalRequest->decision_note) ({{ $additionalRequest->decision_note }}) @endif
+                    @if ($additionalRequest->status === \App\Domain\Person\Enums\AdditionalProgramRequestStatus::Requested)
+                        <button type="button" wire:click="cancelAdditionalProgram({{ $additionalRequest->id }})" wire:confirm="{{ __('portal.records.cancel_confirm') }}" class="ms-2 underline">{{ __('portal.records.cancel') }}</button>
+                    @endif
+                </p>
+            @endforeach
+
+            @if ($applicationTerm)
+                <form wire:submit="applyAdditionalProgram" class="grid gap-3 border-t border-zinc-100 pt-3 sm:grid-cols-3">
+                    <p class="text-sm text-zinc-600 sm:col-span-3">{{ __('portal.records.additional_program_open', ['term' => $applicationTerm->name]) }}</p>
+                    <select wire:model.live="additionalRole" aria-label="{{ __('people.fields.program_role') }}" class="rounded border border-zinc-300 px-3 py-2">
+                        @foreach (\App\Domain\Person\Enums\AdditionalProgramRole::cases() as $role)
+                            <option value="{{ $role->value }}">{{ $role->label() }}</option>
+                        @endforeach
+                    </select>
+                    <select wire:model="additionalProgramId" aria-label="{{ __('reference.fields.programs') }}" class="rounded border border-zinc-300 px-3 py-2 sm:col-span-2">
+                        <option value="">-</option>
+                        @foreach ($additionalOptions as $option)
+                            <option value="{{ $option->id }}">{{ $option->name }}</option>
+                        @endforeach
+                    </select>
+                    <textarea wire:model="additionalStatement" rows="2" placeholder="{{ __('people.fields.statement') }}" class="rounded border border-zinc-300 px-3 py-2 sm:col-span-3"></textarea>
+                    <div class="sm:col-span-3">
+                        <button type="submit" class="rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white">{{ __('portal.records.apply_additional_program') }}</button>
+                        @foreach (['additionalProgramId', 'program_id', 'role', 'student_record_id'] as $field)
+                            @error($field) <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        @endforeach
+                    </div>
+                </form>
+            @endif
+        </section>
+
         <section class="rounded-lg border border-zinc-200 bg-white p-6">
             <h2 class="mb-3 font-medium">{{ __('people.resources.status_changes.plural_label') }}</h2>
             @forelse ($record->statusChanges as $change)

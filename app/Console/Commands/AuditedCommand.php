@@ -4,8 +4,11 @@ namespace App\Console\Commands;
 
 use App\Domain\Security\Services\AuditLogger;
 use App\Models\User;
+use App\Support\Database\DatabaseSessionContext;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,6 +20,7 @@ use Throwable;
  * - Records the run in the business audit (log "command"): command, options, operating
  *   system user, optional --actor account, exit code and the result set with recordResult().
  * - Adds --actor=<email> so an administrator can be named as the person responsible.
+ * - Gives the run an id (request_id) shared by its audit entry, row changes and jobs.
  * - Commands that support --dry-run declare it in their signature and call isDryRun().
  *
  * Read-only check commands extend Illuminate\Console\Command directly and are not audited.
@@ -60,6 +64,15 @@ abstract class AuditedCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        // Run id in the request_id slot: the audit entry below, the row changes and the jobs
+        // of this run share it. Also set when called from code or tests, where the
+        // CommandStarting event (DatabaseServiceProvider) does not fire.
+        if (! Context::has('request_id')) {
+            Context::add('request_id', 'cmd-'.Str::uuid());
+        }
+
+        app(DatabaseSessionContext::class)->forSystem('command:'.$this->getName(), requestId: Context::get('request_id'));
+
         $actorEmail = $input->getOption('actor');
 
         if (is_string($actorEmail) && $actorEmail !== '' && $this->actor() === null) {

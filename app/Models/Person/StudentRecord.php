@@ -2,6 +2,7 @@
 
 namespace App\Models\Person;
 
+use App\Domain\Person\Enums\AdditionalProgramRequestStatus;
 use App\Domain\Person\Enums\StudentStatus;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Security\Services\AuthorizationService;
@@ -154,7 +155,9 @@ class StudentRecord extends Model implements TargetSubject
 
     /**
      * Records the user may see: staff by scope (student_records.view or .manage: all, org
-     * unit and below, program), the student's own records, and current advisees. Mirrors
+     * unit and below, program, including second majors and minors in that scope), records
+     * behind second major or minor requests they decide, the student's own records, and
+     * current advisees. Mirrors
      * the row level security policies on student_records.
      *
      * @template TModel of Model
@@ -181,6 +184,22 @@ class StudentRecord extends Model implements TargetSubject
             if ($scope->programIds !== []) {
                 $query->orWhereIn('student_records.program_id', $scope->programIds);
             }
+
+            // Second majors and minors in the user's scope (their department's students).
+            if ($scope->orgUnitIds !== [] || $scope->programIds !== []) {
+                $query->orWhereIn('student_records.id', StudentRecordProgram::query()
+                    ->whereNull('end_date')
+                    ->where(fn (Builder $programs) => $programs
+                        ->whereIn('program_id', $scope->programIds)
+                        ->orWhereHas('program', fn (Builder $program) => $program->whereIn('org_unit_id', $scope->orgUnitIds)))
+                    ->select('student_record_id'));
+            }
+
+            // Records behind second major and minor requests the user may decide.
+            $query->orWhereIn('student_records.id', AdditionalProgramRequest::query()
+                ->where('status', AdditionalProgramRequestStatus::Requested)
+                ->tap(fn (Builder $requests) => AdditionalProgramRequest::constrainDecidableBy($requests, $user))
+                ->select('student_record_id'));
 
             if ($user->person_id !== null) {
                 $query->orWhere('student_records.person_id', $user->person_id)
@@ -215,9 +234,15 @@ class StudentRecord extends Model implements TargetSubject
         return [$this->program_id, ...$this->additionalPrograms()->whereNull('end_date')->pluck('program_id')->all()];
     }
 
+    /**
+     * The record's unit and the units of its current second majors and minors, with their
+     * ancestors (eligibility for "students of the College of Engineering" includes them).
+     */
     public function targetOrgUnitIds(): array
     {
-        return OrgUnit::query()->findOrFail($this->org_unit_id)->ancestorIds();
+        $units = [$this->org_unit_id, ...$this->additionalPrograms()->whereNull('end_date')->with('program')->get()->map(fn (StudentRecordProgram $program) => $program->program->org_unit_id)->all()];
+
+        return array_values(array_unique(array_merge(...array_map(fn (int $unit) => OrgUnit::query()->findOrFail($unit)->ancestorIds(), array_unique($units)))));
     }
 
     public function targetAdmissionYear(): ?int

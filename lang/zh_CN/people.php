@@ -30,6 +30,14 @@ return [
             'label' => '导师',
             'plural_label' => '导师',
         ],
+        'additional_program_requests' => [
+            'label' => '第二专业与辅修申请',
+            'plural_label' => '第二专业与辅修申请',
+        ],
+        'additional_programs' => [
+            'label' => '第二专业与辅修',
+            'plural_label' => '第二专业与辅修',
+        ],
     ],
     'sections' => [
         'name' => '姓名',
@@ -95,6 +103,11 @@ return [
         'academic_title' => '职称',
         'hire_date' => '聘用日期',
         'end_date' => '结束日期',
+        'primary_program' => '主修专业',
+        'requested_program' => '申请专业',
+        'program_role' => '类型',
+        'start_term' => '开始学期',
+        'statement' => '申请理由',
     ],
     'help' => [
         'romanized' => '与护照一致的拉丁字母法定姓名。其他语言的姓名在下方各语言姓名中填写。',
@@ -119,6 +132,7 @@ return [
         'open' => '打开',
         'reveal_national_id' => '查看身份证号',
         'reveal_passport_number' => '查看护照号',
+        'end_additional_program' => '结束',
     ],
     'notifications' => [
         'status_changed' => '已办理学籍异动。',
@@ -127,6 +141,7 @@ return [
         'rejected' => '已驳回申请。',
         'invited' => '已发送邀请。',
         'merged' => '已合并人员。',
+        'additional_program_ended' => '已结束。',
     ],
     'filters' => [
         'merged' => '已合并',
@@ -149,6 +164,13 @@ return [
         'merge_two_open_applications' => '两位人员在同一招生批次都有进行中的申请，请先放弃其中一份。',
         'already_has_account' => '该人员已有账户。',
         'email_in_use' => '该邮箱已被其他账户使用。',
+        'additional_program_inactive_record' => '只有在读学生可以申请。',
+        'additional_program_window_closed' => '现在不是第二专业与辅修的申请期间。',
+        'additional_program_not_offered' => '该专业不接受此类申请。',
+        'additional_program_already_held' => '您已在修读该专业。',
+        'additional_program_limit' => '同时最多 :count 个（包括处理中的申请）。',
+        'additional_program_pending' => '该专业已有处理中的申请。',
+        'additional_program_end_invalid' => '已经结束，或日期早于开始日期。',
     ],
     'invitations' => [
         'mail_subject' => '创建您的 :app 账户',
@@ -206,5 +228,11 @@ return [
         'adjunct' => '兼任',
         'visiting' => '客座',
         'emeritus' => '荣誉',
+    ],
+    'additional_program_request_statuses' => [
+        'requested' => '处理中',
+        'approved' => '已批准',
+        'rejected' => '已驳回',
+        'cancelled' => '已取消',
     ],
 ];

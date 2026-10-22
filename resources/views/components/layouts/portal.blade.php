@@ -23,6 +23,12 @@
             @if ($portalUser->person_id !== null)
                 <a href="{{ route('portal.profile') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.profile') }}</a>
             @endif
+            @if ($portalUser->person_id !== null)
+                <a href="{{ route('portal.catalog') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.catalog') }}</a>
+            @endif
+            @if (in_array(\App\Domain\Security\Enums\Persona::Instructor, $personas, true))
+                <a href="{{ route('portal.teaching') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.teaching') }}</a>
+            @endif
             @if (in_array(\App\Domain\Security\Enums\Persona::Advisor, $personas, true))
                 <a href="{{ route('portal.advisees') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.advisees') }}</a>
             @endif

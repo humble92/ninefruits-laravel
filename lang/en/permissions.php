@@ -29,6 +29,10 @@ return [
         'institution_settings' => 'Institution settings',
         'admission_cycles' => 'Admission cycles',
         'applications' => 'Applications',
+        'courses' => 'Courses',
+        'curriculum' => 'Graduation requirements',
+        'sections' => 'Sections',
+        'additional_programs' => 'Second majors and minors',
     ],
     'admin_panel' => ['access' => 'Open the administration panel'],
     'users' => [
@@ -65,4 +69,8 @@ return [
     'authentication_settings' => ['manage' => 'Manage sign-in methods and SSO'],
     'admission_cycles' => ['manage' => 'Manage admission cycles and admission settings'],
     'applications' => ['view' => 'View applications', 'review' => 'Review and decide applications', 'matriculate' => 'Create student records for admitted applicants'],
+    'courses' => ['manage' => 'Manage courses, versions and requisites'],
+    'curriculum' => ['manage' => 'Manage graduation requirements'],
+    'sections' => ['view' => 'View sections', 'manage' => 'Plan sections (instructors, times, rooms)'],
+    'additional_programs' => ['approve' => 'Decide second major and minor applications'],
 ];

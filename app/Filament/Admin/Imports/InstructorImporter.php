@@ -46,7 +46,7 @@ class InstructorImporter extends ReferenceImporter
         return $record;
     }
 
-    protected function beforeSave(): void
+    protected function beforeSaveInRowTransaction(): void
     {
         /** @var Instructor $record */
         $record = $this->record;

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Import types for the admin screens and `php artisan reference:import {type}`.
- * Courses (Phase 4) are added with their table.
  */
 final class ReferenceImporters
 {
@@ -21,12 +20,14 @@ final class ReferenceImporters
         'lookup_values' => LookupValueImporter::class,
         'students' => StudentImporter::class,
         'instructors' => InstructorImporter::class,
+        'courses' => CourseImporter::class,
     ];
 
     /** Types whose screens need a permission other than reference_data.import. */
     private const array PERMISSIONS = [
         'students' => Permission::StudentRecordsManage,
         'instructors' => Permission::InstructorsManage,
+        'courses' => Permission::CoursesManage,
     ];
 
     public static function action(string $type): ImportAction

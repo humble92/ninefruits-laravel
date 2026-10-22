@@ -20,6 +20,7 @@ return [
         'course_categories' => ['label' => '课程类别', 'plural_label' => '课程类别'],
         'grade_scales' => ['label' => '成绩等级制', 'plural_label' => '成绩等级制'],
         'grade_scale_items' => ['label' => '等级', 'plural_label' => '等级'],
+        'term_sessions' => ['label' => '时段', 'plural_label' => '时段'],
     ],
     'fields' => [
         'code' => '代码',
@@ -84,6 +85,11 @@ return [
         'max_percentage' => '上限（%）',
         'counts_in_gpa' => '计入绩点',
         'is_passing' => '及格',
+        'is_full_term' => '全学期',
+        'term_session' => '时段',
+        'source_session' => '复制来源时段',
+        'allows_second_major' => '接受第二专业',
+        'allows_minor' => '接受辅修',
     ],
     'help' => [
         'is_regular' => '正常学期与短学期在学分上限等规则上有所不同。',
@@ -93,6 +99,8 @@ return [
         'eligibility' => '留空表示所有人。同一业务设置多个不同条件的期间可分阶段开放。',
         'org_unit_descendants' => '包含所选单位下的所有单位。',
         'is_default_scale' => '当专业或课程未指定时使用。',
+        'term_session' => '课程的日程遵循课程所属的时段。除非用于较短的时段，否则为全学期时段。',
+        'copy_session_windows' => '将其他时段的课程业务期间（加退选、退课、成绩、课程评价）按本时段日期复制：前段期间以开始日期为准，后段期间以结束日期为准。复制后请检查调整。',
     ],
     'degree_levels' => [
         'associate' => '专科',
@@ -123,22 +131,20 @@ return [
         'grade_appeal' => '成绩申诉',
         'course_evaluation' => '课程评价',
         'graduation_application' => '毕业申请',
+        'additional_program_application' => '第二专业与辅修申请',
     ],
     'actions' => [
         'reorganize' => '组织重组',
         'change_status' => '更改状态',
         'import_csv' => '导入 CSV',
+        'copy_session_windows' => '复制业务期间',
     ],
-    'filters' => [
-        'current_only' => '仅当前有效',
-    ],
-    'eligibility' => [
-        'everyone' => '所有人',
-        'restricted' => '有条件',
-    ],
+    'filters' => ['current_only' => '仅当前有效'],
+    'eligibility' => ['everyone' => '所有人', 'restricted' => '有条件'],
     'notifications' => [
         'reorganized' => '已记录组织重组。',
         'term_status_changed' => '已更改学期状态。',
+        'session_windows_copied' => '{0} 没有可复制的业务期间。|[1,*] 已复制 :count 个业务期间。',
     ],
     'errors' => [
         'in_use_title' => '仍在使用中',
@@ -148,6 +154,9 @@ return [
         'single_successor' => '只有拆分可以有多个承接单位。',
         'successor_is_self' => '单位不能承接自身。',
         'reorganization_before_start' => '重组生效日期必须晚于该单位的生效日期。',
+        'sessions_outside_term' => '有时段会超出新的日期范围，请先修改时段。',
+        'invalid_session_copy' => '请选择同一学期的其他时段。',
+        'session_has_windows' => '该时段已有业务期间。',
     ],
     'import' => [
         'title' => ':type 导入完成',
@@ -156,4 +165,5 @@ return [
         'row_rejected' => '被数据库拒绝：:message',
         'unknown_code' => '未知的 :column 代码 ":code"。',
     ],
+    'term_sessions' => ['full_term' => '全学期'],
 ];

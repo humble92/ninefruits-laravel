@@ -1,0 +1,6 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+/* Our own Blade views used inside the admin panel (e.g. the timetable). */
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../resources/views/components/timetable.blade.php';
