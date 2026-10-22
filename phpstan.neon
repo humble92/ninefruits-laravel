@@ -1,0 +1,19 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+rules:
+    - Tools\PHPStan\Rules\NoDynamicRawSqlRule
+
+parameters:
+    level: 6
+    paths:
+        - app
+        - database/factories
+        - database/seeders
+        - tools/phpstan
+    tmpDir: storage/framework/cache/phpstan
+    ignoreErrors:
+        # Used by personal data models from Phase 2 on; covered by tests until then.
+        -
+            identifier: trait.unused
+            path: app/Models/Concerns/HasEncryptedPii.php

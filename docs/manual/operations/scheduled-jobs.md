@@ -1,0 +1,25 @@
+# 스케줄 작업과 큐
+
+- 대상: IT 운영자
+
+## 상시 프로세스
+
+| 프로세스 | 명령 | 확인 |
+|---|---|---|
+| 큐 워커 | `php artisan horizon` | `/horizon` (권한 `queue_monitor.view`) |
+| 스케줄러 | cron `* * * * * php artisan schedule:run` | `php artisan schedule:list` |
+
+## 스케줄 작업
+
+Phase 0 기준 등록된 스케줄 작업은 없다. Phase마다 이 표에 추가한다.
+
+| 작업 | 주기 | Phase | 실패 감지 |
+|---|---|---|---|
+
+## 큐 작업
+
+| 작업 | 발생 | 비고 |
+|---|---|---|
+| `ReencryptPiiRecords` | `pii:reencrypt` | 배치. 실패한 작업은 Horizon에서 재시도 |
+
+큐 작업은 실행 중 DB 수행자가 `system:job:{클래스}`로 기록된다.

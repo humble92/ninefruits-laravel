@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PHP_VERSION: '8.5'
+  PHP_EXTENSIONS: bcmath, intl, pdo_pgsql, pgsql, redis, zip, gd, sodium
+
+jobs:
+  quality:
+    name: Style, static analysis, conventions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Security advisories
+        run: composer audit --locked
+
+      - name: Code style (Pint)
+        run: vendor/bin/pint --test
+
+      - name: Static analysis (Larastan, raw SQL rule)
+        run: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
+
+      - name: Naming conventions
+        run: php artisan naming:check
+
+      - name: Missing translations
+        run: php artisan i18n:missing --strict
+
+  tests:
+    name: Tests (PostgreSQL 18)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testing
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:8-alpine
+        ports: ['6379:6379']
+      gotenberg:
+        image: gotenberg/gotenberg:8
+        ports: ['3000:3000']
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_USERNAME: app_runtime
+      DB_PASSWORD: secret
+      DB_MIGRATOR_USERNAME: app_migrator
+      DB_MIGRATOR_PASSWORD: secret
+      REDIS_HOST: 127.0.0.1
+      GOTENBERG_URL: http://127.0.0.1:3000
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+
+      - name: Create database roles
+        run: |
+          psql -h 127.0.0.1 -U postgres -d postgres -v ON_ERROR_STOP=1 \
+            -v migrator_password=secret -v runtime_password=secret -v reporting_password=secret \
+            -f database/sql/roles/create_roles.sql
+          psql -h 127.0.0.1 -U postgres -d testing -v ON_ERROR_STOP=1 -f database/sql/roles/prepare_database.sql
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Tests
+        run: vendor/bin/pest

@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Domain\Security\Enums;
+
+/**
+ * Permission catalog. Permissions are defined in code and synchronized to the database
+ * with `php artisan security:sync-permissions`. Roles are composed of these in the admin panel.
+ *
+ * Naming: {resource}.{action}, resource in snake_case plural (docs/conventions/naming.md).
+ */
+enum Permission: string
+{
+    case AdminPanelAccess = 'admin_panel.access';
+
+    case UsersView = 'users.view';
+    case UsersCreate = 'users.create';
+    case UsersUpdate = 'users.update';
+    case UsersResetMfa = 'users.reset_mfa';
+
+    case RolesView = 'roles.view';
+    case RolesManage = 'roles.manage';
+    case RoleAssignmentsManage = 'role_assignments.manage';
+
+    case AuditRecordsView = 'audit_records.view';
+    case SecurityEventsView = 'security_events.view';
+
+    case SecuritySettingsManage = 'security_settings.manage';
+    case InstitutionSettingsManage = 'institution_settings.manage';
+
+    case QueueMonitorView = 'queue_monitor.view';
+
+    public function resource(): string
+    {
+        return explode('.', $this->value, 2)[0];
+    }
+
+    public function label(): string
+    {
+        return __('permissions.'.$this->value);
+    }
+
+    /**
+     * @return array<string, list<self>>
+     */
+    public static function groupedByResource(): array
+    {
+        $groups = [];
+
+        foreach (self::cases() as $permission) {
+            $groups[$permission->resource()][] = $permission;
+        }
+
+        return $groups;
+    }
+}
