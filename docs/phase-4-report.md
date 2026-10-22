@@ -10,7 +10,7 @@
 
 - 테스트 321개(단언 1,112개) 통과. Phase 3 대비 34개 추가. Larastan 레벨 6 오류 0, Pint 위반 0, 명명 검사 위반 0, 번역 누락 0, `composer audit` 통과
 - 빈 DB에서 `setup:install --force --profile=korean-university`, `setup:demo --size=small --seed=42` 성공. 데모 두 학기(각 52개 강좌, 강의 시간 94개)가 `schedule:check-conflicts`에서 문제 0건. 다음 학기 편성은 데모 시더가 `CopySections`로 만든다
-- CI 결과는 7절
+- CI(GitHub Actions) 통과 (7절)
 
 ## 2. 완료 기준
 
@@ -75,7 +75,9 @@
 
 ## 7. CI
 
-push 후 GitHub Actions 결과를 여기에 기록한다.
+| 실행 | 결과 | 내용 |
+|---|---|---|
+| `eaa16f4` | 통과 | 품질 작업 40초(audit, Pint, Larastan, 명명, 번역), 테스트 작업 3분 54초(PostgreSQL 18 서비스, 테스트 321개) |
 
 ## 8. 남은 일
 
