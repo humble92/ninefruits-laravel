@@ -10,7 +10,7 @@
 
 - 테스트 259개(단언 828개) 통과. Phase 1 대비 61개 추가. Larastan 레벨 6 오류 0, Pint 위반 0, 명명 검사 위반 0, 번역 누락 0, `composer audit` 통과
 - 빈 DB에서 `setup:install --force --profile=korean-university`와 `setup:demo --size=small --seed=42` 성공 확인 (학적 104건, 교원 20명, 지도 배정 61건, 처리 대기 신청 3건, 보호자 34명)
-- CI 결과는 7절
+- CI(GitHub Actions) 통과 (7절)
 
 ## 2. 완료 기준
 
@@ -80,7 +80,11 @@
 
 ## 7. CI
 
-push 후 GitHub Actions 결과를 여기에 기록한다.
+| 실행 | 결과 | 내용 |
+|---|---|---|
+| `6031b60` | 통과 | 품질 작업 29초(audit, Pint, Larastan, 명명, 번역), 테스트 작업 2분 1초(PostgreSQL 18 서비스, 테스트 259개) |
+
+실행 직후 GitHub API가 실행 전체는 성공으로, 개별 작업은 대기 중으로 몇 분간 다르게 보고했다. 작업 기록이 갱신된 뒤 두 작업의 성공과 테스트 로그(259개 통과)를 확인했다.
 
 ## 8. 남은 일
 
