@@ -8,7 +8,7 @@
 
 Phase 1 착수 전 검토 사항을 먼저 처리하고(별도 커밋), 기준정보 전체와 13.5절 공통 완료 기준을 구현했다.
 
-- 테스트 197개(단언 569개) 통과. Larastan 레벨 6 오류 0, Pint 위반 0, 명명 검사 위반 0, 번역 누락 0, `composer audit` 통과
+- 테스트 198개(단언 570개) 통과. Larastan 레벨 6 오류 0, Pint 위반 0, 명명 검사 위반 0, 번역 누락 0, `composer audit` 통과
 - 빈 DB에서 `setup:install --force --profile=korean-university`와 `setup:demo --size=small` 성공 확인
 - CI(GitHub Actions) 통과 (7절)
 
