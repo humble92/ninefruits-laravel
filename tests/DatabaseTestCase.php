@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Support\Database\DatabaseSessionContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 abstract class DatabaseTestCase extends TestCase
@@ -13,6 +14,11 @@ abstract class DatabaseTestCase extends TestCase
         parent::setUp();
 
         $this->withoutVite();
+
+        // Fixtures are created as a system actor so row level security does not block
+        // factories. Requests still run as the signed-in user and return to this baseline.
+        // Tests of the database policies clear it with useBaseline([]).
+        app(DatabaseSessionContext::class)->useBaseline(['app.actor' => 'system:test']);
     }
 
     /**

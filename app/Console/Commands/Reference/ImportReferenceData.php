@@ -16,7 +16,7 @@ use League\Csv\Reader;
  * screen, so validation, matching by code and failed row reports are identical.
  */
 #[Signature('reference:import
-    {type : org_units, programs, buildings, rooms or lookup_values}
+    {type : org_units, programs, buildings, rooms, lookup_values, students or instructors}
     {file : CSV file with a header row (UTF-8)}
     {--chunk=100 : Rows per queued job}
     {--dry-run : Check the header and count rows without importing}')]

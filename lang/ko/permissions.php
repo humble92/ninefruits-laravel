@@ -2,6 +2,13 @@
 
 return [
     'resources' => [
+        'people' => '인물',
+        'accounts' => '계정',
+        'student_records' => '학적',
+        'student_status_changes' => '학적 변동',
+        'instructors' => '교원',
+        'advisors' => '지도교수',
+        'authentication_settings' => '로그인 설정',
         'reference_data' => '기준정보',
         'lookup_values' => '코드 데이터',
         'org_units' => '조직 단위',
@@ -47,4 +54,11 @@ return [
     'term_windows' => ['manage' => '업무 기간 관리'],
     'course_categories' => ['manage' => '교과 구분 관리'],
     'grade_scales' => ['manage' => '성적 척도 관리'],
+    'people' => ['view' => '전체 인물 조회', 'manage' => '인물 등록과 수정', 'view_sensitive' => '신분증·여권번호 표시', 'merge' => '중복 인물 병합'],
+    'accounts' => ['invite' => '계정 초대'],
+    'student_records' => ['view' => '학적 조회', 'manage' => '학적 등록과 수정'],
+    'student_status_changes' => ['approve' => '학적 변동 승인과 처리'],
+    'instructors' => ['manage' => '교원 관리'],
+    'advisors' => ['manage' => '지도교수 배정'],
+    'authentication_settings' => ['manage' => '로그인 수단과 SSO 관리'],
 ];

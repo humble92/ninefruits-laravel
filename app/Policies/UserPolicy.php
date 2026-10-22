@@ -27,6 +27,11 @@ class UserPolicy
         return $user->can(Permission::UsersUpdate->value);
     }
 
+    public function unlock(User $user, User $model): bool
+    {
+        return $user->can(Permission::UsersUpdate->value) && $user->isNot($model);
+    }
+
     public function resetMfa(User $user, User $model): bool
     {
         return $user->can(Permission::UsersResetMfa->value) && $user->isNot($model);

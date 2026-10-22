@@ -27,7 +27,19 @@ class RoleTemplateSeeder extends Seeder
             ],
             'registrar' => [
                 'display_name' => ['en' => 'Registrar', 'ko' => '학적 담당', 'zh_CN' => '学籍管理员'],
-                'permissions' => $staff,
+                'permissions' => [
+                    ...$staff,
+                    Permission::PeopleView,
+                    Permission::PeopleManage,
+                    Permission::PeopleViewSensitive,
+                    Permission::PeopleMerge,
+                    Permission::AccountsInvite,
+                    Permission::StudentRecordsView,
+                    Permission::StudentRecordsManage,
+                    Permission::StudentStatusChangesApprove,
+                    Permission::AdvisorsManage,
+                    Permission::ReferenceDataImport,
+                ],
             ],
             'academic_affairs' => [
                 'display_name' => ['en' => 'Academic Affairs', 'ko' => '교무 담당', 'zh_CN' => '教务管理员'],
@@ -42,15 +54,18 @@ class RoleTemplateSeeder extends Seeder
                     Permission::TermWindowsManage,
                     Permission::CourseCategoriesManage,
                     Permission::GradeScalesManage,
+                    Permission::InstructorsManage,
+                    Permission::StudentRecordsView,
                 ],
             ],
             'certificate_officer' => [
                 'display_name' => ['en' => 'Certificate Officer', 'ko' => '증명서 담당', 'zh_CN' => '证明书管理员'],
-                'permissions' => $staff,
+                'permissions' => [...$staff, Permission::StudentRecordsView],
             ],
+            // Assign with an org unit scope: the assistant sees that unit's students.
             'department_assistant' => [
                 'display_name' => ['en' => 'Department Assistant', 'ko' => '학과 조교', 'zh_CN' => '院系助理'],
-                'permissions' => $staff,
+                'permissions' => [...$staff, Permission::StudentRecordsView, Permission::AdvisorsManage],
             ],
             'admissions_officer' => [
                 'display_name' => ['en' => 'Admissions Officer', 'ko' => '입학 담당', 'zh_CN' => '招生管理员'],

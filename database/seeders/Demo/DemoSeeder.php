@@ -17,6 +17,7 @@ class DemoSeeder extends Seeder
     public const array SEEDERS = [
         DemoAccountSeeder::class,
         DemoReferenceSeeder::class,
+        DemoPeopleSeeder::class,
     ];
 
     public function run(DatabaseSessionContext $context): void

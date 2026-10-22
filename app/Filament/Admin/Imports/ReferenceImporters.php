@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Import types for the admin screens and `php artisan reference:import {type}`.
- * Students and instructors (Phase 2) and courses (Phase 4) are added with their tables.
+ * Courses (Phase 4) are added with their table.
  */
 final class ReferenceImporters
 {
@@ -19,6 +19,14 @@ final class ReferenceImporters
         'buildings' => BuildingImporter::class,
         'rooms' => RoomImporter::class,
         'lookup_values' => LookupValueImporter::class,
+        'students' => StudentImporter::class,
+        'instructors' => InstructorImporter::class,
+    ];
+
+    /** Types whose screens need a permission other than reference_data.import. */
+    private const array PERMISSIONS = [
+        'students' => Permission::StudentRecordsManage,
+        'instructors' => Permission::InstructorsManage,
     ];
 
     public static function action(string $type): ImportAction
@@ -26,6 +34,6 @@ final class ReferenceImporters
         return ImportAction::make("import_{$type}")
             ->label(__('reference.actions.import_csv'))
             ->importer(self::TYPES[$type])
-            ->authorize(fn () => (bool) Auth::user()?->can(Permission::ReferenceDataImport->value));
+            ->authorize(fn () => (bool) Auth::user()?->can((self::PERMISSIONS[$type] ?? Permission::ReferenceDataImport)->value));
     }
 }

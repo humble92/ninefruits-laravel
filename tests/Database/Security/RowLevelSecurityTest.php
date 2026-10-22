@@ -79,7 +79,7 @@ beforeEach(function () {
         $recordId = DB::table('rls_poc_student_records')->insertGetId(['user_id' => $user->id, 'student_number' => "2026000{$index}"]);
         DB::table('rls_poc_enrollments')->insert([['student_record_id' => $recordId, 'grade' => 'A'], ['student_record_id' => $recordId, 'grade' => 'B']]);
     }
-    rlsContext()->reset();
+    rlsContext()->useBaseline([]);
 });
 
 it('shows users only their own rows, including in related tables', function () {

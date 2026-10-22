@@ -40,6 +40,18 @@ enum Permission: string
     case CourseCategoriesManage = 'course_categories.manage';
     case GradeScalesManage = 'grade_scales.manage';
 
+    case PeopleView = 'people.view';
+    case PeopleManage = 'people.manage';
+    case PeopleViewSensitive = 'people.view_sensitive';
+    case PeopleMerge = 'people.merge';
+    case AccountsInvite = 'accounts.invite';
+    case StudentRecordsView = 'student_records.view';
+    case StudentRecordsManage = 'student_records.manage';
+    case StudentStatusChangesApprove = 'student_status_changes.approve';
+    case InstructorsManage = 'instructors.manage';
+    case AdvisorsManage = 'advisors.manage';
+    case AuthenticationSettingsManage = 'authentication_settings.manage';
+
     public function resource(): string
     {
         return explode('.', $this->value, 2)[0];

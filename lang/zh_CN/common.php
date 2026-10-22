@@ -7,4 +7,5 @@ return [
     'reason' => '原因',
     'save' => '保存',
     'saved' => '已保存',
+    'yes' => '是',
 ];

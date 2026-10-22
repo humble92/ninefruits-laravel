@@ -2,8 +2,6 @@
 
 use App\Domain\Institution\Settings\InstitutionSettings;
 use App\Domain\Security\Settings\SecuritySettings;
-use Spatie\LaravelData\Data;
-use Spatie\LaravelSettings\SettingsCasts\DataCast;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeInterfaceCast;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeZoneCast;
 use Spatie\LaravelSettings\SettingsRepositories\DatabaseSettingsRepository;
@@ -91,7 +89,6 @@ return [
         DateTimeInterface::class => DateTimeInterfaceCast::class,
         DateTimeZone::class => DateTimeZoneCast::class,
         //        Spatie\DataTransferObject\DataTransferObject::class => Spatie\LaravelSettings\SettingsCasts\DtoCast::class,
-        Data::class => DataCast::class,
     ],
 
     /*

@@ -45,7 +45,7 @@ class RecordAuthenticationEvents
         Context::add('user_id', $event->user->id);
         $this->databaseContext->forUser($event->user->id, Context::get('request_id'));
 
-        $event->user->forceFill(['last_login_at' => CarbonImmutable::now()])->saveQuietly();
+        $event->user->forceFill(['last_login_at' => CarbonImmutable::now(), 'failed_login_count' => 0, 'locked_until' => null])->saveQuietly();
 
         $this->record->handle(SecurityEventType::LoginSucceeded, $event->user, $event->user->email);
     }

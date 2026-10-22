@@ -5,6 +5,7 @@ namespace App\Console\Commands\Setup;
 use App\Console\Commands\AuditedCommand;
 use App\Support\Setup\DemoOptions;
 use Database\Seeders\Demo\DemoAccountSeeder;
+use Database\Seeders\Demo\DemoPeopleSeeder;
 use Database\Seeders\Demo\DemoSeeder;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -47,7 +48,7 @@ class Demo extends AuditedCommand
 
         $this->components->info('Demo accounts (password: '.config('setup.demo.password').')');
 
-        foreach (DemoAccountSeeder::emails() as $email) {
+        foreach ([...DemoAccountSeeder::emails(), ...DemoPeopleSeeder::emails()] as $email) {
             $this->line("  {$email}");
         }
 

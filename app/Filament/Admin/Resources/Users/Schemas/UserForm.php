@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
 use App\Domain\Institution\Services\SupportedLocales;
+use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -18,7 +19,8 @@ class UserForm
             ->components([
                 TextInput::make('name')
                     ->label(__('admin.users.fields.name'))
-                    ->required()
+                    ->helperText(__('admin.users.help.name'))
+                    ->required(fn (?User $record) => $record?->person_id === null)
                     ->maxLength(255),
                 TextInput::make('email')
                     ->label(__('admin.users.fields.email'))

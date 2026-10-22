@@ -5,6 +5,9 @@ return [
         'dashboard' => '홈',
         'security' => '보안',
         'admin' => '관리',
+        'records' => '내 학적',
+        'profile' => '내 정보',
+        'advisees' => '지도 학생',
     ],
     'dashboard' => [
         'title' => '홈',
@@ -12,5 +15,27 @@ return [
         'access' => '내 권한',
         'roles' => '역할',
         'personas' => '신분',
+    ],
+    'records' => [
+        'title' => '내 학적',
+        'choose' => '학적이 여러 개 있습니다. 볼 학적을 고르세요.',
+        'none' => '학적이 없습니다.',
+        'pending' => '처리 중인 신청: :type (:date부터)',
+        'cancel' => '신청 취소',
+        'cancel_confirm' => '이 신청을 취소할까요?',
+        'request_title' => '학적 변동 신청',
+        'submit_request' => '신청',
+        'request_submitted' => '신청했습니다. 학적 담당 부서에서 검토합니다.',
+    ],
+    'profile' => [
+        'title' => '내 정보',
+        'registrar_fields' => '이름, 생년월일, 신분 번호 변경은 학적 담당 부서에 요청하세요.',
+        'saved' => '저장했습니다.',
+        'add_guardian' => '보호자 추가',
+        'remove' => '삭제',
+        'remove_confirm' => '이 보호자를 삭제할까요?',
+    ],
+    'advisees' => [
+        'title' => '지도 학생',
     ],
 ];

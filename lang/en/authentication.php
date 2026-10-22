@@ -7,12 +7,14 @@ return [
         'password' => 'Password',
         'new_password' => 'New password',
         'password_confirmation' => 'Confirm password',
+        'email_or_student_number' => 'Email or student number',
     ],
     'login' => [
         'title' => 'Sign in',
         'remember_me' => 'Keep me signed in',
         'forgot_password' => 'Forgot your password?',
         'submit' => 'Sign in',
+        'sso' => 'Sign in with :provider',
     ],
     'two_factor' => [
         'title' => 'Two-factor authentication',

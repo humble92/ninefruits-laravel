@@ -10,14 +10,19 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class UsersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with('person'))
             ->columns([
-                TextColumn::make('name')->label(__('admin.users.fields.name'))->searchable()->sortable(),
+                TextColumn::make('name')->label(__('admin.users.fields.name'))
+                    ->state(fn (User $record) => $record->displayName())
+                    ->description(fn (User $record) => $record->person_id !== null ? __('admin.users.fields.linked_person') : null)
+                    ->searchable()->sortable(),
                 TextColumn::make('email')->label(__('admin.users.fields.email'))->searchable()->sortable(),
                 IconColumn::make('is_active')->label(__('admin.users.fields.is_active'))->boolean(),
                 IconColumn::make('mfa_enrolled')

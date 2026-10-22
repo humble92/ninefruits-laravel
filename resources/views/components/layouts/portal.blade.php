@@ -12,6 +12,17 @@
         <nav class="mx-auto flex max-w-5xl flex-wrap items-center gap-4 px-4 py-3">
             <a href="{{ route('portal.dashboard') }}" class="font-semibold">{{ config('app.name') }}</a>
             <a href="{{ route('portal.dashboard') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.dashboard') }}</a>
+            @php($portalUser = auth()->user())
+            @php($personas = app(\App\Domain\Security\Services\PersonaResolver::class)->personasFor($portalUser))
+            @if (in_array(\App\Domain\Security\Enums\Persona::Student, $personas, true) || in_array(\App\Domain\Security\Enums\Persona::Alumni, $personas, true))
+                <a href="{{ route('portal.records') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.records') }}</a>
+            @endif
+            @if ($portalUser->person_id !== null)
+                <a href="{{ route('portal.profile') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.profile') }}</a>
+            @endif
+            @if (in_array(\App\Domain\Security\Enums\Persona::Advisor, $personas, true))
+                <a href="{{ route('portal.advisees') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.advisees') }}</a>
+            @endif
             <a href="{{ route('portal.security') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.security') }}</a>
             @can(\App\Domain\Security\Enums\Permission::AdminPanelAccess->value)
                 <a href="{{ url('/admin') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.admin') }}</a>

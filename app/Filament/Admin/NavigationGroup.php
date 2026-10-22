@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
  */
 enum NavigationGroup implements HasLabel
 {
+    case StudentRecords;
     case ReferenceData;
     case Access;
     case Audit;

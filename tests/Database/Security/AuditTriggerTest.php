@@ -34,6 +34,7 @@ it('records inserts, updates and deletes with the request context', function () 
 });
 
 it('records changes made outside the application', function () {
+    app(DatabaseSessionContext::class)->useBaseline([]);
     DB::table('users')->insert([
         'name' => 'Direct', 'email' => 'direct@example.com', 'password' => 'x',
     ]);

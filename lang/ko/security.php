@@ -37,7 +37,8 @@ return [
         'mail_expiry' => '코드는 :minutes분 후 만료되며 한 번만 사용할 수 있습니다.',
         'mail_ignore' => '로그인을 시도하지 않았다면 비밀번호를 변경하세요.',
         'mail_greeting' => '안녕하세요.',
-        'mail_salutation' => "감사합니다.\n:app",
+        'mail_salutation' => '감사합니다.
+:app',
     ],
     'mfa_enforcement' => [
         'disabled' => '사용 안 함',
@@ -78,10 +79,35 @@ return [
         'role_permissions_changed' => '역할 권한 변경',
         'sensitive_data_revealed' => '민감 정보 표시',
         'data_exported' => '데이터 내보내기',
+        'account_unlocked' => '계정 잠금 해제',
     ],
     'errors' => [
         'persona_role_not_assignable' => '신분 역할은 자동으로 부여되므로 직접 할당할 수 없습니다.',
         'scope_id_mismatch' => '범위 할당에는 대상을 지정하고, 전체 할당에는 지정하지 마세요.',
         'invalid_period' => '종료 시각은 시작 시각 이후여야 합니다.',
+    ],
+    'sso' => [
+        'title' => '학교 통합 로그인',
+        'help' => '학교 계정을 연결하면 그 계정으로 로그인할 수 있습니다.',
+        'link' => '연결',
+        'unlink' => '연결 해제',
+        'unlink_confirm' => '학교 계정 연결을 해제할까요? 이후에는 비밀번호로 로그인해야 합니다.',
+        'linked_status' => '연결됨',
+        'linked' => ':provider 계정을 연결했습니다.',
+        'not_linked' => ':provider 계정이 이곳 계정과 연결되어 있지 않습니다. 비밀번호로 로그인한 뒤 보안 화면에서 연결하세요.',
+        'expired' => '로그인 시도가 만료되었습니다. 다시 시도하세요.',
+        'cancelled' => '로그인을 취소했습니다.',
+        'failed' => '학교 통합 로그인에 실패했습니다. 다시 시도하거나 비밀번호로 로그인하세요.',
+        'already_linked' => '이 제공자의 다른 계정이 이미 연결되어 있습니다.',
+        'linked_to_another_account' => '이 학교 계정은 다른 사용자에게 연결되어 있습니다.',
+    ],
+    'student_number_login' => [
+        'disabled' => '허용 안 함',
+        'active_records' => '재학생만',
+        'all_records' => '재학생과 졸업생',
+    ],
+    'sso_link_modes' => [
+        'manual' => '사용자가 직접 연결',
+        'institutional_email' => '확인된 학교 이메일로 자동 연결',
     ],
 ];

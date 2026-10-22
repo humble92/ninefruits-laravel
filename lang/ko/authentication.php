@@ -7,12 +7,14 @@ return [
         'password' => '비밀번호',
         'new_password' => '새 비밀번호',
         'password_confirmation' => '비밀번호 확인',
+        'email_or_student_number' => '이메일 또는 학번',
     ],
     'login' => [
         'title' => '로그인',
         'remember_me' => '로그인 상태 유지',
         'forgot_password' => '비밀번호를 잊으셨나요?',
         'submit' => '로그인',
+        'sso' => ':provider로 로그인',
     ],
     'two_factor' => [
         'title' => '2단계 인증',

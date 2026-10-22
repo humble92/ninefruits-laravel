@@ -7,4 +7,5 @@ return [
     'reason' => 'Reason',
     'save' => 'Save',
     'saved' => 'Saved',
+    'yes' => 'Yes',
 ];

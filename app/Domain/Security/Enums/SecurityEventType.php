@@ -7,6 +7,7 @@ enum SecurityEventType: string
     case LoginSucceeded = 'login.succeeded';
     case LoginFailed = 'login.failed';
     case LoginLockedOut = 'login.locked_out';
+    case AccountUnlocked = 'account.unlocked';
     case Logout = 'logout';
     case PasswordReset = 'password.reset';
     case MfaEnabled = 'mfa.enabled';

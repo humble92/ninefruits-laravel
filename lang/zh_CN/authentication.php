@@ -7,12 +7,14 @@ return [
         'password' => '密码',
         'new_password' => '新密码',
         'password_confirmation' => '确认密码',
+        'email_or_student_number' => '邮箱或学号',
     ],
     'login' => [
         'title' => '登录',
         'remember_me' => '保持登录状态',
         'forgot_password' => '忘记密码？',
         'submit' => '登录',
+        'sso' => '使用 :provider 登录',
     ],
     'two_factor' => [
         'title' => '双重身份验证',

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Domain\Person\Personas\AdvisorPersonaDetector;
+use App\Domain\Person\Personas\AlumniPersonaDetector;
+use App\Domain\Person\Personas\InstructorPersonaDetector;
+use App\Domain\Person\Personas\StudentPersonaDetector;
 use App\Domain\Security\Contracts\PersonaDetector;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Security\Listeners\RecordAuthenticationEvents;
@@ -65,7 +69,12 @@ class AppServiceProvider extends ServiceProvider
      *
      * @var list<class-string<PersonaDetector>>
      */
-    private const array PERSONA_DETECTORS = [];
+    private const array PERSONA_DETECTORS = [
+        StudentPersonaDetector::class,
+        AlumniPersonaDetector::class,
+        InstructorPersonaDetector::class,
+        AdvisorPersonaDetector::class,
+    ];
 
     /**
      * @var array<class-string, class-string>

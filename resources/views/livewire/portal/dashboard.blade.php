@@ -1,5 +1,5 @@
 <div class="space-y-6">
-    <h1 class="text-2xl font-semibold">{{ __('portal.dashboard.welcome', ['name' => $user->name]) }}</h1>
+    <h1 class="text-2xl font-semibold">{{ __('portal.dashboard.welcome', ['name' => $user->displayName()]) }}</h1>
 
     <section class="rounded-lg border border-zinc-200 bg-white p-6">
         <h2 class="mb-3 font-medium">{{ __('portal.dashboard.access') }}</h2>

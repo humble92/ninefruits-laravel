@@ -4,9 +4,11 @@ namespace App\Livewire\Portal;
 
 use App\Domain\Security\Actions\DisableMfaMethod;
 use App\Domain\Security\Actions\EnableEmailMfa;
+use App\Domain\Security\Actions\UnlinkIdentity;
 use App\Domain\Security\Enums\MfaMethod;
 use App\Domain\Security\Services\EmailCodeChallenge;
 use App\Domain\Security\Services\MfaPolicy;
+use App\Domain\Security\Services\Sso\OidcClient;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +20,8 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 /**
- * Two-factor enrollment shared by every user type. The admin panel links here, so a user
- * enrolls once for both the portal and the admin panel.
+ * Two-factor enrollment and school sign-in (SSO) links, shared by every user type. The
+ * admin panel links here, so a user enrolls once for both the portal and the admin panel.
  */
 #[Layout('components.layouts.portal')]
 class SecuritySettings extends Component
@@ -119,7 +121,18 @@ class SecuritySettings extends Component
         return $this->disableMethod($disable, MfaMethod::EmailCode);
     }
 
-    public function render(MfaPolicy $policy): View
+    public function unlinkIdentity(int $identityId, UnlinkIdentity $unlink): mixed
+    {
+        if ($this->requirePasswordConfirmation()) {
+            return null;
+        }
+
+        $unlink->handle($this->user(), $this->user()->identities()->findOrFail($identityId));
+
+        return null;
+    }
+
+    public function render(MfaPolicy $policy, OidcClient $sso): View
     {
         $user = $this->user();
         $methods = $policy->methodsFor($user);
@@ -136,6 +149,8 @@ class SecuritySettings extends Component
             'qrCodeSvg' => $pending ? $user->twoFactorQrCodeSvg() : null,
             'setupKey' => $pending ? decrypt((string) $user->two_factor_secret) : null,
             'recoveryCodes' => $this->showingRecoveryCodes ? $user->recoveryCodes() : [],
+            'ssoProviders' => $sso->enabledProviders(),
+            'identities' => $user->identities()->get()->keyBy('provider'),
         ])->title(__('security.mfa.title'));
     }
 

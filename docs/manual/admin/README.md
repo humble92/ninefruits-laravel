@@ -16,6 +16,10 @@
 | [9. CSV 가져오기](09-csv-import.md) | 파일 형식, 가져오기 결과와 실패 행 처리 |
 | [10. 학년도, 학기, 업무 기간](10-terms.md) | 학기 상태, 수강신청 등 업무 기간과 대상 조건, 교시 |
 | [11. 교과 구분과 성적 척도](11-course-categories-and-grade-scales.md) | 교과 구분, 등급과 평점 |
+| [12. 인물과 학적](12-people-and-student-records.md) | 인물, 학적 등록과 학번, 조회 범위, 교원 |
+| [13. 학적 변동과 지도교수](13-status-changes-and-advisors.md) | 학적 상태, 변동 신청과 승인, 직접 처리, 지도교수 |
+| [14. 인물 병합과 계정 초대](14-merge-and-invitations.md) | 중복 인물 병합, 계정 없는 인물에게 가입 안내 |
+| [15. 로그인 수단 설정](15-sign-in-methods.md) | 학번 로그인, 계정 잠금, 학교 통합 로그인(SSO) |
 
 Phase가 진행되면서 장을 추가한다.
 

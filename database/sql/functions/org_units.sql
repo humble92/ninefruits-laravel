@@ -41,7 +41,7 @@ END
 $$;
 
 -- Org units (with descendants) where the current user has the permission. For RLS policies:
---   USING (org_unit_id = ANY ((SELECT util.permission_org_unit_ids('student_records.view'))))
+--   USING (org_unit_id = ANY ((SELECT util.permission_org_unit_ids('student_records.view'))::bigint[]))
 CREATE OR REPLACE FUNCTION util.permission_org_unit_ids(permission_name text) RETURNS bigint[]
     LANGUAGE sql STABLE PARALLEL SAFE
 AS $$

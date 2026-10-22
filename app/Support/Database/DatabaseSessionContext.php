@@ -20,6 +20,9 @@ class DatabaseSessionContext
     /** @var array<int, array<string, string>> Settings not yet sent, per connection object */
     private array $pending = [];
 
+    /** @var array<string, string> */
+    private array $baseline = [];
+
     /** @var array<int, true> Connections with the beforeExecuting hook */
     private array $hooked = [];
 
@@ -53,7 +56,19 @@ class DatabaseSessionContext
 
     public function reset(): void
     {
-        $this->apply(array_fill_keys(self::KEYS, ''));
+        $this->apply(array_merge(array_fill_keys(self::KEYS, ''), $this->baseline));
+    }
+
+    /**
+     * Settings that reset() returns to instead of empty values. Only tests use this, to
+     * create fixtures as a system actor between requests; production has no baseline.
+     *
+     * @param  array<string, string>  $settings
+     */
+    public function useBaseline(array $settings): void
+    {
+        $this->baseline = $settings;
+        $this->reset();
     }
 
     /**

@@ -2,6 +2,13 @@
 
 return [
     'resources' => [
+        'people' => '人员',
+        'accounts' => '账户',
+        'student_records' => '学籍',
+        'student_status_changes' => '学籍异动',
+        'instructors' => '教师',
+        'advisors' => '导师',
+        'authentication_settings' => '登录设置',
         'reference_data' => '基础数据',
         'lookup_values' => '代码数据',
         'org_units' => '组织单位',
@@ -47,4 +54,11 @@ return [
     'term_windows' => ['manage' => '管理业务期间'],
     'course_categories' => ['manage' => '管理课程类别'],
     'grade_scales' => ['manage' => '管理成绩等级'],
+    'people' => ['view' => '查看所有人员', 'manage' => '登记和编辑人员', 'view_sensitive' => '显示身份证号和护照号', 'merge' => '合并重复人员'],
+    'accounts' => ['invite' => '邀请创建账户'],
+    'student_records' => ['view' => '查看学籍', 'manage' => '登记和编辑学籍'],
+    'student_status_changes' => ['approve' => '审批和办理学籍异动'],
+    'instructors' => ['manage' => '管理教师'],
+    'advisors' => ['manage' => '分配导师'],
+    'authentication_settings' => ['manage' => '管理登录方式和 SSO'],
 ];

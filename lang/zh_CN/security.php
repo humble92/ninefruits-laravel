@@ -37,7 +37,8 @@ return [
         'mail_expiry' => '验证码将在 :minutes 分钟后失效，且只能使用一次。',
         'mail_ignore' => '如果不是您本人尝试登录，请修改密码。',
         'mail_greeting' => '您好，',
-        'mail_salutation' => "此致\n:app",
+        'mail_salutation' => '此致
+:app',
     ],
     'mfa_enforcement' => [
         'disabled' => '不使用',
@@ -78,10 +79,35 @@ return [
         'role_permissions_changed' => '角色权限变更',
         'sensitive_data_revealed' => '显示敏感信息',
         'data_exported' => '导出数据',
+        'account_unlocked' => '账户解锁',
     ],
     'errors' => [
         'persona_role_not_assignable' => '身份角色由系统自动授予，不能手动分配。',
         'scope_id_mismatch' => '范围分配需要指定对象，全部范围分配不需要指定。',
         'invalid_period' => '结束时间必须晚于开始时间。',
+    ],
+    'sso' => [
+        'title' => '学校统一登录',
+        'help' => '关联学校账户后即可用其登录。',
+        'link' => '关联',
+        'unlink' => '取消关联',
+        'unlink_confirm' => '取消关联学校账户？之后需使用密码登录。',
+        'linked_status' => '已关联',
+        'linked' => '已关联 :provider 账户。',
+        'not_linked' => '您的 :provider 账户尚未与此处账户关联。请用密码登录后在安全设置中关联。',
+        'expired' => '登录请求已过期，请重试。',
+        'cancelled' => '已取消登录。',
+        'failed' => '学校统一登录失败。请重试或使用密码登录。',
+        'already_linked' => '您的账户已关联该提供方的另一个账户。',
+        'linked_to_another_account' => '该学校账户已关联其他用户。',
+    ],
+    'student_number_login' => [
+        'disabled' => '不允许',
+        'active_records' => '仅在读学生',
+        'all_records' => '在读学生和毕业生',
+    ],
+    'sso_link_modes' => [
+        'manual' => '用户自行关联',
+        'institutional_email' => '按已验证的学校邮箱自动关联',
     ],
 ];

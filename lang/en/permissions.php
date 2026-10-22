@@ -2,6 +2,13 @@
 
 return [
     'resources' => [
+        'people' => 'People',
+        'accounts' => 'Accounts',
+        'student_records' => 'Student records',
+        'student_status_changes' => 'Status changes',
+        'instructors' => 'Instructors',
+        'advisors' => 'Advisors',
+        'authentication_settings' => 'Sign-in settings',
         'reference_data' => 'Reference data',
         'lookup_values' => 'Code data',
         'org_units' => 'Org units',
@@ -47,4 +54,11 @@ return [
     'term_windows' => ['manage' => 'Manage term windows'],
     'course_categories' => ['manage' => 'Manage course categories'],
     'grade_scales' => ['manage' => 'Manage grade scales'],
+    'people' => ['view' => 'View all people', 'manage' => 'Create and edit people', 'view_sensitive' => 'Reveal national ID and passport numbers', 'merge' => 'Merge duplicate people'],
+    'accounts' => ['invite' => 'Invite people to create an account'],
+    'student_records' => ['view' => 'View student records', 'manage' => 'Create and edit student records'],
+    'student_status_changes' => ['approve' => 'Approve and record status changes'],
+    'instructors' => ['manage' => 'Manage instructors'],
+    'advisors' => ['manage' => 'Assign advisors'],
+    'authentication_settings' => ['manage' => 'Manage sign-in methods and SSO'],
 ];

@@ -19,6 +19,7 @@ class EssentialSeeder extends Seeder
             LanguageSeeder::class,
             LookupTypeSeeder::class,
             OrgUnitTypeSeeder::class,
+            StatusChangeTypeSeeder::class,
         ]);
     }
 }

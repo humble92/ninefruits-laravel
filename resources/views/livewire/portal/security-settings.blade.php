@@ -83,4 +83,26 @@
             @error('email_code') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
         </section>
     @endif
+
+    @if ($ssoProviders !== [])
+        <section class="space-y-3 rounded-lg border border-zinc-200 bg-white p-6">
+            <h2 class="font-medium">{{ __('security.sso.title') }}</h2>
+            <p class="text-sm text-zinc-600">{{ __('security.sso.help') }}</p>
+            @foreach ($ssoProviders as $provider)
+                <div class="flex items-center justify-between border-t border-zinc-100 pt-3 text-sm">
+                    <span>
+                        {{ $provider->label }}
+                        @if ($identities->has($provider->key))
+                            <span class="text-zinc-500">· {{ $identities[$provider->key]->email ?? __('security.sso.linked_status') }}</span>
+                        @endif
+                    </span>
+                    @if ($identities->has($provider->key))
+                        <button type="button" wire:click="unlinkIdentity({{ $identities[$provider->key]->id }})" wire:confirm="{{ __('security.sso.unlink_confirm') }}" class="text-red-700 underline">{{ __('security.sso.unlink') }}</button>
+                    @else
+                        <a href="{{ route('sso.redirect', [$provider->key, 'link' => 1]) }}" class="underline">{{ __('security.sso.link') }}</a>
+                    @endif
+                </div>
+            @endforeach
+        </section>
+    @endif
 </div>
