@@ -80,6 +80,8 @@ return [
         'validate_distribution' => 'Check grade caps',
     ],
     'entry' => [
+        'import_lms' => 'Load scores from the LMS',
+        'lms_imported' => ':count score(s) loaded from the LMS as a draft. Check them and save.',
         'title' => 'Grade entry',
         'open' => 'Enter grades',
         'counts' => ':none not entered, :draft draft, :submitted submitted, :finalized final',

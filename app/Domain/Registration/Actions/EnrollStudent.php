@@ -13,6 +13,7 @@ use App\Domain\Registration\Enums\EnrollmentSource;
 use App\Domain\Registration\Enums\RuleCode;
 use App\Domain\Registration\Enums\RuleSeverity;
 use App\Domain\Registration\Enums\WaitlistStatus;
+use App\Domain\Registration\Events\EnrollmentConfirmed;
 use App\Domain\Registration\Services\AttemptLog;
 use App\Domain\Registration\Services\RegistrationRuleEngine;
 use App\Domain\Registration\Services\SeatAllocator;
@@ -95,6 +96,8 @@ class EnrollStudent
                 CartItem::query()->where('student_record_id', $record->id)->where('section_id', $locked->id)->delete();
                 WaitlistEntry::query()->where('student_record_id', $record->id)->where('section_id', $locked->id)->where('status', WaitlistStatus::Waiting)
                     ->update(['status' => WaitlistStatus::Promoted, 'resolved_at' => $at, 'enrollment_id' => $enrollment->id]);
+
+                EnrollmentConfirmed::dispatch($enrollment);
 
                 return new RegistrationOutcome(AttemptOutcome::Succeeded, $evaluation, $enrollment);
             });

@@ -80,6 +80,8 @@ return [
         'validate_distribution' => '등급 비율 검사',
     ],
     'entry' => [
+        'import_lms' => 'LMS 점수 불러오기',
+        'lms_imported' => 'LMS 점수 :count건을 초안으로 불러왔습니다. 확인 후 저장하세요.',
         'title' => '성적 입력',
         'open' => '성적 입력',
         'counts' => '미입력 :none, 임시 저장 :draft, 제출 :submitted, 확정 :finalized',

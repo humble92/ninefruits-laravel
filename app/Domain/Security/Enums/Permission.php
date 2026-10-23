@@ -88,6 +88,8 @@ enum Permission: string
     case GraduationProcess = 'graduation.process';
     case ReportsView = 'reports.view';
 
+    case LmsManage = 'lms.manage';
+
     public function resource(): string
     {
         return explode('.', $this->value, 2)[0];

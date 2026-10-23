@@ -6,6 +6,7 @@ use App\Domain\Registration\Data\RegistrationContext;
 use App\Domain\Registration\Enums\AttemptAction;
 use App\Domain\Registration\Enums\AttemptOutcome;
 use App\Domain\Registration\Enums\EnrollmentStatus;
+use App\Domain\Registration\Events\EnrollmentDropped;
 use App\Domain\Registration\Jobs\PromoteWaitlistJob;
 use App\Domain\Registration\Services\AttemptLog;
 use App\Domain\Registration\Services\RegistrationRuleEngine;
@@ -87,6 +88,7 @@ class DropEnrollment
         }
 
         PromoteWaitlistJob::dispatch($section->id)->afterCommit();
+        EnrollmentDropped::dispatch($enrollment);
 
         return $enrollment;
     }

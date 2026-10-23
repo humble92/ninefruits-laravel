@@ -25,6 +25,9 @@
                 @endif
             </p>
         @elseif ($canRequestMethod)
+            @if ($this->hasLmsScores())
+                <button type="button" wire:click="importLmsScores" class="mt-2 rounded border border-zinc-300 bg-white px-3 py-1 text-sm">{{ __('grading.entry.import_lms') }}</button>
+            @endif
             <form wire:submit="requestMethod" class="mt-2 flex flex-wrap items-end gap-2">
                 <label class="grow text-xs">
                     {{ __('grading.entry.method_request_help', ['method' => $otherMethod->label()]) }}

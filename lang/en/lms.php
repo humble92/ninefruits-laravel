@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS platform', 'plural_label' => 'LMS platforms'],
+        'course_links' => ['label' => 'Course link', 'plural_label' => 'Course links'],
+        'sync_logs' => ['label' => 'Sync log', 'plural_label' => 'Sync logs'],
+    ],
+    'fields' => [
+        'driver' => 'Driver',
+        'not_implemented' => 'not implemented yet',
+        'base_url' => 'Base URL',
+        'credentials' => 'Credentials',
+        'credential_key' => 'Key',
+        'credential_value' => 'Value',
+        'course_links' => 'Course links',
+        'should_sync_enrollments' => 'Synchronize rosters',
+        'should_pull_grades' => 'Pull final scores',
+        'external_course_id' => 'Course id on the platform',
+        'external_url' => 'Course URL',
+        'last_synced_at' => 'Last synced',
+        'last_error' => 'Last error',
+        'started_at' => 'Started',
+        'operation' => 'Operation',
+        'message' => 'Message',
+    ],
+    'help' => [
+        'driver' => 'The connector that talks to the platform. "null" records what would be sent without calling anything; use it to prepare and test.',
+        'credentials' => 'Tokens and secrets the driver needs (see docs/lms-integration-guide.md). Stored encrypted; leave empty on edit to keep the stored ones.',
+        'is_active' => 'Active platforms receive published sections and roster changes as they happen, and the nightly reconcile.',
+        'should_pull_grades' => 'Lets instructors load the platform\'s final scores into the grade entry screen as a draft.',
+    ],
+    'actions' => ['resync' => 'Synchronize again'],
+    'notifications' => ['synced' => 'Synchronized: :members member(s).'],
+    'drivers' => ['null' => 'None (records only)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Pending', 'linked' => 'Linked', 'failed' => 'Failed'],
+    'operations' => ['course.sync' => 'Course', 'enrollment.add' => 'Add member', 'enrollment.remove' => 'Remove member', 'grades.pull' => 'Pull scores', 'reconcile' => 'Reconcile'],
+    'sync_statuses' => ['queued' => 'Queued', 'succeeded' => 'Succeeded', 'failed' => 'Failed', 'skipped' => 'Skipped'],
+    'portal' => ['open_course' => 'Open the course on :platform'],
+];

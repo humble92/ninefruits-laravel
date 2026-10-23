@@ -11,6 +11,8 @@ use App\Domain\Grading\Enums\GradeChangeStatus;
 use App\Domain\Grading\Enums\GradeStatus;
 use App\Domain\Grading\Services\GradeDistributionCheck;
 use App\Domain\Grading\Services\GradeOptions;
+use App\Domain\Lms\Actions\PullGrades;
+use App\Domain\Lms\Enums\LinkStatus;
 use App\Domain\Registration\Enums\EnrollmentStatus;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Term\Enums\TermWindowType;
@@ -18,6 +20,7 @@ use App\Domain\Term\Services\TermResolver;
 use App\Models\Grading\EvaluationMethodRequest;
 use App\Models\Grading\GradeChangeRequest;
 use App\Models\Grading\GradeScaleItem;
+use App\Models\Lms\LmsPlatform;
 use App\Models\Offering\Section;
 use App\Models\Registration\Enrollment;
 use App\Models\User;
@@ -217,6 +220,33 @@ class GradeEntry extends Component
             ->whereIn('status', [EnrollmentStatus::Enrolled, EnrollmentStatus::Completed, EnrollmentStatus::Withdrawn])
             ->with(['studentRecord.person', 'studentRecord.program', 'version', 'section', 'gradeChangeRequests'])
             ->get()->sortBy(fn (Enrollment $enrollment) => $enrollment->studentRecord->student_number)->values();
+    }
+
+    /**
+     * Loads the platform's final scores into the score fields as a draft; nothing is saved
+     * until the instructor does (docs/porting-plan.md section 12).
+     */
+    public function importLmsScores(PullGrades $pull): void
+    {
+        $this->messages = [];
+        $imported = 0;
+
+        foreach (LmsPlatform::query()->where('is_active', true)->where('should_pull_grades', true)->get() as $platform) {
+            foreach ($pull->handle($platform, $this->section) as $enrollmentId => $score) {
+                if (array_key_exists($enrollmentId, $this->grades)) {
+                    $this->grades[$enrollmentId]['score'] = (string) $score;
+                    $imported++;
+                }
+            }
+        }
+
+        [$this->messages, $this->messageTone] = [[__('grading.entry.lms_imported', ['count' => $imported])], $imported > 0 ? 'success' : 'info'];
+    }
+
+    public function hasLmsScores(): bool
+    {
+        return LmsPlatform::query()->where('is_active', true)->where('should_pull_grades', true)
+            ->whereHas('courseLinks', fn ($q) => $q->where('section_id', $this->section->id)->where('status', LinkStatus::Linked))->exists();
     }
 
     private function fillGrades(): void

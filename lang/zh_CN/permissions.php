@@ -45,6 +45,7 @@ return [
         'assessments' => '语言/综合考试',
         'graduation' => '毕业',
         'reports' => '报表',
+        'lms' => 'LMS 对接',
         'certificates' => '证明书',
     ],
     'admin_panel' => ['access' => '使用管理界面'],
@@ -98,5 +99,6 @@ return [
     'assessments' => ['record' => '登记考生、录入和公布成绩、登记外部成绩', 'manage' => '管理考试种类、领域和场次'],
     'graduation' => ['audit' => '执行和查看毕业资格审核', 'process' => '办理毕业、批准要求豁免'],
     'reports' => ['view' => '查看和下载标准报表'],
+    'lms' => ['manage' => '管理 LMS 平台、关联和同步'],
     'certificates' => ['issue' => '开具、重新生成和撤销证明书', 'manage' => '管理证明书种类、模板和设置'],
 ];

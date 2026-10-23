@@ -91,6 +91,7 @@ class RoleTemplateSeeder extends Seeder
                     Permission::AssessmentsManage,
                     Permission::GraduationAudit,
                     Permission::ReportsView,
+                    Permission::LmsManage,
                 ],
             ],
             'certificate_officer' => [

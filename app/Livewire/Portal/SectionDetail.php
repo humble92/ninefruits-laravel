@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Portal;
 
+use App\Domain\Lms\Enums\LinkStatus;
 use App\Domain\Offering\Enums\SectionStatus;
+use App\Models\Lms\LmsCourseLink;
 use App\Models\Offering\Section;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
@@ -40,6 +42,7 @@ class SectionDetail extends Component
             'section' => $section,
             'canEdit' => $canEdit,
             'syllabus' => $section->syllabus !== null && ($section->syllabus->published_at !== null || $canEdit) ? $section->syllabus : null,
+            'lmsLinks' => LmsCourseLink::query()->where('section_id', $section->id)->where('status', LinkStatus::Linked)->whereNotNull('external_url')->with('platform')->get(),
         ])->title($section->label());
     }
 }

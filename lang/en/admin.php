@@ -16,6 +16,7 @@ return [
         'assessments' => 'Examinations',
         'graduation' => 'Graduation',
         'reports' => 'Reports',
+        'lms' => 'LMS integration',
         'certificates' => 'Certificates',
     ],
     'users' => [

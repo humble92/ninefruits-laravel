@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS 플랫폼', 'plural_label' => 'LMS 플랫폼'],
+        'course_links' => ['label' => '강좌 연결', 'plural_label' => '강좌 연결'],
+        'sync_logs' => ['label' => '동기화 기록', 'plural_label' => '동기화 기록'],
+    ],
+    'fields' => [
+        'driver' => '드라이버',
+        'not_implemented' => '미구현',
+        'base_url' => '기본 URL',
+        'credentials' => '인증 정보',
+        'credential_key' => '키',
+        'credential_value' => '값',
+        'course_links' => '강좌 연결',
+        'should_sync_enrollments' => '수강 명단 동기화',
+        'should_pull_grades' => '최종 점수 가져오기',
+        'external_course_id' => '플랫폼 강좌 ID',
+        'external_url' => '강좌 URL',
+        'last_synced_at' => '마지막 동기화',
+        'last_error' => '마지막 오류',
+        'started_at' => '시작',
+        'operation' => '작업',
+        'message' => '메시지',
+    ],
+    'help' => [
+        'driver' => '플랫폼과 통신하는 커넥터. "없음"은 호출 없이 보낼 내용만 기록한다(준비·시험용).',
+        'credentials' => '드라이버가 쓰는 토큰·비밀값(docs/lms-integration-guide.md 참조). 암호화해 저장하며, 수정 시 비워 두면 기존 값을 유지한다.',
+        'is_active' => '활성 플랫폼은 강좌 공개와 수강 변동을 즉시 받고, 야간 대조 대상이 된다.',
+        'should_pull_grades' => '교원이 성적 입력 화면에서 플랫폼의 최종 점수를 초안으로 불러올 수 있게 한다.',
+    ],
+    'actions' => ['resync' => '다시 동기화'],
+    'notifications' => ['synced' => '동기화 완료: 구성원 :members명.'],
+    'drivers' => ['null' => '없음(기록만)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => '대기', 'linked' => '연결됨', 'failed' => '실패'],
+    'operations' => ['course.sync' => '강좌', 'enrollment.add' => '구성원 추가', 'enrollment.remove' => '구성원 제거', 'grades.pull' => '점수 가져오기', 'reconcile' => '대조'],
+    'sync_statuses' => ['queued' => '대기', 'succeeded' => '성공', 'failed' => '실패', 'skipped' => '건너뜀'],
+    'portal' => ['open_course' => ':platform 강좌 열기'],
+];

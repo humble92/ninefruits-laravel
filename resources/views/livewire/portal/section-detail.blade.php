@@ -2,6 +2,9 @@
     <div>
         <a href="{{ route('portal.catalog', ['termId' => $section->term_id]) }}" class="text-sm text-zinc-600 underline">{{ __('offering.catalog.title') }}</a>
         <h1 class="mt-1 text-2xl font-semibold">{{ $section->label() }} {{ $section->version->title }}</h1>
+        @foreach ($lmsLinks as $link)
+            <a href="{{ $link->external_url }}" target="_blank" rel="noopener" class="mt-1 inline-block text-sm underline">{{ __('lms.portal.open_course', ['platform' => $link->platform->name]) }}</a>
+        @endforeach
         <p class="text-sm text-zinc-600">{{ $section->term->name }} · {{ $section->session->name }} ({{ $section->session->start_date->toDateString() }} ~ {{ $section->session->end_date->toDateString() }})</p>
     </div>
 

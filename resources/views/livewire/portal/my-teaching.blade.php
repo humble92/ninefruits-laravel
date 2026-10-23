@@ -30,7 +30,11 @@
             <tbody>
                 @forelse ($sections as $section)
                     <tr class="border-t border-zinc-100">
-                        <td class="px-4 py-2"><a href="{{ route('portal.sections.show', $section) }}" class="underline">{{ $section->label() }}</a></td>
+                        <td class="px-4 py-2"><a href="{{ route('portal.sections.show', $section) }}" class="underline">{{ $section->label() }}</a>
+                            @foreach ($lmsLinks->get($section->id, collect()) as $link)
+                                <a href="{{ $link->external_url }}" target="_blank" rel="noopener" class="ml-1 text-xs underline">LMS</a>
+                            @endforeach
+                        </td>
                         <td class="px-4 py-2">{{ $section->version->title }}</td>
                         <td class="px-4 py-2">{{ \App\Domain\Offering\Services\Timetable::summary($section->meetings) ?: '-' }}</td>
                         <td class="px-4 py-2">

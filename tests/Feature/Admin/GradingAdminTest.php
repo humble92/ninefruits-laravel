@@ -3,6 +3,7 @@
 use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Enums\GradeChangeStatus;
 use App\Domain\Grading\Enums\GradeStatus;
+use App\Domain\Grading\Settings\GradingSettings;
 use App\Domain\Registration\Actions\ManageHolds;
 use App\Domain\Registration\Enums\HoldType;
 use App\Domain\Security\Actions\SyncPermissionCatalog;
@@ -45,7 +46,13 @@ beforeEach(function () {
     app()->instance(DemoOptions::class, new DemoOptions('tiny', seed: 42));
     fake()->seed(42);
     mt_srand(42);
-    $this->seed([EssentialSeeder::class, DemoAccountSeeder::class, DemoReferenceSeeder::class, DemoPeopleSeeder::class, DemoCurriculumSeeder::class,
+    $this->seed(EssentialSeeder::class);
+    // Honors thresholds low enough that the small random demo always produces honors students.
+    $grading = app(GradingSettings::class);
+    $grading->honors_min_gpa = 3.0;
+    $grading->honors_min_credits = 3.0;
+    $grading->save();
+    $this->seed([DemoAccountSeeder::class, DemoReferenceSeeder::class, DemoPeopleSeeder::class, DemoCurriculumSeeder::class,
         DemoGradeHistorySeeder::class, DemoRegistrationSeeder::class, DemoGradingSeeder::class]);
     app(SyncPermissionCatalog::class)->handle();
     Filament::setCurrentPanel('admin');

@@ -12,3 +12,4 @@ Artisan::command('inspire', function () {
 Schedule::command('admission:expire-drafts')->dailyAt('03:10')->withoutOverlapping()->onOneServer();
 Schedule::command('registration:release-reserved-seats')->everyFiveMinutes()->withoutOverlapping()->onOneServer();
 Schedule::command('waitlist:promote')->hourly()->withoutOverlapping()->onOneServer();
+Schedule::command('lms:reconcile')->dailyAt('02:30')->withoutOverlapping()->onOneServer();

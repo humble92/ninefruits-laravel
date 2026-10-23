@@ -16,6 +16,7 @@ return [
         'assessments' => '语言/综合考试',
         'graduation' => '毕业',
         'reports' => '报表',
+        'lms' => 'LMS 对接',
         'certificates' => '证明',
     ],
     'users' => [

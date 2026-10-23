@@ -32,6 +32,7 @@
 | [25. 교수 강의실과 출석](25-classroom-and-attendance.md) | 수강생 명단과 CSV, 수업 회차 생성·휴강, 출석 입력과 집계, 출석부 PDF, 학생 출석 조회 |
 | [26. 졸업 사정과 졸업 처리](26-graduation.md) | 요건 판정 규칙, 점검 저장과 일괄 점검, 요건 면제, 졸업 처리와 학위번호 |
 | [27. 보고서와 reporting 뷰](27-reports.md) | 표준 보고서와 CSV, reporting 스키마 뷰, BI 접속 |
+| [28. LMS 연동](28-lms-integration.md) | 플랫폼과 드라이버, 강좌 연결과 동기화 기록, 즉시 반영과 야간 대조, LMS 점수 초안 |
 
 Phase가 진행되면서 장을 추가한다.
 

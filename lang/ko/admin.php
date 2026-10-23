@@ -16,6 +16,7 @@ return [
         'assessments' => '어학/종합시험',
         'graduation' => '졸업',
         'reports' => '보고서',
+        'lms' => 'LMS 연동',
         'certificates' => '증명서',
     ],
     'users' => [

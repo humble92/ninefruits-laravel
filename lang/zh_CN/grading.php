@@ -80,6 +80,8 @@ return [
         'validate_distribution' => '检查等级比例',
     ],
     'entry' => [
+        'import_lms' => '从 LMS 导入分数',
+        'lms_imported' => '已从 LMS 导入 :count 条分数作为草稿，请核对后保存。',
         'title' => '成绩录入',
         'open' => '录入成绩',
         'counts' => '未录入 :none，暂存 :draft，已提交 :submitted，已确定 :finalized',

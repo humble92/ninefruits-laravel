@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Domain\Admission\Personas\ApplicantPersonaDetector;
+use App\Domain\Lms\Listeners\QueueLmsSync;
 use App\Domain\Person\Personas\AdvisorPersonaDetector;
 use App\Domain\Person\Personas\AlumniPersonaDetector;
 use App\Domain\Person\Personas\InstructorPersonaDetector;
@@ -43,6 +44,9 @@ use App\Models\Institution\Country;
 use App\Models\Institution\Language;
 use App\Models\Institution\LookupType;
 use App\Models\Institution\LookupValue;
+use App\Models\Lms\LmsCourseLink;
+use App\Models\Lms\LmsPlatform;
+use App\Models\Lms\LmsSyncLog;
 use App\Models\Offering\Section;
 use App\Models\Organization\OrgUnit;
 use App\Models\Organization\OrgUnitSuccession;
@@ -73,6 +77,7 @@ use App\Policies\Curriculum\CoursePolicy;
 use App\Policies\Curriculum\CurriculumPolicy;
 use App\Policies\Evaluation\EvaluationSetupPolicy;
 use App\Policies\Graduation\DegreeAuditPolicy;
+use App\Policies\Lms\LmsPolicy;
 use App\Policies\Offering\SectionPolicy;
 use App\Policies\Reference\CourseCategoryPolicy;
 use App\Policies\Reference\FacilityPolicy;
@@ -154,6 +159,9 @@ class AppServiceProvider extends ServiceProvider
         AssessmentResult::class => AssessmentRecordPolicy::class,
         AssessmentResultCorrection::class => AssessmentRecordPolicy::class,
         DegreeAudit::class => DegreeAuditPolicy::class,
+        LmsPlatform::class => LmsPolicy::class,
+        LmsCourseLink::class => LmsPolicy::class,
+        LmsSyncLog::class => LmsPolicy::class,
         CertificateType::class => CertificateSetupPolicy::class,
         CertificateTemplate::class => CertificateSetupPolicy::class,
         CertificateIssue::class => CertificateIssuePolicy::class,
@@ -176,6 +184,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->scoped(AuthorizationService::class);
 
         $this->app->bind(PdfRenderer::class, GotenbergPdfRenderer::class);
+        Event::subscribe(QueueLmsSync::class);
     }
 
     /**

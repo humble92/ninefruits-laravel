@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS 平台', 'plural_label' => 'LMS 平台'],
+        'course_links' => ['label' => '课程关联', 'plural_label' => '课程关联'],
+        'sync_logs' => ['label' => '同步日志', 'plural_label' => '同步日志'],
+    ],
+    'fields' => [
+        'driver' => '驱动',
+        'not_implemented' => '尚未实现',
+        'base_url' => '基础 URL',
+        'credentials' => '凭据',
+        'credential_key' => '键',
+        'credential_value' => '值',
+        'course_links' => '课程关联',
+        'should_sync_enrollments' => '同步选课名单',
+        'should_pull_grades' => '拉取最终分数',
+        'external_course_id' => '平台课程 ID',
+        'external_url' => '课程 URL',
+        'last_synced_at' => '最近同步',
+        'last_error' => '最近错误',
+        'started_at' => '开始',
+        'operation' => '操作',
+        'message' => '消息',
+    ],
+    'help' => [
+        'driver' => '与平台通信的连接器。“无”不调用任何接口，只记录将要发送的内容（用于准备和测试）。',
+        'credentials' => '驱动所需的令牌和密钥（见 docs/lms-integration-guide.md）。加密存储；编辑时留空则保留原值。',
+        'is_active' => '启用的平台会即时收到课程发布和选课变动，并参与每夜核对。',
+        'should_pull_grades' => '允许教师在成绩录入页面将平台的最终分数作为草稿导入。',
+    ],
+    'actions' => ['resync' => '重新同步'],
+    'notifications' => ['synced' => '同步完成：:members 名成员。'],
+    'drivers' => ['null' => '无（仅记录）', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => '待处理', 'linked' => '已关联', 'failed' => '失败'],
+    'operations' => ['course.sync' => '课程', 'enrollment.add' => '添加成员', 'enrollment.remove' => '移除成员', 'grades.pull' => '拉取分数', 'reconcile' => '核对'],
+    'sync_statuses' => ['queued' => '排队中', 'succeeded' => '成功', 'failed' => '失败', 'skipped' => '已跳过'],
+    'portal' => ['open_course' => '在 :platform 上打开课程'],
+];

@@ -3,6 +3,7 @@
 namespace App\Domain\Offering\Actions;
 
 use App\Domain\Offering\Enums\SectionStatus;
+use App\Domain\Offering\Events\SectionPublished;
 use App\Domain\Offering\Services\ScheduleConflicts;
 use App\Domain\Security\Services\AuditLogger;
 use App\Models\Offering\Section;
@@ -39,6 +40,10 @@ class ChangeSectionStatus
         $previous = $section->status;
         $this->conflicts->guard(fn () => $section->forceFill(['status' => $status])->save(), 'status');
         $this->audit->record('section.'.$status->value, $section, $reason, ['previous_status' => $previous->value], $user);
+
+        if ($status === SectionStatus::Published) {
+            SectionPublished::dispatch($section);
+        }
 
         return $section;
     }

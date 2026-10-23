@@ -45,6 +45,7 @@ return [
         'assessments' => 'Examinations',
         'graduation' => 'Graduation',
         'reports' => 'Reports',
+        'lms' => 'LMS integration',
         'certificates' => 'Certificates',
     ],
     'admin_panel' => ['access' => 'Open the administration panel'],
@@ -98,5 +99,6 @@ return [
     'assessments' => ['record' => 'Register students, enter and publish results, record external results', 'manage' => 'Manage examination kinds, areas and sessions'],
     'graduation' => ['audit' => 'Run and view degree audits', 'process' => 'Process graduations, grant requirement waivers'],
     'reports' => ['view' => 'View standard reports and download them'],
+    'lms' => ['manage' => 'Manage LMS platforms, links and synchronization'],
     'certificates' => ['issue' => 'Issue, re-render and revoke certificates', 'manage' => 'Manage certificate kinds, templates and settings'],
 ];

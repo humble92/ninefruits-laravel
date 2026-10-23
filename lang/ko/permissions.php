@@ -45,6 +45,7 @@ return [
         'assessments' => '어학/종합시험',
         'graduation' => '졸업',
         'reports' => '보고서',
+        'lms' => 'LMS 연동',
         'certificates' => '증명서',
     ],
     'admin_panel' => ['access' => '관리 화면 사용'],
@@ -98,5 +99,6 @@ return [
     'assessments' => ['record' => '응시 등록, 결과 입력·공개, 외부 성적 등록', 'manage' => '시험 종류, 영역, 회차 관리'],
     'graduation' => ['audit' => '졸업 요건 점검 실행·조회', 'process' => '졸업 처리, 요건 면제 승인'],
     'reports' => ['view' => '표준 보고서 조회와 내려받기'],
+    'lms' => ['manage' => 'LMS 플랫폼, 연결, 동기화 관리'],
     'certificates' => ['issue' => '증명서 발급, 재생성, 취소', 'manage' => '증명서 종류, 서식, 설정 관리'],
 ];
