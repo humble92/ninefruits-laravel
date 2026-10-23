@@ -38,6 +38,9 @@ return [
         'honors' => '성적우수',
         'honors_rank' => '성적우수 순위',
         'closed' => '마감',
+        'evaluation_method' => '평가 방식',
+        'comparison_grade' => '비교 성적',
+        'new_score' => '바꿀 점수',
     ],
     'help' => [
         'applies_to' => '등급은 일반 과목, P/NP는 P/F 과목에 쓴다. "둘 다"는 예를 들어 I(미완).',
@@ -47,6 +50,7 @@ return [
         'close_dry_run' => '마감할 수 있는지만 확인한다.',
         'recalculate' => '확정 성적으로 학점과 평점을 다시 계산한다(예: 정책 변경 후). 학업 상태와 성적우수는 학기 마감 때 정한 값을 유지한다.',
         'standing_criteria' => '최근 학기 마감의 학업 상태. 비우면 모두.',
+        'evaluation_method' => '절대평가: 교원이 점수를 입력하면 두 척도의 성적이 계산된다. 상대평가: 교원이 성적만 입력한다. 성적을 입력한 뒤에는 바꿀 수 없다.',
     ],
     'actions' => [
         'save_draft' => '임시 저장',
@@ -74,7 +78,10 @@ return [
         'change_requested' => '정정을 요청했습니다.',
         'change_pending' => ':from → :to 정정 요청 중',
         'no_students' => '수강생이 없습니다.',
-        'help' => '성적을 고르거나 점수를 입력하면 성적이 채워집니다. 임시 저장은 언제든 할 수 있고, 모든 학생의 성적을 넣은 뒤 제출합니다.',
+        'help' => '임시 저장은 언제든 할 수 있고, 모든 학생의 성적을 넣은 뒤 제출합니다.',
+        'absolute_help' => '학생마다 점수(0~100)를 입력하세요. :scale 기준 성적이 점수로 정해지고, :comparison 기준 성적도 비교용으로 함께 저장됩니다. 점수가 없는 성적(예: I)만 직접 고릅니다.',
+        'relative_help' => '점수는 입력하지 마세요. 학생마다 성적만 입력합니다.',
+        'by_score' => '점수로',
     ],
     'grades' => [
         'title' => '성적',
@@ -110,6 +117,9 @@ return [
         'honors_min_gpa' => '최저 학기 평점',
         'honors_min_credits' => '학기 최소 평점 학점',
         'honors_exclude_failing' => 'F가 있으면 제외',
+        'scale' => '성적 척도',
+        'absolute_scale' => '절대평가 기준 척도',
+        'absolute_scale_help' => '기관의 성적 척도. 절대평가 강좌의 점수가 이 척도의 성적이 되고, 평점도 이 척도로 계산한다. 다른 척도의 성적은 비교용으로 함께 저장한다. 이미 준 성적의 척도는 바뀌지 않는다.',
     ],
     'notifications' => [
         'finalized' => ':count건을 확정했습니다.',
@@ -136,6 +146,10 @@ return [
         'own_request' => '본인이 요청한 건은 처리할 수 없습니다.',
         'term_not_published' => '공개 상태인 학기만 마감합니다.',
         'term_not_ready' => '확정되지 않은 성적이 있는 강좌가 :count개 있습니다.',
+        'no_score_here' => '이 강좌는 성적만 입력합니다(상대평가 또는 P/F 과목). 점수는 비워 두세요.',
+        'above_retake_cap' => '재수강은 :grade까지만 받을 수 있습니다.',
+        'new_grade_required' => '바꿀 점수나 성적을 입력하세요.',
+        'method_has_grades' => '이미 성적이 입력되어 평가 방식을 바꿀 수 없습니다.',
     ],
     'mail' => [
         'returned_subject' => '성적 반려: :section',
@@ -168,5 +182,9 @@ return [
         'graded' => '일반 과목',
         'pass_fail' => 'P/F 과목',
         'both' => '둘 다',
+    ],
+    'evaluation_methods' => [
+        'absolute' => '절대평가',
+        'relative' => '상대평가',
     ],
 ];

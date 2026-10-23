@@ -2,6 +2,7 @@
 
 namespace App\Models\Offering;
 
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Offering\Enums\SectionStatus;
 use App\Domain\Security\Data\PermissionScope;
 use App\Domain\Security\Enums\Permission;
@@ -43,6 +44,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $org_unit_id
  * @property int $capacity
  * @property SectionStatus $status
+ * @property EvaluationMethod $evaluation_method
  * @property TargetCriteria $eligibility
  * @property TargetCriteria $exclusion
  * @property string|null $instruction_language
@@ -71,12 +73,12 @@ class Section extends Model implements Translatable
 
     protected $fillable = [
         'term_id', 'term_session_id', 'course_id', 'course_version_id', 'section_code', 'org_unit_id', 'capacity',
-        'eligibility', 'exclusion', 'instruction_language', 'note', 'waitlist_capacity',
+        'eligibility', 'exclusion', 'instruction_language', 'note', 'waitlist_capacity', 'evaluation_method',
     ];
 
     protected $attributes = [
         'status' => 'draft', 'eligibility' => null, 'exclusion' => null, 'instruction_language' => null, 'note' => null,
-        'copied_from_section_id' => null, 'enrolled_count' => 0, 'waitlist_capacity' => 0,
+        'copied_from_section_id' => null, 'enrolled_count' => 0, 'waitlist_capacity' => 0, 'evaluation_method' => 'relative',
     ];
 
     protected function casts(): array
@@ -86,6 +88,7 @@ class Section extends Model implements Translatable
             'enrolled_count' => 'integer',
             'waitlist_capacity' => 'integer',
             'status' => SectionStatus::class,
+            'evaluation_method' => EvaluationMethod::class,
             'eligibility' => TargetCriteria::class,
             'exclusion' => TargetCriteria::class,
         ];

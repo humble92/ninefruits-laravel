@@ -38,6 +38,9 @@ return [
         'honors' => 'Honors',
         'honors_rank' => 'Honors rank',
         'closed' => 'Closed',
+        'evaluation_method' => 'Evaluation',
+        'comparison_grade' => 'Comparison grade',
+        'new_score' => 'New score',
     ],
     'help' => [
         'applies_to' => 'Letter grades are for graded courses, P/NP for pass/fail courses; "both" e.g. for I (incomplete).',
@@ -47,6 +50,7 @@ return [
         'close_dry_run' => 'Only check whether the term can close.',
         'recalculate' => 'Recalculates credits and GPA from final grades, e.g. after a policy change. Standing and honors stay as decided at term close.',
         'standing_criteria' => 'The standing from the latest term close. Leave empty for any.',
+        'evaluation_method' => 'Absolute: instructors enter scores and the grades follow on both scales. Relative: instructors give grades only. Cannot change once grades are entered.',
     ],
     'actions' => [
         'save_draft' => 'Save draft',
@@ -74,7 +78,10 @@ return [
         'change_requested' => 'Grade change requested.',
         'change_pending' => 'Change :from → :to requested',
         'no_students' => 'No students.',
-        'help' => 'Enter a grade, or a score and the grade fills in. Save drafts any time; submit once every student has a grade.',
+        'help' => 'Save drafts any time; submit once every student has a grade.',
+        'absolute_help' => 'Enter each student\'s score (0–100). The grade follows from the score on :scale; the grade on :comparison is kept for comparison. Choose a grade directly only for one without a score (e.g. I).',
+        'relative_help' => 'Do not enter scores: give each student a grade.',
+        'by_score' => 'By score',
     ],
     'grades' => [
         'title' => 'Grades',
@@ -110,6 +117,9 @@ return [
         'honors_min_gpa' => 'Minimum term GPA',
         'honors_min_credits' => 'Minimum GPA credits in the term',
         'honors_exclude_failing' => 'No honors with a failed course',
+        'scale' => 'Grade scale',
+        'absolute_scale' => 'Absolute evaluation base',
+        'absolute_scale_help' => 'The institution\'s scale: scores of absolutely evaluated sections turn into its grades, and GPAs use it. Grades on the other scale are kept for comparison. Grades already given keep their scale.',
     ],
     'notifications' => [
         'finalized' => ':count grade(s) finalized.',
@@ -136,6 +146,10 @@ return [
         'own_request' => 'You cannot decide your own request.',
         'term_not_published' => 'Only a published term closes.',
         'term_not_ready' => ':count section(s) have grades that are not final.',
+        'no_score_here' => 'This section takes grades only (relative evaluation or a pass/fail course): leave the score empty.',
+        'above_retake_cap' => 'A retake can receive at most :grade.',
+        'new_grade_required' => 'Enter the new score or grade.',
+        'method_has_grades' => 'Grades are already entered; the evaluation method cannot change.',
     ],
     'mail' => [
         'returned_subject' => 'Grades returned: :section',
@@ -168,5 +182,9 @@ return [
         'graded' => 'Graded courses',
         'pass_fail' => 'Pass/fail courses',
         'both' => 'Both',
+    ],
+    'evaluation_methods' => [
+        'absolute' => 'Absolute evaluation',
+        'relative' => 'Relative evaluation',
     ],
 ];

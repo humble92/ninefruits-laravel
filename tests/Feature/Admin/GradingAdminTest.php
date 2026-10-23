@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Enums\GradeChangeStatus;
 use App\Domain\Grading\Enums\GradeStatus;
 use App\Domain\Registration\Actions\ManageHolds;
@@ -101,14 +102,17 @@ it('lets the instructor enter grades in the portal and the student see final one
     $section = Section::query()->taughtBy($instructor->person_id)->where('enrolled_count', '>', 0)
         ->whereHas('term', fn ($query) => $query->where('status', 'published'))->first();
     $enrollment = $section->enrollments()->where('status', 'enrolled')->first();
+    $section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
 
+    // Absolute evaluation: the score shows its grade on the 4.5 scale and on the 4.3 scale.
     Livewire::actingAs($instructor)->test(GradeEntry::class, ['section' => $section])
+        ->assertSee(__('grading.evaluation_methods.absolute'))
         ->set("grades.{$enrollment->id}.score", '86')
-        ->assertSet("grades.{$enrollment->id}.grade_code", 'B+')
+        ->assertSet("previews.{$enrollment->id}", ['grade' => 'B+', 'comparison' => 'B0'])
         ->call('save')
         ->assertSet('messageTone', 'success');
 
-    expect($enrollment->refresh())->grade_code->toBe('B+')->grade_status->toBe(GradeStatus::Draft);
+    expect($enrollment->refresh())->grade_code->toBe('B+')->comparison_grade_code->toBe('B0')->score->toBe('86.00')->grade_status->toBe(GradeStatus::Draft);
 
     // Drafts stay hidden from the student; final grades show.
     $student = User::query()->whereHas('person.studentRecords', fn ($query) => $query->whereKey($enrollment->student_record_id))->first()

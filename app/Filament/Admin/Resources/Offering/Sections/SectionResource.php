@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Offering\Sections;
 
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Offering\Enums\SectionStatus;
 use App\Domain\Offering\Services\Timetable;
 use App\Domain\Term\Services\TermResolver;
@@ -111,6 +112,9 @@ class SectionResource extends Resource
                     ->helperText(__('offering.help.change_session')),
                 TextInput::make('section_code')->label(__('offering.fields.section_code'))->required()->maxLength(16)->alphaDash(),
                 TextInput::make('capacity')->label(__('offering.fields.capacity'))->integer()->minValue(0)->maxValue(2000)->required(),
+                Select::make('evaluation_method')->label(__('grading.fields.evaluation_method'))->required()->default(EvaluationMethod::Relative->value)
+                    ->options(collect(EvaluationMethod::cases())->mapWithKeys(fn (EvaluationMethod $method) => [$method->value => $method->label()]))
+                    ->helperText(__('grading.help.evaluation_method')),
                 TextInput::make('waitlist_capacity')->label(__('registration.fields.waitlist_capacity'))->integer()->minValue(0)->maxValue(500)->default(0)
                     ->helperText(__('registration.help.waitlist_capacity')),
                 Select::make('org_unit_id')->label(__('offering.fields.offering_unit'))->options(fn () => OrgUnitResource::unitOptions())->searchable()->required(),

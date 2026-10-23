@@ -4,6 +4,7 @@ namespace App\Livewire\Portal;
 
 use App\Domain\Grading\Actions\ManageGradeChanges;
 use App\Domain\Grading\Actions\SaveGrades;
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Enums\GradeChangeStatus;
 use App\Domain\Grading\Enums\GradeStatus;
 use App\Domain\Grading\Services\GradeOptions;
@@ -25,9 +26,10 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 /**
- * Grade entry for a section (legacy prof/opobj*): the instructors enter a grade or a
- * percentage per student, save drafts and submit while the grade entry window is open.
- * After finalization they can ask for a grade change with a reason.
+ * Grade entry for a section (legacy prof/opobj*). Absolute evaluation: the instructors
+ * enter scores and the grades follow (on the institution's scale and the comparison
+ * scale). Relative evaluation: grades only, no scores. Drafts and submission while the
+ * grade entry window is open; after finalization a grade change request with a reason.
  */
 #[Layout('components.layouts.portal')]
 class GradeEntry extends Component
@@ -40,6 +42,8 @@ class GradeEntry extends Component
     public ?int $changeFor = null;
 
     public string $changeGrade = '';
+
+    public string $changeScore = '';
 
     public string $changeReason = '';
 
@@ -59,22 +63,28 @@ class GradeEntry extends Component
     }
 
     /**
-     * A percentage fills in the grade whose range holds it.
+     * Absolute evaluation: a score shows the grade it gives (on both scales) right away.
+     *
+     * @var array<int, array{grade: string|null, comparison: string|null}>
      */
+    public array $previews = [];
+
     public function updatedGrades(mixed $value, string $key): void
     {
         [$id, $field] = explode('.', $key) + [1 => null];
 
-        if ($field !== 'score' || blank($value)) {
+        if ($field !== 'score') {
             return;
         }
 
         $enrollment = $this->enrollments()->firstWhere('id', (int) $id);
 
         try {
-            $this->grades[(int) $id]['grade_code'] = $enrollment === null ? null : app(GradeOptions::class)->resolve($enrollment, null, (string) $value)?->code;
-        } catch (ValidationException) {
+            $choice = $enrollment === null || blank($value) ? null : app(GradeOptions::class)->resolve($enrollment, null, (string) $value);
+            $this->previews[(int) $id] = ['grade' => $choice?->item?->code, 'comparison' => $choice?->comparison?->code];
             $this->grades[(int) $id]['grade_code'] = null;
+        } catch (ValidationException) {
+            $this->previews[(int) $id] = ['grade' => null, 'comparison' => null];
         }
     }
 
@@ -95,16 +105,24 @@ class GradeEntry extends Component
     {
         $this->changeFor = $enrollmentId;
         $this->changeGrade = '';
+        $this->changeScore = '';
         $this->changeReason = '';
     }
 
+    /**
+     * Absolute evaluation asks for the new score, relative for the new grade.
+     */
     public function requestChange(): void
     {
-        $this->validate(['changeGrade' => 'required|string|max:8', 'changeReason' => 'required|string|max:2000']);
-        $enrollment = Enrollment::query()->where('section_id', $this->section->id)->findOrFail($this->changeFor);
+        $this->validate([
+            'changeGrade' => 'nullable|required_without:changeScore|string|max:8',
+            'changeScore' => 'nullable|required_without:changeGrade|numeric|between:0,100',
+            'changeReason' => 'required|string|max:2000',
+        ]);
+        $enrollment = Enrollment::query()->where('section_id', $this->section->id)->with(['section', 'version'])->findOrFail($this->changeFor);
 
         $this->run(function () use ($enrollment) {
-            app(ManageGradeChanges::class)->request($enrollment, $this->changeGrade, $this->changeReason, $this->user());
+            app(ManageGradeChanges::class)->request($enrollment, $this->changeGrade ?: null, $this->changeReason, $this->user(), $this->changeScore === '' ? null : $this->changeScore);
             $this->changeFor = null;
             $this->say([__('grading.entry.change_requested')], 'success');
         });
@@ -125,6 +143,10 @@ class GradeEntry extends Component
         return view('livewire.portal.grade-entry', [
             'enrollments' => $enrollments,
             'options' => fn (Enrollment $enrollment) => $options->for($enrollment)->map(fn (GradeScaleItem $item) => $item->code),
+            'takesScore' => fn (Enrollment $enrollment) => $options->takesScore($enrollment),
+            'absolute' => $this->section->evaluation_method === EvaluationMethod::Absolute,
+            'scale' => $options->scale(),
+            'comparisonScale' => $options->comparisonScale(),
             'editable' => fn (Enrollment $enrollment) => $canEnter && $enrollment->status === EnrollmentStatus::Enrolled
                 && in_array($enrollment->grade_status, $byStaff ? [GradeStatus::None, GradeStatus::Draft, GradeStatus::Submitted] : [GradeStatus::None, GradeStatus::Draft], true),
             'canEnter' => $canEnter,
@@ -141,12 +163,14 @@ class GradeEntry extends Component
     {
         return Enrollment::query()->where('section_id', $this->section->id)
             ->whereIn('status', [EnrollmentStatus::Enrolled, EnrollmentStatus::Completed, EnrollmentStatus::Withdrawn])
-            ->with(['studentRecord.person', 'studentRecord.program', 'version', 'gradeChangeRequests'])
+            ->with(['studentRecord.person', 'studentRecord.program', 'version', 'section', 'gradeChangeRequests'])
             ->get()->sortBy(fn (Enrollment $enrollment) => $enrollment->studentRecord->student_number)->values();
     }
 
     private function fillGrades(): void
     {
+        $this->previews = [];
+
         $this->grades = $this->enrollments()->mapWithKeys(fn (Enrollment $enrollment) => [$enrollment->id => [
             'grade_code' => $enrollment->grade_code,
             'score' => $enrollment->score === null ? null : rtrim(rtrim($enrollment->score, '0'), '.'),

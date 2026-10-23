@@ -102,17 +102,15 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         }
     }
 
+    /**
+     * The 4.5 scale (default) and the 4.3 scale with minus grades. Both have score ranges, so
+     * absolutely evaluated grades are kept on both (the one not chosen as the absolute
+     * evaluation base is the comparison scale).
+     */
     private function gradeScale(): void
     {
-        $scale = $this->seedRow(GradeScale::class, ['code' => 'KR45'], [
-            'name' => ['en' => '4.5 scale', 'ko' => '4.5 만점', 'zh_CN' => '4.5 分制'],
-        ], [
-            'max_grade_points' => 4.5,
-            'is_default' => ! GradeScale::query()->where('is_default', true)->exists(),
-        ]);
-
         // code => [points, min %, max %, counts in GPA, passing]
-        $items = [
+        self::seedScale('KR45', ['en' => '4.5 scale', 'ko' => '4.5 만점', 'zh_CN' => '4.5 分制'], 4.5, ! GradeScale::query()->where('is_default', true)->exists(), [
             'A+' => [4.5, 95, 100, true, true],
             'A0' => [4.0, 90, 94.99, true, true],
             'B+' => [3.5, 85, 89.99, true, true],
@@ -124,21 +122,64 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
             'F' => [0.0, 0, 59.99, true, false],
             'P' => [null, null, null, false, true],
             'NP' => [null, null, null, false, false],
-        ];
+        ]);
+        self::seedScale('KR43', ['en' => '4.3 scale', 'ko' => '4.3 만점', 'zh_CN' => '4.3 分制'], 4.3, false, self::scale43(['P' => [true], 'NP' => [false]]));
+    }
 
+    /**
+     * 4.3 grades with three-point score ranges, plus the given non-GPA grades.
+     *
+     * @param  array<string, array{0: bool, 1?: string}>  $nonGpa  code => [passing, applies to]
+     * @return array<string, array{0: float|null, 1: float|null, 2: float|null, 3: bool, 4: bool, 5?: string}>
+     */
+    public static function scale43(array $nonGpa): array
+    {
+        $items = [
+            'A+' => [4.3, 97, 100], 'A0' => [4.0, 93, 96.99], 'A-' => [3.7, 90, 92.99],
+            'B+' => [3.3, 87, 89.99], 'B0' => [3.0, 83, 86.99], 'B-' => [2.7, 80, 82.99],
+            'C+' => [2.3, 77, 79.99], 'C0' => [2.0, 73, 76.99], 'C-' => [1.7, 70, 72.99],
+            'D+' => [1.3, 67, 69.99], 'D0' => [1.0, 63, 66.99], 'D-' => [0.7, 60, 62.99],
+            'F' => [0.0, 0, 59.99],
+        ];
+        $rows = [];
+
+        foreach ($items as $code => [$points, $min, $max]) {
+            $rows[$code] = [$points, $min, $max, true, $code !== 'F'];
+        }
+
+        foreach ($nonGpa as $code => $options) {
+            $rows[$code] = [null, null, null, false, $options[0], $options[1] ?? 'pass_fail'];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Creates the scale and its missing grades; existing grades and scales are not changed.
+     *
+     * @param  array<string, string>  $name
+     * @param  array<string, array{0: float|null, 1: float|null, 2: float|null, 3: bool, 4: bool, 5?: string}>  $items
+     */
+    public static function seedScale(string $code, array $name, float $maxPoints, bool $isDefault, array $items): GradeScale
+    {
+        $scale = GradeScale::query()->firstOrCreate(['code' => $code], ['name' => $name, 'max_grade_points' => $maxPoints, 'is_default' => $isDefault]);
         $order = 0;
 
-        foreach ($items as $code => [$points, $min, $max, $countsInGpa, $isPassing]) {
-            GradeScaleItem::query()->firstOrCreate(['grade_scale_id' => $scale->id, 'code' => $code], [
+        foreach ($items as $itemCode => $item) {
+            [$points, $min, $max, $countsInGpa, $isPassing] = $item;
+
+            GradeScaleItem::query()->firstOrCreate(['grade_scale_id' => $scale->id, 'code' => $itemCode], [
                 'grade_points' => $points,
                 'min_percentage' => $min,
                 'max_percentage' => $max,
                 'counts_in_gpa' => $countsInGpa,
                 'is_passing' => $isPassing,
-                'applies_to' => $countsInGpa ? 'graded' : 'pass_fail',
+                'applies_to' => $item[5] ?? ($countsInGpa ? 'graded' : 'pass_fail'),
                 'sort_order' => $order += 10,
             ]);
         }
+
+        return $scale;
     }
 
     private function timeSlots(): void

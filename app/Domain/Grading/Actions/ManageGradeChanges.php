@@ -31,7 +31,10 @@ class ManageGradeChanges
         private readonly AuditLogger $audit,
     ) {}
 
-    public function request(Enrollment $enrollment, string $toGrade, string $reason, User $requester, ?string $toScore = null): GradeChangeRequest
+    /**
+     * Absolute evaluation: the new score (the grade follows). Relative: the new grade.
+     */
+    public function request(Enrollment $enrollment, ?string $toGrade, string $reason, User $requester, ?string $toScore = null): GradeChangeRequest
     {
         $enrollment->loadMissing(['section', 'version']);
 
@@ -47,9 +50,13 @@ class ManageGradeChanges
             throw ValidationException::withMessages(['reason' => __('registration.errors.reason_required')]);
         }
 
-        $item = $this->options->resolve($enrollment, $toGrade, null);
+        $choice = $this->options->resolve($enrollment, $toGrade, $toScore);
 
-        if ($item?->code === $enrollment->grade_code && $toScore === $enrollment->score) {
+        if ($choice->item === null) {
+            throw ValidationException::withMessages(['to_grade_code' => __('grading.errors.new_grade_required')]);
+        }
+
+        if ($choice->item->code === $enrollment->grade_code && $choice->score === $enrollment->score) {
             throw ValidationException::withMessages(['to_grade_code' => __('grading.errors.same_grade')]);
         }
 
@@ -62,8 +69,8 @@ class ManageGradeChanges
             $request = DB::transaction(fn () => GradeChangeRequest::query()->create([
                 'enrollment_id' => $enrollment->id,
                 'from_grade_code' => $enrollment->grade_code,
-                'to_grade_code' => $toGrade,
-                'to_score' => $toScore,
+                'to_grade_code' => $choice->item->code,
+                'to_score' => $choice->score,
                 'reason' => $reason,
                 'requested_by_id' => $requester->id,
                 'requested_at' => CarbonImmutable::now(),
@@ -72,7 +79,7 @@ class ManageGradeChanges
             throw ValidationException::withMessages(['to_grade_code' => __('grading.errors.request_pending')]);
         }
 
-        $this->audit->record('grade_change.requested', $request, $reason, ['from' => $enrollment->grade_code, 'to' => $toGrade], $requester);
+        $this->audit->record('grade_change.requested', $request, $reason, ['from' => $enrollment->grade_code, 'to' => $choice->item->code, 'score' => $choice->score], $requester);
 
         return $request;
     }
@@ -82,22 +89,14 @@ class ManageGradeChanges
         $this->authorizeDecision($request, $approver);
 
         DB::transaction(function () use ($request, $approver, $note) {
-            $enrollment = Enrollment::query()->with('version')->lockForUpdate()->findOrFail($request->enrollment_id);
-            $item = $this->options->resolve($enrollment, $request->to_grade_code, null)
-                ?? throw ValidationException::withMessages(['to_grade_code' => __('grading.errors.grade_not_allowed', ['grade' => $request->to_grade_code])]);
+            $enrollment = Enrollment::query()->with(['version', 'section'])->lockForUpdate()->findOrFail($request->enrollment_id);
+            $choice = $this->options->resolve($enrollment, $request->to_score === null ? $request->to_grade_code : null, $request->to_score);
 
             $request->forceFill(['status' => GradeChangeStatus::Approved, 'decided_by_id' => $approver->id, 'decided_at' => CarbonImmutable::now(), 'decision_note' => $note])->save();
 
             // The guard trigger lets the finalized grade change for this approved request only.
             DB::select("SELECT set_config('app.grade_change_request_id', ?, true)", [(string) $request->id]);
-            $enrollment->forceFill([
-                'grade_scale_id' => $item->grade_scale_id,
-                'grade_code' => $item->code,
-                'score' => $request->to_score,
-                'grade_points' => $item->grade_points,
-                'counts_in_gpa' => $item->counts_in_gpa,
-                'is_passed' => $item->is_passing,
-            ])->save();
+            $enrollment->forceFill($choice->attributes())->save();
             DB::select("SELECT set_config('app.grade_change_request_id', '', true)");
 
             $request->forceFill(['applied_at' => CarbonImmutable::now()])->save();

@@ -38,6 +38,9 @@ return [
         'honors' => '成绩优秀',
         'honors_rank' => '成绩优秀排名',
         'closed' => '已结算',
+        'evaluation_method' => '评价方式',
+        'comparison_grade' => '对照成绩',
+        'new_score' => '更正后分数',
     ],
     'help' => [
         'applies_to' => '等级成绩用于普通课程，P/NP 用于合格制课程；"两者"例如 I（未完成）。',
@@ -47,6 +50,7 @@ return [
         'close_dry_run' => '只检查学期是否可以结算。',
         'recalculate' => '根据已确定的成绩重新计算学分和绩点（例如政策变更后）。学业状态和成绩优秀保持学期结算时的结果。',
         'standing_criteria' => '最近一次学期结算的学业状态。留空表示全部。',
+        'evaluation_method' => '绝对评价：教师录入分数，两种等级制的成绩自动计算。相对评价：教师只录入等级。录入成绩后不能更改。',
     ],
     'actions' => [
         'save_draft' => '暂存',
@@ -74,7 +78,10 @@ return [
         'change_requested' => '已申请更正。',
         'change_pending' => '已申请 :from → :to 更正',
         'no_students' => '没有学生。',
-        'help' => '选择成绩，或输入分数自动填写成绩。可以随时暂存，所有学生都有成绩后再提交。',
+        'help' => '可以随时暂存，所有学生都有成绩后再提交。',
+        'absolute_help' => '请为每位学生录入分数（0–100）。按 :scale 由分数确定成绩，并同时保存 :comparison 的对照成绩。只有没有分数的成绩（如 I）才直接选择。',
+        'relative_help' => '请不要录入分数，只为每位学生录入等级。',
+        'by_score' => '按分数',
     ],
     'grades' => [
         'title' => '成绩',
@@ -110,6 +117,9 @@ return [
         'honors_min_gpa' => '最低学期绩点',
         'honors_min_credits' => '学期最低计绩点学分',
         'honors_exclude_failing' => '有不及格课程则不评',
+        'scale' => '成绩等级制',
+        'absolute_scale' => '绝对评价基准等级制',
+        'absolute_scale_help' => '本机构的成绩等级制：绝对评价课程的分数换算为该等级制的成绩，绩点也按其计算。另一等级制的成绩作为对照一并保存。已给出的成绩不改变等级制。',
     ],
     'notifications' => [
         'finalized' => '已确定 :count 条。',
@@ -136,6 +146,10 @@ return [
         'own_request' => '不能处理本人提出的申请。',
         'term_not_published' => '只有已发布的学期可以结算。',
         'term_not_ready' => '有 :count 个课程的成绩未确定。',
+        'no_score_here' => '这个课程只录入等级（相对评价或合格制课程），请不要填写分数。',
+        'above_retake_cap' => '重修最高只能得 :grade。',
+        'new_grade_required' => '请输入更正后的分数或成绩。',
+        'method_has_grades' => '已录入成绩，不能更改评价方式。',
     ],
     'mail' => [
         'returned_subject' => '成绩已退回：:section',
@@ -168,5 +182,9 @@ return [
         'graded' => '普通课程',
         'pass_fail' => '合格制课程',
         'both' => '两者',
+    ],
+    'evaluation_methods' => [
+        'absolute' => '绝对评价',
+        'relative' => '相对评价',
     ],
 ];

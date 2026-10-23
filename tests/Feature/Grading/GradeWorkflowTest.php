@@ -4,11 +4,14 @@ use App\Domain\Curriculum\Enums\GradingBasis;
 use App\Domain\Grading\Actions\FinalizeGrades;
 use App\Domain\Grading\Actions\ManageGradeChanges;
 use App\Domain\Grading\Actions\SaveGrades;
+use App\Domain\Grading\Actions\SaveGradeScale;
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Enums\GradeChangeStatus;
 use App\Domain\Grading\Enums\GradeStatus;
 use App\Domain\Grading\Events\GradesFinalized;
 use App\Domain\Grading\Notifications\GradesReturnedNotification;
 use App\Domain\Grading\Settings\GradingSettings;
+use App\Domain\Offering\Actions\UpdateSection;
 use App\Domain\Registration\Enums\EnrollmentStatus;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Term\Enums\TermWindowType;
@@ -56,16 +59,83 @@ it('lets the instructor save drafts and submit, then locks the grades for them',
     expect($save->save($this->section, gradeAll($this, ['A+', 'B0', null]), $this->teacher))->toBe(2);
     expect(fn () => $save->submit($this->section, $this->teacher))->toThrow(ValidationException::class);
 
-    $save->save($this->section, [$this->enrollments[2]->id => ['score' => '91.5']], $this->teacher);
+    // Relative evaluation (the default): grades only.
+    expect(fn () => $save->save($this->section, [$this->enrollments[2]->id => ['score' => '91.5']], $this->teacher))->toThrow(ValidationException::class);
+    $save->save($this->section, [$this->enrollments[2]->id => ['grade_code' => 'A0']], $this->teacher);
     expect($this->enrollments[2]->refresh())
         ->grade_code->toBe('A0')
-        ->score->toBe('91.50')
+        ->score->toBeNull()
         ->grade_points->toBe('4.00')
+        ->comparison_grade_code->toBeNull()
         ->grade_status->toBe(GradeStatus::Draft);
 
     expect($save->submit($this->section, $this->teacher))->toBe(3)
         ->and(fn () => $save->save($this->section, gradeAll($this, ['F', 'F', 'F']), $this->teacher))->toThrow(ValidationException::class)
         ->and($this->enrollments[0]->refresh()->grade_code)->toBe('A+');
+});
+
+it('turns scores into grades on both scales for absolute evaluation', function () {
+    GradeScale::factory()->create(['code' => 'KR43', 'max_grade_points' => 4.3])->items()->createMany([
+        ['code' => 'A+', 'grade_points' => 4.3, 'min_percentage' => 97, 'max_percentage' => 100, 'sort_order' => 1],
+        ['code' => 'A0', 'grade_points' => 4.0, 'min_percentage' => 93, 'max_percentage' => 96.99, 'sort_order' => 2],
+        ['code' => 'A-', 'grade_points' => 3.7, 'min_percentage' => 90, 'max_percentage' => 92.99, 'sort_order' => 3],
+        ['code' => 'F', 'grade_points' => 0, 'min_percentage' => 0, 'max_percentage' => 89.99, 'is_passing' => false, 'sort_order' => 4],
+    ]);
+    $this->section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
+    $save = app(SaveGrades::class);
+
+    // Absolute evaluation takes scores; a letter grade with GPA value cannot be chosen.
+    expect(fn () => $save->save($this->section, [$this->enrollments[0]->id => ['grade_code' => 'A0']], $this->teacher))->toThrow(ValidationException::class);
+
+    $save->save($this->section, [$this->enrollments[0]->id => ['score' => '91.5'], $this->enrollments[1]->id => ['score' => '97']], $this->teacher);
+
+    expect($this->enrollments[0]->refresh())
+        ->grade_code->toBe('A0')->grade_points->toBe('4.00')->score->toBe('91.50')
+        ->comparison_grade_code->toBe('A-')->comparison_grade_points->toBe('3.70')
+        ->and($this->enrollments[1]->refresh())
+        ->grade_code->toBe('A+')->grade_points->toBe('4.50')
+        ->comparison_grade_code->toBe('A+')->comparison_grade_points->toBe('4.30');
+
+    // The base scale is the default scale: with 4.3 as the base, 4.5 is the comparison.
+    app(SaveGradeScale::class)->handle(GradeScale::query()->where('code', 'KR43')->sole(), ['is_default' => true]);
+    app(SaveGrades::class)->save($this->section, [$this->enrollments[2]->id => ['score' => '91.5']], $this->teacher);
+    expect($this->enrollments[2]->refresh())->grade_code->toBe('A-')->grade_points->toBe('3.70')->comparison_grade_code->toBe('A0');
+});
+
+it('lowers an absolute retake above the cap to the cap and keeps the score', function () {
+    $this->section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
+    $this->enrollments[0]->forceFill(['is_retake' => true])->save();
+    $settings = app(GradingSettings::class);
+    $settings->retake_max_grade = 'B+';
+    $settings->save();
+
+    app(SaveGrades::class)->save($this->section, [$this->enrollments[0]->id => ['score' => '98']], $this->teacher);
+
+    expect($this->enrollments[0]->refresh())->grade_code->toBe('B+')->score->toBe('98.00');
+});
+
+it('changes an absolute grade by a new score and refuses a bare grade', function () {
+    $this->section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
+    app(SaveGrades::class)->save($this->section, collect($this->enrollments)->mapWithKeys(fn (Enrollment $enrollment) => [$enrollment->id => ['score' => '81']])->all(), $this->teacher);
+    app(SaveGrades::class)->submit($this->section, $this->teacher);
+    app(FinalizeGrades::class)->finalize($this->section, $this->registrar);
+    $enrollment = $this->enrollments[0]->refresh();
+    $changes = app(ManageGradeChanges::class);
+
+    expect(fn () => $changes->request($enrollment, 'A0', 'Regrade', $this->teacher))->toThrow(ValidationException::class);
+
+    $request = $changes->request($enrollment, null, 'Exam re-marked', $this->teacher, '92');
+    expect($request)->to_grade_code->toBe('A0')->to_score->toBe('92.00');
+
+    $changes->approve($request, $this->registrar);
+    expect($enrollment->refresh())->grade_code->toBe('A0')->score->toBe('92.00');
+});
+
+it('does not change the evaluation method once grades are entered', function () {
+    app(SaveGrades::class)->save($this->section, [$this->enrollments[0]->id => ['grade_code' => 'B0']], $this->teacher);
+
+    expect(fn () => app(UpdateSection::class)->handle($this->section, ['evaluation_method' => 'absolute'], User::factory()->withPermissions([Permission::SectionsManage])->create()))
+        ->toThrow(ValidationException::class, __('grading.errors.method_has_grades'));
 });
 
 it('refuses entry outside the grade entry window and by other instructors, but not by grade staff', function () {

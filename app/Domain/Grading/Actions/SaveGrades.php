@@ -33,6 +33,9 @@ class SaveGrades
     ) {}
 
     /**
+     * Absolute evaluation takes scores (the grades follow), relative evaluation grades only
+     * (GradeOptions).
+     *
      * @param  array<int, array{grade_code?: string|null, score?: string|int|float|null}>  $grades  by enrollment id
      * @return int saved grades
      */
@@ -48,22 +51,17 @@ class SaveGrades
             foreach ($grades as $enrollmentId => $grade) {
                 $enrollment = $enrollments->get($enrollmentId)
                     ?? throw ValidationException::withMessages(['grades' => __('grading.errors.not_editable')]);
-                $score = isset($grade['score']) && $grade['score'] !== '' ? number_format((float) $grade['score'], 2, '.', '') : null;
-                $item = $this->options->resolve($enrollment, $grade['grade_code'] ?? null, $score);
+                $score = isset($grade['score']) && $grade['score'] !== '' ? (string) $grade['score'] : null;
+                $choice = $this->options->resolve($enrollment, $grade['grade_code'] ?? null, $score);
 
                 $enrollment->forceFill([
+                    ...$choice->attributes(),
                     // Staff corrections before finalization keep a submitted grade submitted.
                     'grade_status' => match (true) {
-                        $item === null && $score === null => GradeStatus::None,
-                        $item !== null && $enrollment->grade_status === GradeStatus::Submitted => GradeStatus::Submitted,
+                        $choice->isEmpty() => GradeStatus::None,
+                        $choice->item !== null && $enrollment->grade_status === GradeStatus::Submitted => GradeStatus::Submitted,
                         default => GradeStatus::Draft,
                     },
-                    'grade_scale_id' => $item?->grade_scale_id,
-                    'grade_code' => $item?->code,
-                    'score' => $score,
-                    'grade_points' => $item?->grade_points,
-                    'counts_in_gpa' => $item?->counts_in_gpa,
-                    'is_passed' => $item?->is_passing,
                 ]);
 
                 if ($enrollment->isDirty()) {
@@ -141,6 +139,6 @@ class SaveGrades
     {
         return Enrollment::query()->where('section_id', $section->id)->where('status', EnrollmentStatus::Enrolled)
             ->whereIn('grade_status', $byStaff ? [GradeStatus::None, GradeStatus::Draft, GradeStatus::Submitted] : [GradeStatus::None, GradeStatus::Draft])
-            ->with('version');
+            ->with(['version', 'section']);
     }
 }

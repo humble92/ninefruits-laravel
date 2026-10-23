@@ -2,10 +2,9 @@
 
 namespace Database\Seeders\Profiles;
 
+use App\Domain\Grading\Actions\SaveGradeScale;
 use App\Domain\Grading\Settings\GradingSettings;
 use App\Models\Curriculum\CourseVersion;
-use App\Models\Grading\GradeScale;
-use App\Models\Grading\GradeScaleItem;
 use App\Models\Organization\OrgUnit;
 use App\Models\Registration\CreditLimitPolicy;
 use App\Models\Term\TermType;
@@ -32,11 +31,12 @@ use Illuminate\Database\Seeder;
  * Holds (legacy SRDENY), overrides (SRALLOW), section eligibility (TARGET_ST*),
  * prerequisites, time conflicts, duplicates and retakes are the default rule set.
  * Grading (legacy SSCOREDEF and the GPA views, docs/decisions/0011-grades-and-term-records.md):
- * a 4.3 scale with minus grades, P/N and I; GPA rounded to 3 decimals; the latest attempt
+ * the 4.3 scale with minus grades (A+ 4.3, confirmed 2026-10-22), P/N and I is the
+ * institution's scale and absolute evaluation base; score ranges are in steps of three
+ * points (the legacy entered letters only). GPA rounded to 3 decimals; the latest attempt
  * of a retake counts; a warning below a term GPA of 1.3 in regular terms; dismissal review
- * after 4 warnings in all. A+ is 4.3 by the scale's pattern: the legacy table had no data
- * in the dump, so confirm it from the live SSCOREDEF before going live. The legacy honors
- * list was a plain top N, so every student with a GPA is ranked.
+ * after 4 warnings in all. The legacy honors list was a plain top N, so every student with
+ * a GPA is ranked.
  *
  * Idempotent: policies with the same name are updated, not duplicated.
  */
@@ -110,34 +110,17 @@ class YustLegacyProfileSeeder extends Seeder implements SetupProfile
         $this->gradingPolicy();
     }
 
+    /**
+     * The 4.3 scale becomes the institution's scale (the absolute evaluation base); the 4.5
+     * scale of the Korean profile stays as the comparison scale.
+     */
     private function gradeScale(): void
     {
-        $scale = GradeScale::query()->firstOrNew(['code' => 'YUST43']);
-        $scale->fill(['name' => ['en' => '4.3 scale (YUST)', 'ko' => '4.3 만점(YUST)', 'zh_CN' => '4.3 分制（YUST）'], 'max_grade_points' => 4.3]);
+        $scale = KoreanUniversityProfileSeeder::seedScale('YUST43', ['en' => '4.3 scale (YUST)', 'ko' => '4.3 만점(YUST)', 'zh_CN' => '4.3 分制（YUST）'], 4.3, false,
+            KoreanUniversityProfileSeeder::scale43(['P' => [true], 'N' => [false], 'I' => [false, 'both']]));
 
-        if (! $scale->exists) {
-            GradeScale::query()->where('is_default', true)->update(['is_default' => false]);
-            $scale->is_default = true;
-        }
-
-        $scale->save();
-
-        // code => [points, counts in GPA, passing, for]
-        $items = [
-            'A+' => [4.3, true, true, 'graded'], 'A0' => [4.0, true, true, 'graded'], 'A-' => [3.7, true, true, 'graded'],
-            'B+' => [3.3, true, true, 'graded'], 'B0' => [3.0, true, true, 'graded'], 'B-' => [2.7, true, true, 'graded'],
-            'C+' => [2.3, true, true, 'graded'], 'C0' => [2.0, true, true, 'graded'], 'C-' => [1.7, true, true, 'graded'],
-            'D+' => [1.3, true, true, 'graded'], 'D0' => [1.0, true, true, 'graded'], 'D-' => [0.7, true, true, 'graded'],
-            'F' => [0.0, true, false, 'graded'],
-            'P' => [null, false, true, 'pass_fail'], 'N' => [null, false, false, 'pass_fail'],
-            'I' => [null, false, false, 'both'],
-        ];
-        $order = 0;
-
-        foreach ($items as $code => [$points, $countsInGpa, $isPassing, $appliesTo]) {
-            GradeScaleItem::query()->firstOrCreate(['grade_scale_id' => $scale->id, 'code' => $code], [
-                'grade_points' => $points, 'counts_in_gpa' => $countsInGpa, 'is_passing' => $isPassing, 'applies_to' => $appliesTo, 'sort_order' => $order += 10,
-            ]);
+        if (! $scale->is_default) {
+            app(SaveGradeScale::class)->handle($scale, ['is_default' => true]);
         }
     }
 

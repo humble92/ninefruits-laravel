@@ -4,6 +4,7 @@ namespace Database\Seeders\Demo;
 
 use App\Domain\Grading\Actions\ManageGradeChanges;
 use App\Domain\Grading\Actions\SaveGrades;
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Enums\GradeStatus;
 use App\Domain\Grading\Services\GradeOptions;
 use App\Domain\Registration\Enums\EnrollmentStatus;
@@ -20,9 +21,10 @@ use App\Support\Targeting\TargetCriteria;
 use Illuminate\Database\Seeder;
 
 /**
- * Grade entry in the current term for demonstration: a grade entry window open now, one
- * section with every grade submitted (ready to finalize), one with drafts, and a pending
- * grade change request on last term's grades by its instructor.
+ * Grade entry in the current term for demonstration: every third section evaluated
+ * absolutely (scores), a grade entry window open now, one section with every grade
+ * submitted (ready to finalize), one with drafts, and a pending grade change request on
+ * last term's grades by its instructor.
  */
 class DemoGradingSeeder extends Seeder
 {
@@ -45,13 +47,19 @@ class DemoGradingSeeder extends Seeder
             'eligibility' => TargetCriteria::everyone(),
         ]);
 
+        // Every third section of the term is evaluated absolutely (scores), the rest relatively.
+        Section::query()->where('term_id', $current->id)->whereRaw('id % 3 = 0')->update(['evaluation_method' => EvaluationMethod::Absolute]);
+
         $instructor = User::query()->where('email', 'instructor@'.config('setup.demo.email_domain'))->first();
-        $sections = Section::query()->where('term_id', $current->id)->where('enrolled_count', '>', 0)
+        // An absolutely evaluated section submitted with scores, a relative one half done.
+        $candidates = fn (EvaluationMethod $method) => Section::query()->where('term_id', $current->id)->where('enrolled_count', '>', 0)
+            ->where('evaluation_method', $method)
             ->when($instructor?->person_id, fn ($query, $personId) => $query->whereDoesntHave('instructors', fn ($instructors) => $instructors->where('person_id', $personId)))
-            ->orderBy('id')->limit(2)->get();
+            ->orderBy('id')->first();
+        $sections = collect([$candidates(EvaluationMethod::Absolute), $candidates(EvaluationMethod::Relative)])->filter();
 
         foreach ($sections->values() as $index => $section) {
-            $enrollments = Enrollment::query()->where('section_id', $section->id)->where('status', EnrollmentStatus::Enrolled)->with('version')->get();
+            $enrollments = Enrollment::query()->where('section_id', $section->id)->where('status', EnrollmentStatus::Enrolled)->with(['version', 'section'])->get();
             $entered = [];
 
             foreach ($enrollments as $position => $enrollment) {
@@ -59,8 +67,12 @@ class DemoGradingSeeder extends Seeder
                     continue; // the second section is half done
                 }
 
-                $codes = $options->for($enrollment)->pluck('code')->all();
-                $entered[$enrollment->id] = ['grade_code' => $codes[array_rand($codes)]];
+                if ($options->takesScore($enrollment)) {
+                    $entered[$enrollment->id] = ['score' => (string) mt_rand(55, 99)];
+                } else {
+                    $codes = $options->for($enrollment)->pluck('code')->all();
+                    $entered[$enrollment->id] = ['grade_code' => $codes[array_rand($codes)]];
+                }
             }
 
             $grades->save($section, $entered, $registrar);

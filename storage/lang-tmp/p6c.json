@@ -1,0 +1,54 @@
+{"en": {"grading": {
+  "evaluation_methods": {"absolute": "Absolute evaluation", "relative": "Relative evaluation"},
+  "fields": {"evaluation_method": "Evaluation", "comparison_grade": "Comparison grade", "new_score": "New score"},
+  "help": {"evaluation_method": "Absolute: instructors enter scores and the grades follow on both scales. Relative: instructors give grades only. Cannot change once grades are entered."},
+  "entry": {
+    "absolute_help": "Enter each student's score (0–100). The grade follows from the score on :scale; the grade on :comparison is kept for comparison. Choose a grade directly only for one without a score (e.g. I).",
+    "relative_help": "Do not enter scores: give each student a grade.",
+    "by_score": "By score",
+    "help": "Save drafts any time; submit once every student has a grade."
+  },
+  "errors": {
+    "no_score_here": "This section takes grades only (relative evaluation or a pass/fail course): leave the score empty.",
+    "above_retake_cap": "A retake can receive at most :grade.",
+    "new_grade_required": "Enter the new score or grade.",
+    "method_has_grades": "Grades are already entered; the evaluation method cannot change."
+  },
+  "settings": {"scale": "Grade scale", "absolute_scale": "Absolute evaluation base", "absolute_scale_help": "The institution's scale: scores of absolutely evaluated sections turn into its grades, and GPAs use it. Grades on the other scale are kept for comparison. Grades already given keep their scale."}
+}},
+"ko": {"grading": {
+  "evaluation_methods": {"absolute": "절대평가", "relative": "상대평가"},
+  "fields": {"evaluation_method": "평가 방식", "comparison_grade": "비교 성적", "new_score": "바꿀 점수"},
+  "help": {"evaluation_method": "절대평가: 교원이 점수를 입력하면 두 척도의 성적이 계산된다. 상대평가: 교원이 성적만 입력한다. 성적을 입력한 뒤에는 바꿀 수 없다."},
+  "entry": {
+    "absolute_help": "학생마다 점수(0~100)를 입력하세요. :scale 기준 성적이 점수로 정해지고, :comparison 기준 성적도 비교용으로 함께 저장됩니다. 점수가 없는 성적(예: I)만 직접 고릅니다.",
+    "relative_help": "점수는 입력하지 마세요. 학생마다 성적만 입력합니다.",
+    "by_score": "점수로",
+    "help": "임시 저장은 언제든 할 수 있고, 모든 학생의 성적을 넣은 뒤 제출합니다."
+  },
+  "errors": {
+    "no_score_here": "이 강좌는 성적만 입력합니다(상대평가 또는 P/F 과목). 점수는 비워 두세요.",
+    "above_retake_cap": "재수강은 :grade까지만 받을 수 있습니다.",
+    "new_grade_required": "바꿀 점수나 성적을 입력하세요.",
+    "method_has_grades": "이미 성적이 입력되어 평가 방식을 바꿀 수 없습니다."
+  },
+  "settings": {"scale": "성적 척도", "absolute_scale": "절대평가 기준 척도", "absolute_scale_help": "기관의 성적 척도. 절대평가 강좌의 점수가 이 척도의 성적이 되고, 평점도 이 척도로 계산한다. 다른 척도의 성적은 비교용으로 함께 저장한다. 이미 준 성적의 척도는 바뀌지 않는다."}
+}},
+"zh_CN": {"grading": {
+  "evaluation_methods": {"absolute": "绝对评价", "relative": "相对评价"},
+  "fields": {"evaluation_method": "评价方式", "comparison_grade": "对照成绩", "new_score": "更正后分数"},
+  "help": {"evaluation_method": "绝对评价：教师录入分数，两种等级制的成绩自动计算。相对评价：教师只录入等级。录入成绩后不能更改。"},
+  "entry": {
+    "absolute_help": "请为每位学生录入分数（0–100）。按 :scale 由分数确定成绩，并同时保存 :comparison 的对照成绩。只有没有分数的成绩（如 I）才直接选择。",
+    "relative_help": "请不要录入分数，只为每位学生录入等级。",
+    "by_score": "按分数",
+    "help": "可以随时暂存，所有学生都有成绩后再提交。"
+  },
+  "errors": {
+    "no_score_here": "这个课程只录入等级（相对评价或合格制课程），请不要填写分数。",
+    "above_retake_cap": "重修最高只能得 :grade。",
+    "new_grade_required": "请输入更正后的分数或成绩。",
+    "method_has_grades": "已录入成绩，不能更改评价方式。"
+  },
+  "settings": {"scale": "成绩等级制", "absolute_scale": "绝对评价基准等级制", "absolute_scale_help": "本机构的成绩等级制：绝对评价课程的分数换算为该等级制的成绩，绩点也按其计算。另一等级制的成绩作为对照一并保存。已给出的成绩不改变等级制。"}
+}}}

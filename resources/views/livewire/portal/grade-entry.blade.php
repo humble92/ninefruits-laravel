@@ -10,6 +10,13 @@
         </p>
     </div>
 
+    <p class="rounded-lg border border-sky-200 bg-sky-50 p-3 text-sm">
+        <span class="font-medium">{{ $section->evaluation_method->label() }}</span> ·
+        {{ $absolute
+            ? __('grading.entry.absolute_help', ['scale' => $scale->name, 'comparison' => $comparisonScale?->name ?? '-'])
+            : __('grading.entry.relative_help') }}
+    </p>
+
     @if ($messages !== [])
         <div role="status" @class([
             'rounded-lg border p-3 text-sm',
@@ -30,8 +37,13 @@
                     <th class="px-3 py-2">{{ __('people.fields.student_number') }}</th>
                     <th class="px-3 py-2">{{ __('people.fields.name') }}</th>
                     <th class="px-3 py-2">{{ __('reference.resources.programs.label') }}</th>
-                    <th class="px-3 py-2">{{ __('grading.fields.score') }}</th>
-                    <th class="px-3 py-2">{{ __('grading.fields.grade') }}</th>
+                    @if ($absolute)
+                        <th class="px-3 py-2">{{ __('grading.fields.score') }}</th>
+                    @endif
+                    <th class="px-3 py-2">{{ __('grading.fields.grade') }} ({{ $scale->code }})</th>
+                    @if ($absolute && $comparisonScale)
+                        <th class="px-3 py-2">{{ __('grading.fields.comparison_grade') }} ({{ $comparisonScale->code }})</th>
+                    @endif
                     <th class="px-3 py-2">{{ __('registration.fields.status') }}</th>
                 </tr>
             </thead>
@@ -47,21 +59,45 @@
                         </td>
                         <td class="px-3 py-2">{{ $enrollment->studentRecord->program->name }}</td>
                         @if ($editable($enrollment))
+                            @if ($absolute)
+                                <td class="px-3 py-2">
+                                    @if ($takesScore($enrollment))
+                                        <input type="number" min="0" max="100" step="0.01" wire:model.live.debounce.500ms="grades.{{ $enrollment->id }}.score"
+                                            aria-label="{{ __('grading.fields.score') }} {{ $enrollment->studentRecord->student_number }}" class="w-20 rounded border border-zinc-300 px-2 py-1">
+                                    @endif
+                                </td>
+                            @endif
                             <td class="px-3 py-2">
-                                <input type="number" min="0" max="100" step="0.01" wire:model.live.debounce.500ms="grades.{{ $enrollment->id }}.score"
-                                    aria-label="{{ __('grading.fields.score') }} {{ $enrollment->studentRecord->student_number }}" class="w-20 rounded border border-zinc-300 px-2 py-1">
+                                @if ($takesScore($enrollment))
+                                    <span class="font-medium">{{ $previews[$enrollment->id]['grade'] ?? $enrollment->grade_code }}</span>
+                                    @if ($options($enrollment)->isNotEmpty())
+                                        <select wire:model="grades.{{ $enrollment->id }}.grade_code" aria-label="{{ __('grading.fields.grade') }} {{ $enrollment->studentRecord->student_number }}" class="ms-1 rounded border border-zinc-300 px-1 py-0.5 text-xs">
+                                            <option value="">{{ __('grading.entry.by_score') }}</option>
+                                            @foreach ($options($enrollment) as $code)
+                                                <option value="{{ $code }}">{{ $code }}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
+                                @else
+                                    <select wire:model="grades.{{ $enrollment->id }}.grade_code" aria-label="{{ __('grading.fields.grade') }} {{ $enrollment->studentRecord->student_number }}" class="rounded border border-zinc-300 px-2 py-1">
+                                        <option value=""></option>
+                                        @foreach ($options($enrollment) as $code)
+                                            <option value="{{ $code }}">{{ $code }}</option>
+                                        @endforeach
+                                    </select>
+                                @endif
                             </td>
-                            <td class="px-3 py-2">
-                                <select wire:model="grades.{{ $enrollment->id }}.grade_code" aria-label="{{ __('grading.fields.grade') }} {{ $enrollment->studentRecord->student_number }}" class="rounded border border-zinc-300 px-2 py-1">
-                                    <option value=""></option>
-                                    @foreach ($options($enrollment) as $code)
-                                        <option value="{{ $code }}">{{ $code }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
+                            @if ($absolute && $comparisonScale)
+                                <td class="px-3 py-2 text-zinc-600">{{ $previews[$enrollment->id]['comparison'] ?? $enrollment->comparison_grade_code }}</td>
+                            @endif
                         @else
-                            <td class="px-3 py-2">{{ $enrollment->score === null ? '' : (float) $enrollment->score }}</td>
+                            @if ($absolute)
+                                <td class="px-3 py-2">{{ $enrollment->score === null ? '' : (float) $enrollment->score }}</td>
+                            @endif
                             <td class="px-3 py-2 font-medium">{{ $enrollment->displayGrade() }}</td>
+                            @if ($absolute && $comparisonScale)
+                                <td class="px-3 py-2 text-zinc-600">{{ $enrollment->comparison_grade_code }}</td>
+                            @endif
                         @endif
                         <td class="px-3 py-2">
                             {{ $enrollment->status === \App\Domain\Registration\Enums\EnrollmentStatus::Withdrawn ? $enrollment->status->label() : $enrollment->grade_status->label() }}
@@ -76,14 +112,20 @@
                             @if ($enrollment->grade_status === \App\Domain\Grading\Enums\GradeStatus::Finalized && $enrollment->gradeChangeRequests->where('status', $pendingStatus)->isEmpty())
                                 @if ($changeFor === $enrollment->id)
                                     <form wire:submit="requestChange" class="mt-2 space-y-2">
-                                        <select wire:model="changeGrade" aria-label="{{ __('grading.fields.new_grade') }}" class="rounded border border-zinc-300 px-2 py-1">
-                                            <option value="">{{ __('grading.fields.new_grade') }}</option>
-                                            @foreach ($options($enrollment) as $code)
-                                                <option value="{{ $code }}">{{ $code }}</option>
-                                            @endforeach
-                                        </select>
+                                        @if ($takesScore($enrollment))
+                                            <input type="number" min="0" max="100" step="0.01" wire:model="changeScore" placeholder="{{ __('grading.fields.new_score') }}" aria-label="{{ __('grading.fields.new_score') }}" class="w-28 rounded border border-zinc-300 px-2 py-1">
+                                        @endif
+                                        @if ($options($enrollment)->isNotEmpty())
+                                            <select wire:model="changeGrade" aria-label="{{ __('grading.fields.new_grade') }}" class="rounded border border-zinc-300 px-2 py-1">
+                                                <option value="">{{ $takesScore($enrollment) ? __('grading.entry.by_score') : __('grading.fields.new_grade') }}</option>
+                                                @foreach ($options($enrollment) as $code)
+                                                    <option value="{{ $code }}">{{ $code }}</option>
+                                                @endforeach
+                                            </select>
+                                        @endif
                                         <textarea wire:model="changeReason" rows="2" placeholder="{{ __('common.reason') }}" aria-label="{{ __('common.reason') }}" class="block w-full rounded border border-zinc-300 px-2 py-1"></textarea>
                                         @error('changeGrade') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
+                                        @error('changeScore') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                                         @error('changeReason') <p class="text-xs text-red-600">{{ $message }}</p> @enderror
                                         <button type="submit" class="rounded bg-zinc-900 px-3 py-1 text-white">{{ __('grading.actions.request_change') }}</button>
                                     </form>
@@ -94,7 +136,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="px-3 py-6 text-center text-zinc-500">{{ __('grading.entry.no_students') }}</td></tr>
+                    <tr><td colspan="7" class="px-3 py-6 text-center text-zinc-500">{{ __('grading.entry.no_students') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

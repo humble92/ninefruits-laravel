@@ -58,6 +58,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $grade_submitted_by_id
  * @property CarbonImmutable|null $grade_finalized_at
  * @property int|null $grade_finalized_by_id
+ * @property int|null $comparison_grade_scale_id
+ * @property string|null $comparison_grade_code
+ * @property string|null $comparison_grade_points
  * @property-read StudentRecord $studentRecord
  * @property-read Section $section
  * @property-read Term $term
@@ -83,7 +86,7 @@ class Enrollment extends Model
         'changed_by_id' => null, 'grade_status' => 'none', 'grade_code' => null, 'is_passed' => null,
         'grade_scale_id' => null, 'score' => null, 'grade_points' => null, 'counts_in_gpa' => null, 'grade_entered_at' => null,
         'grade_entered_by_id' => null, 'grade_submitted_at' => null, 'grade_submitted_by_id' => null, 'grade_finalized_at' => null,
-        'grade_finalized_by_id' => null,
+        'grade_finalized_by_id' => null, 'comparison_grade_scale_id' => null, 'comparison_grade_code' => null, 'comparison_grade_points' => null,
     ];
 
     protected function casts(): array
@@ -101,6 +104,7 @@ class Enrollment extends Model
             'is_passed' => 'boolean',
             'score' => 'decimal:2',
             'grade_points' => 'decimal:2',
+            'comparison_grade_points' => 'decimal:2',
             'counts_in_gpa' => 'boolean',
             'grade_entered_at' => 'immutable_datetime',
             'grade_submitted_at' => 'immutable_datetime',

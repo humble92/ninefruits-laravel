@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Grading\Sections;
 
 use App\Domain\Grading\Actions\FinalizeGrades;
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Enums\GradeStatus;
 use App\Domain\Registration\Enums\EnrollmentStatus;
 use App\Domain\Security\Enums\Permission;
@@ -93,6 +94,7 @@ class SectionGradeResource extends Resource
                 TextColumn::make('label')->label(__('offering.fields.section'))->state(fn (Section $record) => $record->label())
                     ->searchable(query: fn (Builder $query, string $search) => $query->whereHas('course', fn (Builder $course) => $course->where('code', 'ilike', $search.'%'))),
                 TextColumn::make('version.title')->label(__('curriculum.fields.title')),
+                TextColumn::make('evaluation_method')->label(__('grading.fields.evaluation_method'))->formatStateUsing(fn (EvaluationMethod $state) => $state->label())->badge()->color('gray'),
                 TextColumn::make('instructors')->label(__('offering.fields.instructors'))
                     ->state(fn (Section $record) => $record->instructors->map(fn (Instructor $instructor) => $instructor->person->displayName())->implode(', ') ?: '-'),
                 TextColumn::make('pending_count')->label(__('grading.fields.pending'))->color(fn (int $state) => $state > 0 ? 'warning' : null),

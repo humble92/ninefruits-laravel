@@ -2,10 +2,12 @@
 
 namespace App\Filament\Admin\Pages;
 
+use App\Domain\Grading\Actions\SaveGradeScale;
 use App\Domain\Grading\Enums\GpaRounding;
 use App\Domain\Grading\Enums\RetakePolicy;
 use App\Domain\Grading\Settings\GradingSettings;
 use App\Domain\Security\Enums\Permission;
+use App\Domain\Security\Services\AuditLogger;
 use App\Models\Grading\GradeScale;
 use App\Models\Grading\GradeScaleItem;
 use BackedEnum;
@@ -15,6 +17,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Spatie\LaravelSettings\Settings;
 
 /**
  * Grading policy: GPA precision, retakes, academic standing and honors. Changes apply to
@@ -52,6 +55,12 @@ class ManageGradingSettings extends SettingsPage
             ->whereNotNull('grade_points')->orderBy('sort_order')->pluck('code', 'code');
 
         return $schema->components([
+            Section::make(__('grading.settings.scale'))->schema([
+                Select::make('absolute_scale_id')->label(__('grading.settings.absolute_scale'))->required()
+                    ->options(fn () => GradeScale::query()->whereHas('items', fn ($item) => $item->whereNotNull('min_percentage'))->orderBy('code')->get()
+                        ->mapWithKeys(fn (GradeScale $scale) => [$scale->id => $scale->name.' ('.$scale->code.')']))
+                    ->helperText(__('grading.settings.absolute_scale_help')),
+            ]),
             Section::make(__('grading.settings.gpa'))->columns(2)->schema([
                 TextInput::make('gpa_decimals')->label(__('grading.settings.gpa_decimals'))->integer()->minValue(0)->maxValue(3)->required(),
                 Select::make('gpa_rounding')->label(__('grading.settings.gpa_rounding'))->required()
@@ -75,6 +84,26 @@ class ManageGradingSettings extends SettingsPage
                 Toggle::make('honors_exclude_failing')->label(__('grading.settings.honors_exclude_failing')),
             ]),
         ]);
+    }
+
+    protected function formDataFromSettings(Settings $settings): array
+    {
+        return [...parent::formDataFromSettings($settings), 'absolute_scale_id' => GradeScale::query()->where('is_default', true)->value('id')];
+    }
+
+    /**
+     * The absolute evaluation scale is the default grade scale, not a setting value.
+     */
+    public function save(AuditLogger $audit): void
+    {
+        parent::save($audit);
+
+        $scale = GradeScale::query()->findOrFail($this->form->getState()['absolute_scale_id']);
+
+        if (! $scale->is_default) {
+            app(SaveGradeScale::class)->handle($scale, ['is_default' => true]);
+            $audit->record('grading.absolute_scale_changed', $scale, null, ['code' => $scale->code]);
+        }
     }
 
     protected function settingsDataFromForm(array $state): array

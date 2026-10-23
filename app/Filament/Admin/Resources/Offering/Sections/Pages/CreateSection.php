@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Offering\Sections\Pages;
 
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Offering\Actions\CreateSection as CreateSectionAction;
 use App\Filament\Admin\Resources\Curriculum\Courses\CourseResource;
 use App\Filament\Admin\Resources\Offering\Sections\SectionResource;
@@ -33,6 +34,9 @@ class CreateSection extends CreateRecord
                     ->afterStateUpdated(fn (Set $set, $state) => $set('org_unit_id', Course::query()->find($state)?->org_unit_id)),
                 TextInput::make('section_code')->label(__('offering.fields.section_code'))->required()->maxLength(16)->alphaDash()->default('01'),
                 TextInput::make('capacity')->label(__('offering.fields.capacity'))->integer()->minValue(0)->maxValue(2000)->required()->default(40),
+                Select::make('evaluation_method')->label(__('grading.fields.evaluation_method'))->required()->default(EvaluationMethod::Relative->value)
+                    ->options(collect(EvaluationMethod::cases())->mapWithKeys(fn (EvaluationMethod $method) => [$method->value => $method->label()]))
+                    ->helperText(__('grading.help.evaluation_method')),
                 TextInput::make('waitlist_capacity')->label(__('registration.fields.waitlist_capacity'))->integer()->minValue(0)->maxValue(500)->default(0)
                     ->helperText(__('registration.help.waitlist_capacity')),
                 Select::make('org_unit_id')->label(__('offering.fields.offering_unit'))->options(fn () => OrgUnitResource::unitOptions())->searchable()->required()

@@ -49,6 +49,12 @@ class UpdateSection
                     });
                 }
 
+                // Grades already entered follow the evaluation method they were entered under.
+                if (isset($data['evaluation_method']) && $data['evaluation_method'] !== $section->evaluation_method->value
+                    && $section->enrollments()->where('grade_status', '!=', 'none')->exists()) {
+                    throw ValidationException::withMessages(['evaluation_method' => __('grading.errors.method_has_grades')]);
+                }
+
                 // Registration takes seats under this row lock; capacity never drops below them.
                 $enrolled = (int) Section::query()->whereKey($section->id)->lockForUpdate()->value('enrolled_count');
 
@@ -56,7 +62,7 @@ class UpdateSection
                     throw ValidationException::withMessages(['capacity' => __('registration.errors.capacity_below_enrolled', ['count' => $enrolled])]);
                 }
 
-                $section->fill(Arr::only($data, ['section_code', 'capacity', 'waitlist_capacity', 'org_unit_id', 'eligibility', 'exclusion', 'instruction_language', 'note']))->save();
+                $section->fill(Arr::only($data, ['section_code', 'capacity', 'waitlist_capacity', 'evaluation_method', 'org_unit_id', 'eligibility', 'exclusion', 'instruction_language', 'note']))->save();
 
                 return $section;
             }, 'term_session_id');
