@@ -10,6 +10,8 @@ enum RequirementKind: string
     case RequiredCourses = 'required_courses';
     /** Minimum credits or courses from the listed courses. */
     case CourseGroup = 'course_group';
+    /** A passing result for an examination kind (language, comprehensive, thesis). */
+    case AssessmentPass = 'assessment_pass';
 
     public function label(): string
     {

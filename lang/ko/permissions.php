@@ -42,6 +42,7 @@ return [
         'grading_policies' => '성적 처리 정책',
         'grade_exceptions' => '성적 예외 제출',
         'evaluations' => '강의평가',
+        'assessments' => '어학/종합시험',
         'certificates' => '증명서',
     ],
     'admin_panel' => ['access' => '관리 화면 사용'],
@@ -92,5 +93,6 @@ return [
     'grading_policies' => ['manage' => '평점, 재수강, 학사경고, 성적우수 정책 관리'],
     'grade_exceptions' => ['review' => '직원이 등급 비율을 넘겨 예외 제출하면 알림을 받음(학과장, 학사팀장)'],
     'evaluations' => ['view' => '강의평가 응답률과 결과 조회', 'manage' => '강의평가 양식, 학기 강의평가, 결과 공개 관리'],
+    'assessments' => ['record' => '응시 등록, 결과 입력·공개, 외부 성적 등록', 'manage' => '시험 종류, 영역, 회차 관리'],
     'certificates' => ['issue' => '증명서 발급, 재생성, 취소', 'manage' => '증명서 종류, 서식, 설정 관리'],
 ];

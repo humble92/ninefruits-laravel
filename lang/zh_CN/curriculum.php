@@ -25,6 +25,7 @@ return [
         'requirements' => '要求',
     ],
     'fields' => [
+        'assessment_type' => '考试种类',
         'code' => '课程代码',
         'managing_unit' => '管理单位',
         'title' => '课程名称',
@@ -96,5 +97,6 @@ return [
         'category_credits' => '类别学分',
         'required_courses' => '必修课程',
         'course_group' => '指定课程中选修',
+        'assessment_pass' => '考试合格',
     ],
 ];

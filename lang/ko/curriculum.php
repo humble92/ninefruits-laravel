@@ -25,6 +25,7 @@ return [
         'requirements' => '요건',
     ],
     'fields' => [
+        'assessment_type' => '시험 종류',
         'code' => '교과목 코드',
         'managing_unit' => '관리 조직',
         'title' => '교과목명',
@@ -96,5 +97,6 @@ return [
         'category_credits' => '교과 구분별 학점',
         'required_courses' => '필수 과목',
         'course_group' => '지정 과목 중 선택',
+        'assessment_pass' => '시험 합격',
     ],
 ];

@@ -15,6 +15,11 @@ use App\Domain\Security\Services\PersonaResolver;
 use App\Http\Middleware\EnforceMfaPolicy;
 use App\Http\Middleware\SetDatabaseSessionContext;
 use App\Http\Middleware\SetLocale;
+use App\Models\Assessment\AssessmentComponent;
+use App\Models\Assessment\AssessmentRegistration;
+use App\Models\Assessment\AssessmentResult;
+use App\Models\Assessment\AssessmentSession;
+use App\Models\Assessment\AssessmentType;
 use App\Models\Certificate\CertificateIssue;
 use App\Models\Certificate\CertificateTemplate;
 use App\Models\Certificate\CertificateType;
@@ -58,6 +63,8 @@ use App\Models\Term\TermType;
 use App\Models\Term\TermWindow;
 use App\Models\Term\TimeSlot;
 use App\Models\User;
+use App\Policies\Assessment\AssessmentRecordPolicy;
+use App\Policies\Assessment\AssessmentSetupPolicy;
 use App\Policies\Certificate\CertificateIssuePolicy;
 use App\Policies\Certificate\CertificateSetupPolicy;
 use App\Policies\Curriculum\CoursePolicy;
@@ -137,6 +144,11 @@ class AppServiceProvider extends ServiceProvider
         RegistrationRuleSet::class => RegistrationRulePolicy::class,
         RegistrationRule::class => RegistrationRulePolicy::class,
         CreditLimitPolicy::class => RegistrationRulePolicy::class,
+        AssessmentType::class => AssessmentSetupPolicy::class,
+        AssessmentComponent::class => AssessmentSetupPolicy::class,
+        AssessmentSession::class => AssessmentSetupPolicy::class,
+        AssessmentRegistration::class => AssessmentRecordPolicy::class,
+        AssessmentResult::class => AssessmentRecordPolicy::class,
         CertificateType::class => CertificateSetupPolicy::class,
         CertificateTemplate::class => CertificateSetupPolicy::class,
         CertificateIssue::class => CertificateIssuePolicy::class,

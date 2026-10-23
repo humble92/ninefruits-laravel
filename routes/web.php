@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admission\AdmissionCycleListController;
 use App\Http\Controllers\Admission\ApplicationDocumentController;
+use App\Http\Controllers\Assessment\EvidenceController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\Auth\TwoFactorEmailChallengeController;
@@ -17,6 +18,7 @@ use App\Livewire\Portal\CourseCatalog;
 use App\Livewire\Portal\Dashboard;
 use App\Livewire\Portal\Evaluations;
 use App\Livewire\Portal\GradeEntry;
+use App\Livewire\Portal\MyAssessments;
 use App\Livewire\Portal\MyCertificates;
 use App\Livewire\Portal\MyGrades;
 use App\Livewire\Portal\MyProfile;
@@ -48,6 +50,7 @@ Route::middleware(['guest', 'throttle:two-factor'])->prefix('two-factor-challeng
 });
 
 Route::get('/people/{person}/photo', PersonPhotoController::class)->middleware(['auth', 'mfa'])->name('people.photo');
+Route::get('/assessment-results/{assessmentResult}/evidence', EvidenceController::class)->middleware(['auth', 'mfa'])->name('assessments.evidence');
 Route::get('/certificates/{certificateIssue}/download', DownloadCertificateController::class)->middleware(['auth', 'mfa'])->name('certificates.download');
 Route::get('/student-records/{studentRecord}/transcript', [TranscriptController::class, 'show'])->middleware(['auth', 'mfa'])->name('transcripts.show');
 Route::get('/applications/{application}/documents/{media}', ApplicationDocumentController::class)->middleware(['auth', 'mfa'])->name('applications.documents.show');
@@ -67,6 +70,7 @@ Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(fun
     Route::livewire('/grades', MyGrades::class)->name('grades');
     Route::livewire('/evaluations', Evaluations::class)->name('evaluations');
     Route::livewire('/certificates', MyCertificates::class)->name('certificates');
+    Route::livewire('/assessments', MyAssessments::class)->name('assessments');
     Route::livewire('/sections/{section}/evaluation', SectionEvaluation::class)->name('evaluations.results');
     Route::get('/grades/transcript', [TranscriptController::class, 'own'])->name('grades.transcript');
 

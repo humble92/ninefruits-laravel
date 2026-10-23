@@ -11,6 +11,7 @@ use App\Filament\Admin\Resources\Curriculum\Requirements\Pages\EditCurriculumReq
 use App\Filament\Admin\Resources\Curriculum\Requirements\Pages\ListCurriculumRequirementSets;
 use App\Filament\Admin\Support\SafeDeleteAction;
 use App\Filament\Admin\Support\TranslatableFields;
+use App\Models\Assessment\AssessmentType;
 use App\Models\Curriculum\Course;
 use App\Models\Curriculum\CourseCategory;
 use App\Models\Curriculum\CurriculumRequirement;
@@ -99,15 +100,19 @@ class CurriculumRequirementSetResource extends Resource
                             ->options(fn () => CourseCategory::query()->orderBy('sort_order')->get()->pluck('name', 'id'))
                             ->visible(fn (Get $get) => $get('kind') === RequirementKind::CategoryCredits->value)
                             ->required(fn (Get $get) => $get('kind') === RequirementKind::CategoryCredits->value),
+                        Select::make('assessment_type_id')->label(__('curriculum.fields.assessment_type'))
+                            ->options(fn () => AssessmentType::query()->where('is_active', true)->orderBy('sort_order')->get()->pluck('name', 'id'))
+                            ->visible(fn (Get $get) => $get('kind') === RequirementKind::AssessmentPass->value)
+                            ->required(fn (Get $get) => $get('kind') === RequirementKind::AssessmentPass->value),
                         TextInput::make('min_credits')->label(__('curriculum.fields.min_credits'))->numeric()->minValue(0)
-                            ->visible(fn (Get $get) => $get('kind') !== RequirementKind::RequiredCourses->value)
+                            ->visible(fn (Get $get) => ! in_array($get('kind'), [RequirementKind::RequiredCourses->value, RequirementKind::AssessmentPass->value], true))
                             ->required(fn (Get $get) => $get('kind') === RequirementKind::CategoryCredits->value),
                         TextInput::make('min_courses')->label(__('curriculum.fields.min_courses'))->integer()->minValue(1)
                             ->visible(fn (Get $get) => $get('kind') === RequirementKind::CourseGroup->value),
                         Select::make('courses')->label(__('curriculum.resources.courses.plural_label'))->multiple()->relationship('courses', 'code')
                             ->searchable()->getSearchResultsUsing(fn (string $search) => CourseResource::courseSearch($search))
                             ->getOptionLabelFromRecordUsing(fn (Course $record) => $record->code)
-                            ->visible(fn (Get $get) => $get('kind') !== RequirementKind::CategoryCredits->value)
+                            ->visible(fn (Get $get) => ! in_array($get('kind'), [RequirementKind::CategoryCredits->value, RequirementKind::AssessmentPass->value], true))
                             ->columnSpan(2),
                         TranslatableFields::make('name', __('reference.fields.name'), required: false)->columnSpanFull(),
                     ]),

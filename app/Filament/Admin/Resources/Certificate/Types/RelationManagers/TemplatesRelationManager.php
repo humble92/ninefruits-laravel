@@ -39,7 +39,7 @@ class TemplatesRelationManager extends RelationManager
         $placeholders = implode(', ', array_map(fn (string $name) => '{'.$name.'}', CertificateRenderer::PLACEHOLDERS));
 
         return $schema->columns(1)->components([
-            Select::make('locale')->label(__('common.locale'))->required()
+            Select::make('locale')->label(__('common.language'))->required()
                 ->options(fn () => collect(app(InstitutionSettings::class)->supported_locales)->mapWithKeys(fn (string $locale) => [$locale => $locale]))
                 ->unique(ignoreRecord: true, modifyRuleUsing: fn ($rule) => $rule->where('certificate_type_id', $this->getOwnerRecord()->getKey())),
             TextInput::make('title')->label(__('certificate.fields.title'))->required()->maxLength(160),
@@ -54,7 +54,7 @@ class TemplatesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                TextColumn::make('locale')->label(__('common.locale'))->badge()->color('gray'),
+                TextColumn::make('locale')->label(__('common.language'))->badge()->color('gray'),
                 TextColumn::make('title')->label(__('certificate.fields.title')),
                 TextColumn::make('signer')->label(__('certificate.fields.signer'))->placeholder('-'),
             ])

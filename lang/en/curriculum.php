@@ -25,6 +25,7 @@ return [
         'requirements' => 'Requirements',
     ],
     'fields' => [
+        'assessment_type' => 'Examination kind',
         'code' => 'Course code',
         'managing_unit' => 'Managing unit',
         'title' => 'Title',
@@ -96,5 +97,6 @@ return [
         'category_credits' => 'Credits in a category',
         'required_courses' => 'Required courses',
         'course_group' => 'Choice from courses',
+        'assessment_pass' => 'Passed examination',
     ],
 ];

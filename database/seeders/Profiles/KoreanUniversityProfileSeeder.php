@@ -3,6 +3,8 @@
 namespace Database\Seeders\Profiles;
 
 use App\Models\Admission\Application;
+use App\Models\Assessment\AssessmentComponent;
+use App\Models\Assessment\AssessmentType;
 use App\Models\Certificate\CertificateTemplate;
 use App\Models\Certificate\CertificateType;
 use App\Models\Curriculum\CourseCategory;
@@ -53,6 +55,7 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         $this->gradeScale();
         $this->evaluationForm();
         $this->certificateTypes();
+        $this->assessmentTypes();
         $this->timeSlots();
         $this->roomTypes();
         $this->lookupValues(Application::ADMISSION_TYPE_LOOKUP, [
@@ -364,5 +367,44 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         foreach ($values as $code => $name) {
             $this->seedRow(LookupValue::class, ['lookup_type_id' => $type->id, 'code' => $code], ['name' => $name], ['sort_order' => $order += 10]);
         }
+    }
+
+    /**
+     * Examination kinds (legacy CET types, SSCORE_ADD exams, COMEXAM): an in-house English
+     * comprehensive exam with four areas, a computer exam and the thesis as pass/fail, and
+     * TOPIK as an external test with a level.
+     */
+    private function assessmentTypes(): void
+    {
+        if (AssessmentType::query()->exists()) {
+            return;
+        }
+
+        $english = AssessmentType::query()->create([
+            'code' => 'ENG_COMP', 'name' => ['en' => 'English comprehensive examination', 'ko' => '영어종합시험', 'zh_CN' => '英语综合考试'],
+            'category' => 'language', 'scoring' => 'score', 'pass_score' => 60, 'sort_order' => 10,
+        ]);
+
+        foreach ([
+            ['LISTENING', ['en' => 'Listening', 'ko' => '듣기', 'zh_CN' => '听力']],
+            ['READING', ['en' => 'Reading', 'ko' => '읽기', 'zh_CN' => '阅读']],
+            ['WRITING', ['en' => 'Writing', 'ko' => '쓰기', 'zh_CN' => '写作']],
+            ['GRAMMAR', ['en' => 'Grammar', 'ko' => '문법', 'zh_CN' => '语法']],
+        ] as $index => [$code, $name]) {
+            AssessmentComponent::query()->create(['assessment_type_id' => $english->id, 'code' => $code, 'name' => $name, 'max_score' => 25, 'sort_order' => ($index + 1) * 10]);
+        }
+
+        AssessmentType::query()->create([
+            'code' => 'COMP_EXAM', 'name' => ['en' => 'Computer comprehensive examination', 'ko' => '전산종합시험', 'zh_CN' => '计算机综合考试'],
+            'category' => 'comprehensive', 'scoring' => 'pass_fail', 'sort_order' => 20,
+        ]);
+        AssessmentType::query()->create([
+            'code' => 'THESIS', 'name' => ['en' => 'Graduation thesis', 'ko' => '졸업논문', 'zh_CN' => '毕业论文'],
+            'category' => 'thesis', 'scoring' => 'pass_fail', 'sort_order' => 30,
+        ]);
+        AssessmentType::query()->create([
+            'code' => 'TOPIK', 'name' => ['en' => 'TOPIK (Test of Proficiency in Korean)', 'ko' => '한국어능력시험(TOPIK)', 'zh_CN' => '韩国语能力考试（TOPIK）'],
+            'category' => 'external', 'scoring' => 'pass_fail', 'allows_external' => true, 'sort_order' => 40,
+        ]);
     }
 }

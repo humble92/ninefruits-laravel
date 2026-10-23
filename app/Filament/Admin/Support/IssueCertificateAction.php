@@ -29,7 +29,7 @@ final class IssueCertificateAction
             ->schema([
                 Select::make('certificate_type_id')->label(__('certificate.fields.type'))->required()
                     ->options(fn () => CertificateType::query()->where('is_active', true)->orderBy('sort_order')->get()->mapWithKeys(fn (CertificateType $type) => [$type->id => $type->name])),
-                Select::make('locale')->label(__('common.locale'))->required()->default(fn () => app()->getLocale())
+                Select::make('locale')->label(__('common.language'))->required()->default(fn () => app()->getLocale())
                     ->options(fn () => collect(app(InstitutionSettings::class)->supported_locales)->mapWithKeys(fn (string $locale) => [$locale => $locale])),
                 TextInput::make('purpose')->label(__('certificate.fields.purpose'))->maxLength(200),
                 TextInput::make('copies')->label(__('certificate.fields.copies'))->integer()->minValue(1)->maxValue(20)->default(1)->required(),

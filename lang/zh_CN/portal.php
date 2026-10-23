@@ -13,6 +13,7 @@ return [
         'teaching' => '我的授课',
         'registration' => '选课',
         'grades' => '成绩',
+        'assessments' => '语言/综合考试',
         'certificates' => '证明',
         'evaluations' => '课程评价',
     ],

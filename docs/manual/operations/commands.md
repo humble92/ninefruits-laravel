@@ -234,6 +234,24 @@
 - 감사: 기록 (발급번호, 새 체크섬)
 - 실행 시점: 서식이나 이름 표기를 고친 뒤 특정 증명서를 다시 만들 때.
 
+## 어학/종합시험
+
+### `assessment:import-results`
+
+- 용도: 시험 회차의 결과를 CSV로 입력한다. 관리 화면 **시험 회차 > 결과 가져오기**와 같은 규칙이다(접수하지 않은 학생은 접수 처리, 점수로 합격 판정, 다시 입력하면 교체).
+- 인수/옵션: `{type}` 시험 종류 코드 / `{held_date}` 시험일 `YYYY-MM-DD` / `{file}` 머리글 행이 있는 UTF-8 CSV, `--actor=`(필수), `--dry-run`(기록하지 않고 행 검사만).
+- 열 형식: [관리자 매뉴얼 24장](../admin/24-assessments.md).
+- 감사: 기록 (회차, 파일 이름, 행 수, 입력·결시·오류 수)
+- 종료 코드: 오류 행이 있으면 2(나머지 행은 기록됨).
+- 예시: `php artisan assessment:import-results ENG_COMP 2026-05-15 storage/app/eng.csv --actor=registrar@example.ac.kr --dry-run`
+
+### `assessment:publish-results`
+
+- 용도: 회차의 결과를 학생에게 공개한다. 관리 화면 **시험 회차 > 결과 공개**와 같다.
+- 인수/옵션: `{type}` 시험 종류 코드 / `{held_date}` 시험일, `--actor=`(필수).
+- 감사: 기록 (회차, 결과 수)
+- 실행 시점: 결과 입력이 끝난 뒤. 이미 공개한 회차는 실패한다.
+
 ## 개인정보 암호화 키
 
 ### `pii:generate-key`
