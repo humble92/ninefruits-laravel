@@ -68,6 +68,12 @@ enum Permission: string
     case RegistrationRulesManage = 'registration_rules.manage';
     case RegistrationHoldsManage = 'registration_holds.manage';
 
+    case GradesView = 'grades.view';
+    case GradesManage = 'grades.manage';
+    case GradeChangesRequest = 'grade_changes.request';
+    case GradeChangesApprove = 'grade_changes.approve';
+    case GradingPoliciesManage = 'grading_policies.manage';
+
     public function resource(): string
     {
         return explode('.', $this->value, 2)[0];

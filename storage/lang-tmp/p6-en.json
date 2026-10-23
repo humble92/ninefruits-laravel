@@ -1,0 +1,89 @@
+{"en": {
+"admin": {"navigation": {"grading": "Grades"}},
+"portal": {"navigation": {"grades": "Grades"}},
+"grading": {
+  "resources": {
+    "section_grades": {"label": "grade progress", "plural_label": "grade progress"},
+    "grade_changes": {"label": "grade change", "plural_label": "grade changes"},
+    "term_records": {"label": "term record", "plural_label": "term records"}
+  },
+  "fields": {
+    "applies_to": "For", "score": "Score (%)", "grade": "Grade", "new_grade": "New grade",
+    "pending": "Not submitted", "submitted": "Submitted", "finalized": "Final", "ready_to_finalize": "Ready to finalize",
+    "requested_at": "Requested", "requested_by": "Requested by", "decided_by": "Decided by", "decision_note": "Note", "change": "Change",
+    "term_gpa": "Term GPA", "cumulative_gpa": "Cumulative GPA", "earned_credits": "Earned credits", "attempted_credits": "Attempted credits",
+    "standing": "Academic standing", "warning_count": "Warnings", "honors": "Honors", "honors_rank": "Honors rank", "closed": "Closed"
+  },
+  "help": {
+    "applies_to": "Letter grades are for graded courses, P/NP for pass/fail courses; \"both\" e.g. for I (incomplete).",
+    "finalize": "Finalized grades are final: they change only through an approved grade change request. Students see them from now on.",
+    "approve": "The grade changes from :from to :to now, and the student's GPA is recalculated.",
+    "close_term": "Every grade of the term must be final. Closing calculates term records, academic standing and honors, and moves the term to grades closed.",
+    "close_dry_run": "Only check whether the term can close.",
+    "recalculate": "Recalculates credits and GPA from final grades, e.g. after a policy change. Standing and honors stay as decided at term close."
+  },
+  "actions": {
+    "save_draft": "Save draft", "submit": "Submit grades", "request_change": "Request change", "cancel_request": "Cancel request",
+    "open_entry": "Grades", "finalize": "Finalize", "finalize_selected": "Finalize selected", "return": "Return to instructor",
+    "approve": "Approve", "reject": "Reject", "close_term": "Close term", "recalculate": "Recalculate"
+  },
+  "entry": {
+    "title": "Grade entry", "open": "Enter grades",
+    "counts": ":none not entered, :draft draft, :submitted submitted, :finalized final",
+    "window_open": "Grade entry is open.", "window_closed": "Grade entry is closed.",
+    "saved": ":count grade(s) saved.", "submitted": ":count grade(s) submitted.",
+    "submit_confirm": "Submit the grades? You cannot change them afterwards; ask the office if one is wrong.",
+    "change_requested": "Grade change requested.", "change_pending": "Change :from → :to requested",
+    "no_students": "No students.",
+    "help": "Enter a grade, or a score and the grade fills in. Save drafts any time; submit once every student has a grade."
+  },
+  "grades": {
+    "title": "Grades", "none": "No final grades yet.",
+    "blocked": "Your grades are not available: you have a hold (:type). Contact the office that placed it.",
+    "term_summary": "GPA :gpa · :earned of :attempted credits earned",
+    "superseded": "replaced by a retake in the cumulative GPA"
+  },
+  "transcript": {
+    "title": "Grade report", "print": "Print", "unofficial": "Unofficial grade report. Request an official transcript from the registrar.",
+    "printed_at": "Printed :date"
+  },
+  "settings": {
+    "title": "Grading policy", "gpa": "GPA", "gpa_decimals": "Decimals", "gpa_rounding": "Rounding",
+    "retake_policy": "Retakes in the cumulative GPA", "retake_policy_help": "Term GPAs always keep every grade of their term.",
+    "retake_max_grade": "Highest grade for a retake", "retake_max_grade_help": "Grades above it cannot be given to a retake.", "no_cap": "No cap",
+    "standing": "Academic standing", "warning_gpa_below": "Warning when the term GPA is below",
+    "warning_gpa_below_help": "A term with only pass/fail courses gives no warning.",
+    "standing_regular_terms_only": "Judge only regular terms (not summer or winter)",
+    "dismissal_warning_count": "Warnings for dismissal review", "dismissal_warning_count_help": "0 turns it off. The student is flagged for review; dismissal is a status change.",
+    "dismissal_consecutive_only": "Count only consecutive warnings",
+    "honors": "Honors", "honors_min_gpa": "Minimum term GPA", "honors_min_credits": "Minimum GPA credits in the term", "honors_exclude_failing": "No honors with a failed course"
+  },
+  "notifications": {
+    "finalized": ":count grade(s) finalized.", "skipped": "Not finalized: :sections",
+    "close_ready": "Ready to close: :students student(s).", "close_blocked": "Cannot close yet: :sections section(s) have grades that are not final.",
+    "open_section": ":section: :count not final", "close_started": "Term close started. The term moves to grades closed when it finishes.",
+    "recalculated": ":count student(s) recalculated."
+  },
+  "errors": {
+    "no_default_scale": "There is no default grade scale.", "grade_not_allowed": "The grade :grade is not allowed for this course.",
+    "score_without_grade": "No grade covers the score :score.", "not_editable": "Some grades can no longer be changed here.",
+    "missing_grades": ":count student(s) have no grade yet.", "entry_closed": "Grade entry is not open for this section.",
+    "not_all_submitted": "Not all grades are submitted (:count missing).", "nothing_submitted": "There are no submitted grades.",
+    "not_finalized": "Only a final grade needs a change request.", "same_grade": "The new grade is the current grade.",
+    "request_pending": "A change request for this grade is already open.", "request_decided": "The request is already decided.",
+    "own_request": "You cannot decide your own request.", "term_not_published": "Only a published term closes.",
+    "term_not_ready": ":count section(s) have grades that are not final."
+  },
+  "mail": {
+    "returned_subject": "Grades returned: :section", "returned_intro": "The grades of :section were returned to you. Please check them and submit again.",
+    "open_grade_entry": "Open grade entry",
+    "missing_subject": "Grades not submitted yet", "missing_intro": "These sections still have grades that are not submitted:",
+    "open_teaching": "Open my teaching"
+  },
+  "gpa_roundings": {"round": "Round half up", "floor": "Cut off"},
+  "retake_policies": {"latest": "Latest attempt", "best": "Best attempt"},
+  "standings": {"good": "Good standing", "warning": "Academic warning", "dismissal_review": "Dismissal review"},
+  "change_statuses": {"pending": "Pending", "approved": "Approved", "rejected": "Rejected", "cancelled": "Cancelled"},
+  "applies_to": {"graded": "Graded courses", "pass_fail": "Pass/fail courses", "both": "Both"}
+}
+}}

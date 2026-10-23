@@ -37,6 +37,9 @@ return [
         'registration' => '수강 조정',
         'registration_rules' => '수강신청 규칙',
         'registration_holds' => '수강신청 제한과 예외',
+        'grades' => '성적',
+        'grade_changes' => '성적 정정',
+        'grading_policies' => '성적 처리 정책',
     ],
     'admin_panel' => ['access' => '관리 화면 사용'],
     'users' => [
@@ -81,4 +84,7 @@ return [
     'registration' => ['manage' => '학생 대신 수강신청·취소·철회(사유 필요)'],
     'registration_rules' => ['manage' => '수강신청 규칙 세트와 학점 상한 관리'],
     'registration_holds' => ['manage' => '수강신청 제한 설정·해제, 규칙 예외 허용'],
+    'grades' => ['view' => '성적, 성적 처리 현황, 학기 기록 조회', 'manage' => '성적 확정과 반려, 교원 대신 성적 입력, 학기 마감'],
+    'grade_changes' => ['request' => '확정된 성적의 정정 요청', 'approve' => '성적 정정 승인·반려(본인 요청 제외)'],
+    'grading_policies' => ['manage' => '평점, 재수강, 학사경고, 성적우수 정책 관리'],
 ];

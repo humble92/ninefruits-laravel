@@ -5,6 +5,7 @@ use App\Http\Controllers\Admission\ApplicationDocumentController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\Auth\TwoFactorEmailChallengeController;
+use App\Http\Controllers\Grading\TranscriptController;
 use App\Http\Controllers\Person\PersonPhotoController;
 use App\Http\Controllers\UpdateLocaleController;
 use App\Livewire\Portal\Advisees;
@@ -12,6 +13,8 @@ use App\Livewire\Portal\ApplicationDetail;
 use App\Livewire\Portal\Applications;
 use App\Livewire\Portal\CourseCatalog;
 use App\Livewire\Portal\Dashboard;
+use App\Livewire\Portal\GradeEntry;
+use App\Livewire\Portal\MyGrades;
 use App\Livewire\Portal\MyProfile;
 use App\Livewire\Portal\MyRecords;
 use App\Livewire\Portal\MyTeaching;
@@ -39,6 +42,7 @@ Route::middleware(['guest', 'throttle:two-factor'])->prefix('two-factor-challeng
 });
 
 Route::get('/people/{person}/photo', PersonPhotoController::class)->middleware(['auth', 'mfa'])->name('people.photo');
+Route::get('/student-records/{studentRecord}/transcript', [TranscriptController::class, 'show'])->middleware(['auth', 'mfa'])->name('transcripts.show');
 Route::get('/applications/{application}/documents/{media}', ApplicationDocumentController::class)->middleware(['auth', 'mfa'])->name('applications.documents.show');
 
 Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(function () {
@@ -52,6 +56,9 @@ Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(fun
     Route::livewire('/sections/{section}', SectionDetail::class)->name('sections.show');
     Route::livewire('/sections/{section}/syllabus', SyllabusEditor::class)->name('syllabus.edit');
     Route::livewire('/teaching', MyTeaching::class)->name('teaching');
+    Route::livewire('/sections/{section}/grades', GradeEntry::class)->name('grades.entry');
+    Route::livewire('/grades', MyGrades::class)->name('grades');
+    Route::get('/grades/transcript', [TranscriptController::class, 'own'])->name('grades.transcript');
 
     // Applying needs a verified personal email (docs/porting-plan.md section 7.1).
     Route::middleware('verified')->group(function () {

@@ -37,6 +37,9 @@ return [
         'registration' => 'Registration adjustments',
         'registration_rules' => 'Registration rules',
         'registration_holds' => 'Registration holds and overrides',
+        'grades' => 'Grades',
+        'grade_changes' => 'Grade changes',
+        'grading_policies' => 'Grading policy',
     ],
     'admin_panel' => ['access' => 'Open the administration panel'],
     'users' => [
@@ -81,4 +84,7 @@ return [
     'registration' => ['manage' => 'Register, drop and withdraw students for them (with a reason)'],
     'registration_rules' => ['manage' => 'Manage registration rule sets and credit limits'],
     'registration_holds' => ['manage' => 'Place and release holds, grant rule overrides'],
+    'grades' => ['view' => 'View grades, grade progress and term records', 'manage' => 'Finalize and return grades, enter grades for instructors, close terms'],
+    'grade_changes' => ['request' => 'Request a change to a finalized grade', 'approve' => 'Approve or reject grade changes (not your own requests)'],
+    'grading_policies' => ['manage' => 'Manage GPA, retake, academic standing and honors policy'],
 ];

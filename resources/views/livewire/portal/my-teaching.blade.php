@@ -22,6 +22,7 @@
                     <th class="px-4 py-2">{{ __('curriculum.fields.title') }}</th>
                     <th class="px-4 py-2">{{ __('offering.fields.schedule') }}</th>
                     <th class="px-4 py-2">{{ __('offering.syllabus.title') }}</th>
+                    <th class="px-4 py-2">{{ __('grading.entry.title') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,9 +36,10 @@
                                 {{ $section->syllabus?->published_at ? __('offering.syllabus.published') : ($section->syllabus ? __('offering.syllabus.draft') : __('offering.syllabus.write')) }}
                             </a>
                         </td>
+                        <td class="px-4 py-2"><a href="{{ route('portal.grades.entry', $section) }}" class="underline">{{ __('grading.entry.open') }}</a></td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="px-4 py-6 text-center text-zinc-500">{{ __('offering.teaching.none') }}</td></tr>
+                    <tr><td colspan="5" class="px-4 py-6 text-center text-zinc-500">{{ __('offering.teaching.none') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

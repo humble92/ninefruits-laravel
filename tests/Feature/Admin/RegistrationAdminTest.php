@@ -53,7 +53,9 @@ beforeEach(function () {
     app(SyncPermissionCatalog::class)->handle();
     Filament::setCurrentPanel('admin');
     $this->manager = User::factory()->withPermissions(Permission::cases())->create();
-    $this->enrollment = Enrollment::query()->where('status', EnrollmentStatus::Enrolled)->with('section')->first();
+    // A section with free seats (the demo also has a full next-term section with a waitlist).
+    $this->enrollment = Enrollment::query()->where('status', EnrollmentStatus::Enrolled)
+        ->whereHas('section', fn ($section) => $section->whereColumn('enrolled_count', '<', 'capacity'))->with('section')->orderBy('id')->first();
 });
 
 it('seeds consistent demo registrations', function () {

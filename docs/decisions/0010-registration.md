@@ -34,7 +34,7 @@
 - 엔진은 모든 규칙을 검사해 결과를 모두 돌려준다(첫 실패에서 멈추지 않음). 학생에게 모든 이유가 보이고 `registration_attempts`에 남는다.
 - 실패한 규칙이 통과로 바뀌는 경우: 규칙의 **예외 허용**이 켜져 있고, (a) 학생에게 유효한 규칙 예외가 있거나 (b) 직원이 신청하면서 그 규칙을 골랐을 때. 직원 신청과 직원 취소·철회에는 기간 규칙을 적용하지 않는다. 예외로 통과한 규칙은 기록에 "실패 + 예외 적용"으로 남는다.
 - 대기 신청은 정원을 뺀 모든 규칙을 통과해야 한다. **승격 때 모든 규칙을 다시 검사**한다(`EnrollStudent`를 시스템으로 다시 호출). 정원이 아닌 이유로 실패하면 대기에서 제외하고 사유를 남긴다.
-- 레거시 규칙 재현: `YustLegacyRegistrationProfileSeeder`(프로파일 `yust-legacy-registration`)가 학점 상한 7개와 학점은행 과목 제외를 설정으로 넣는다. `tests/Feature/Registration/LegacyRulesTest.php`가 학번·학과·학기 조합별 상한을 확인한다. 3.4절의 21학점 버그는 재현하지 않는다.
+- 레거시 규칙 재현: `YustLegacyProfileSeeder`(프로파일 `yust-legacy`)가 학점 상한 7개와 학점은행 과목 제외를 설정으로 넣는다. `tests/Feature/Registration/LegacyRulesTest.php`가 학번·학과·학기 조합별 상한을 확인한다. 3.4절의 21학점 버그는 재현하지 않는다.
 
 ## 대기자 승격
 

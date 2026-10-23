@@ -11,6 +11,7 @@ return [
         'admissions' => '招生',
         'curriculum' => '培养方案与开课',
         'registration' => '选课',
+        'grading' => '成绩',
     ],
     'users' => [
         'label' => '用户',

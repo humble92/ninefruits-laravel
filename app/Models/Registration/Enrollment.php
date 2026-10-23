@@ -7,6 +7,8 @@ use App\Domain\Registration\Enums\EnrollmentSource;
 use App\Domain\Registration\Enums\EnrollmentStatus;
 use App\Models\Curriculum\Course;
 use App\Models\Curriculum\CourseVersion;
+use App\Models\Grading\GradeChangeRequest;
+use App\Models\Grading\GradeScale;
 use App\Models\Offering\Section;
 use App\Models\Offering\SectionSeatGroup;
 use App\Models\Person\StudentRecord;
@@ -14,12 +16,15 @@ use App\Models\Term\Term;
 use Carbon\CarbonImmutable;
 use Database\Factories\Registration\EnrollmentFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * A student record in a section (legacy SSCORE): registration now, grades from Phase 6.
+ * A student record in a section (legacy SSCORE): registration, then the grade (entered,
+ * submitted, finalized; a finalized grade changes only through a grade change request).
  * Credits, version and category are a snapshot of the course as taken.
  *
  * @property int $id
@@ -43,12 +48,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property GradeStatus $grade_status
  * @property string|null $grade_code
  * @property bool|null $is_passed
+ * @property int|null $grade_scale_id
+ * @property string|null $score
+ * @property string|null $grade_points
+ * @property bool|null $counts_in_gpa
+ * @property CarbonImmutable|null $grade_entered_at
+ * @property int|null $grade_entered_by_id
+ * @property CarbonImmutable|null $grade_submitted_at
+ * @property int|null $grade_submitted_by_id
+ * @property CarbonImmutable|null $grade_finalized_at
+ * @property int|null $grade_finalized_by_id
  * @property-read StudentRecord $studentRecord
  * @property-read Section $section
  * @property-read Term $term
  * @property-read Course $course
  * @property-read CourseVersion $version
  * @property-read SectionSeatGroup|null $seatGroup
+ * @property-read GradeScale|null $gradeScale
+ * @property-read Collection<int, GradeChangeRequest> $gradeChangeRequests
  */
 class Enrollment extends Model
 {
@@ -64,6 +81,9 @@ class Enrollment extends Model
         'course_category_id' => null, 'counts_toward_credit_limit' => true, 'status' => 'enrolled', 'seat_group_id' => null,
         'is_retake' => false, 'repeats_enrollment_id' => null, 'source' => 'student', 'dropped_at' => null, 'withdrawn_at' => null,
         'changed_by_id' => null, 'grade_status' => 'none', 'grade_code' => null, 'is_passed' => null,
+        'grade_scale_id' => null, 'score' => null, 'grade_points' => null, 'counts_in_gpa' => null, 'grade_entered_at' => null,
+        'grade_entered_by_id' => null, 'grade_submitted_at' => null, 'grade_submitted_by_id' => null, 'grade_finalized_at' => null,
+        'grade_finalized_by_id' => null,
     ];
 
     protected function casts(): array
@@ -79,6 +99,12 @@ class Enrollment extends Model
             'withdrawn_at' => 'immutable_datetime',
             'grade_status' => GradeStatus::class,
             'is_passed' => 'boolean',
+            'score' => 'decimal:2',
+            'grade_points' => 'decimal:2',
+            'counts_in_gpa' => 'boolean',
+            'grade_entered_at' => 'immutable_datetime',
+            'grade_submitted_at' => 'immutable_datetime',
+            'grade_finalized_at' => 'immutable_datetime',
         ];
     }
 
@@ -128,6 +154,30 @@ class Enrollment extends Model
     public function seatGroup(): BelongsTo
     {
         return $this->belongsTo(SectionSeatGroup::class, 'seat_group_id');
+    }
+
+    /**
+     * @return BelongsTo<GradeScale, $this>
+     */
+    public function gradeScale(): BelongsTo
+    {
+        return $this->belongsTo(GradeScale::class);
+    }
+
+    /**
+     * @return HasMany<GradeChangeRequest, $this>
+     */
+    public function gradeChangeRequests(): HasMany
+    {
+        return $this->hasMany(GradeChangeRequest::class)->latest('requested_at');
+    }
+
+    /**
+     * The grade to show: the grade code, W for a withdrawal.
+     */
+    public function displayGrade(): ?string
+    {
+        return $this->status === EnrollmentStatus::Withdrawn ? 'W' : $this->grade_code;
     }
 
     /**

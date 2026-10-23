@@ -268,6 +268,39 @@ class Section extends Model implements Translatable
         return $scope->isGlobal || in_array($this->org_unit_id, self::scopeOrgUnitIds($scope), true);
     }
 
+    /**
+     * Whether the user holds the permission in a scope covering the offering unit.
+     */
+    public function isInScopeOf(User $user, Permission $permission): bool
+    {
+        $scope = app(AuthorizationService::class)->scopeFor($user, $permission);
+
+        return $scope->isGlobal || in_array($this->org_unit_id, self::scopeOrgUnitIds($scope), true);
+    }
+
+    /**
+     * Sections whose offering unit is in the user's scope for any of the permissions.
+     *
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
+     */
+    public static function constrainToScope(Builder $query, User $user, Permission ...$permissions): void
+    {
+        $authorization = app(AuthorizationService::class);
+        $scope = null;
+
+        foreach ($permissions as $permission) {
+            $scope = $scope === null ? $authorization->scopeFor($user, $permission) : $scope->merge($authorization->scopeFor($user, $permission));
+        }
+
+        if ($scope === null || $scope->isGlobal) {
+            return;
+        }
+
+        $query->whereIn('sections.org_unit_id', self::scopeOrgUnitIds($scope));
+    }
+
     public function isTaughtBy(User $user): bool
     {
         return $user->person_id !== null && $this->instructors()->where('person_id', $user->person_id)->exists();

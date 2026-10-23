@@ -4,6 +4,8 @@ namespace Database\Factories\Registration;
 
 use App\Domain\Grading\Enums\GradeStatus;
 use App\Domain\Registration\Enums\EnrollmentStatus;
+use App\Models\Grading\GradeScale;
+use App\Models\Grading\GradeScaleItem;
 use App\Models\Offering\Section;
 use App\Models\Person\StudentRecord;
 use App\Models\Registration\Enrollment;
@@ -41,16 +43,24 @@ class EnrollmentFactory extends Factory
     }
 
     /**
-     * Completed with a grade (Phase 6 sets these through grading).
+     * Completed with a finalized grade of the default scale (a 4.5 scale is created when
+     * there is none). Grading actions set these in the application.
      */
-    public function completed(string $grade = 'A0', bool $passed = true): static
+    public function completed(string $grade = 'A0', ?bool $passed = null): static
     {
         return $this->afterMaking(function (Enrollment $enrollment) use ($grade, $passed) {
+            $scale = GradeScale::query()->where('is_default', true)->first() ?? GradeScale::factory()->korean()->create();
+            $item = GradeScaleItem::query()->where('grade_scale_id', $scale->id)->where('code', $grade)->first();
+
             $enrollment->forceFill([
                 'status' => EnrollmentStatus::Completed,
                 'grade_status' => GradeStatus::Finalized,
+                'grade_scale_id' => $scale->id,
                 'grade_code' => $grade,
-                'is_passed' => $passed,
+                'grade_points' => $item?->grade_points,
+                'counts_in_gpa' => $item->counts_in_gpa ?? false,
+                'is_passed' => $passed ?? $item->is_passing ?? true,
+                'grade_finalized_at' => now(),
             ]);
         });
     }

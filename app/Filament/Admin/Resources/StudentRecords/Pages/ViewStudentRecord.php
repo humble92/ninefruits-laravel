@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\StudentRecords\Pages;
 use App\Domain\Person\Actions\AssignAdvisor;
 use App\Domain\Person\Actions\RecordStatusChange;
 use App\Domain\Person\Enums\AdvisorRole;
+use App\Domain\Security\Enums\Permission;
 use App\Filament\Admin\Resources\StudentRecords\StudentRecordResource;
 use App\Models\Person\Instructor;
 use App\Models\Person\StudentRecord;
@@ -30,6 +31,9 @@ class ViewStudentRecord extends ViewRecord
     {
         return [
             EditAction::make(),
+            Action::make('transcript')->label(__('grading.transcript.title'))->icon(Heroicon::OutlinedDocumentText)->color('gray')
+                ->visible(fn () => (bool) auth()->user()?->can(Permission::GradesView->value))
+                ->url(fn (StudentRecord $record) => route('transcripts.show', $record))->openUrlInNewTab(),
             Action::make('recordStatusChange')
                 ->label(__('people.actions.record_status_change'))
                 ->icon(Heroicon::OutlinedArrowPath)

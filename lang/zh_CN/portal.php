@@ -12,6 +12,7 @@ return [
         'catalog' => '开课查询',
         'teaching' => '我的授课',
         'registration' => '选课',
+        'grades' => '成绩',
     ],
     'dashboard' => [
         'title' => '首页',

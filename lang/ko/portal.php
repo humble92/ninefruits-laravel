@@ -12,6 +12,7 @@ return [
         'catalog' => '개설강좌',
         'teaching' => '담당 강좌',
         'registration' => '수강신청',
+        'grades' => '성적',
     ],
     'dashboard' => [
         'title' => '홈',

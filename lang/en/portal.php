@@ -12,6 +12,7 @@ return [
         'catalog' => 'Course catalog',
         'teaching' => 'My teaching',
         'registration' => 'Registration',
+        'grades' => 'Grades',
     ],
     'dashboard' => [
         'title' => 'Home',

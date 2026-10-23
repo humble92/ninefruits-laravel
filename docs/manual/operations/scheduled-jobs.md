@@ -25,6 +25,7 @@ Phase마다 이 표에 추가한다. 등록 내용은 `routes/console.php`. 시�
 |---|---|---|
 | `ReencryptPiiRecords` | `pii:reencrypt` | 배치. 실패한 작업은 Horizon에서 재시도 |
 | `PromoteWaitlistJob` | 수강 취소·철회, 좌석 할당 전환 | 강좌별 하나만 실행(중복 방지). 대기자 승격은 모든 규칙을 다시 확인한다 |
+| `CloseTermRecordsJob`, `FinishTermCloseJob` | `term:close`, 관리 화면 학기 마감 | 학생 100명 단위 배치 뒤 마무리 작업(성적우수 순위, 학기 상태 변경)이 이어진다. Horizon의 배치 `term-close:{학기 코드}`에서 진행을 본다. 실패한 작업은 Horizon에서 재시도한다(학생별 계산은 다시 실행해도 같은 결과) |
 | `ImportCsv` (Filament) | 관리 화면 CSV 가져오기, `reference:import` | 배치. 완료 알림은 관리 화면 알림(`notifications` 테이블). 실패 행은 `failed_import_rows` |
 
 큐 작업은 실행 중 DB 수행자가 `system:job:{클래스}`로 기록된다.

@@ -1,6 +1,7 @@
 <?php
 
 use App\Domain\Admission\Settings\AdmissionSettings;
+use App\Domain\Grading\Settings\GradingSettings;
 use App\Domain\Institution\Settings\InstitutionSettings;
 use App\Domain\Person\Settings\StudentRecordSettings;
 use App\Domain\Security\Settings\AuthenticationSettings;
@@ -22,6 +23,7 @@ return [
         AuthenticationSettings::class,
         StudentRecordSettings::class,
         AdmissionSettings::class,
+        GradingSettings::class,
     ],
 
     /*

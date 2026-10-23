@@ -37,6 +37,9 @@ return [
         'registration' => '选课调整',
         'registration_rules' => '选课规则',
         'registration_holds' => '选课限制与例外',
+        'grades' => '成绩',
+        'grade_changes' => '成绩更正',
+        'grading_policies' => '成绩处理政策',
     ],
     'admin_panel' => ['access' => '使用管理界面'],
     'users' => [
@@ -81,4 +84,7 @@ return [
     'registration' => ['manage' => '代学生选课、退课、撤课（需填写理由）'],
     'registration_rules' => ['manage' => '管理选课规则集和学分上限'],
     'registration_holds' => ['manage' => '设置和解除选课限制，批准规则例外'],
+    'grades' => ['view' => '查看成绩、成绩处理进度和学期记录', 'manage' => '确定和退回成绩、代教师录入成绩、学期结算'],
+    'grade_changes' => ['request' => '申请更正已确定的成绩', 'approve' => '批准或驳回成绩更正（本人申请除外）'],
+    'grading_policies' => ['manage' => '管理绩点、重修、学业警告和成绩优秀政策'],
 ];

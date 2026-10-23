@@ -2,10 +2,12 @@
 
 namespace App\Filament\Admin\Resources\Reference\GradeScales\RelationManagers;
 
+use App\Domain\Grading\Enums\GradeAppliesTo;
 use App\Filament\Admin\Support\SafeDeleteAction;
 use App\Filament\Admin\Support\TranslatableFields;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -44,6 +46,9 @@ class ItemsRelationManager extends RelationManager
             TextInput::make('max_percentage')->label(__('reference.fields.max_percentage'))->numeric()->minValue(0)->maxValue(100)->gte('min_percentage'),
             Toggle::make('counts_in_gpa')->label(__('reference.fields.counts_in_gpa'))->default(true)->live(),
             Toggle::make('is_passing')->label(__('reference.fields.is_passing'))->default(true),
+            Select::make('applies_to')->label(__('grading.fields.applies_to'))->required()->default(GradeAppliesTo::Graded->value)
+                ->options(collect(GradeAppliesTo::cases())->mapWithKeys(fn (GradeAppliesTo $case) => [$case->value => $case->label()]))
+                ->helperText(__('grading.help.applies_to')),
             TextInput::make('sort_order')->label(__('reference.fields.sort_order'))->integer()->default(0),
         ]);
     }
@@ -58,6 +63,7 @@ class ItemsRelationManager extends RelationManager
                 TextColumn::make('max_percentage')->label(__('reference.fields.max_percentage'))->placeholder('-'),
                 IconColumn::make('counts_in_gpa')->label(__('reference.fields.counts_in_gpa'))->boolean(),
                 IconColumn::make('is_passing')->label(__('reference.fields.is_passing'))->boolean(),
+                TextColumn::make('applies_to')->label(__('grading.fields.applies_to'))->formatStateUsing(fn (GradeAppliesTo $state) => $state->label()),
             ])
             ->defaultSort('sort_order')
             ->headerActions([CreateAction::make()])

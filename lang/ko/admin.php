@@ -11,6 +11,7 @@ return [
         'admissions' => '입학',
         'curriculum' => '교육과정과 개설',
         'registration' => '수강신청',
+        'grading' => '성적',
     ],
     'users' => [
         'label' => '사용자',

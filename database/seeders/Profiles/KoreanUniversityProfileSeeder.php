@@ -135,6 +135,7 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
                 'max_percentage' => $max,
                 'counts_in_gpa' => $countsInGpa,
                 'is_passing' => $isPassing,
+                'applies_to' => $countsInGpa ? 'graded' : 'pass_fail',
                 'sort_order' => $order += 10,
             ]);
         }

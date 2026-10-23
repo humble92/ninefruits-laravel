@@ -1,0 +1,3 @@
+{"en": {"grading": {"help": {"standing_criteria": "The standing from the latest term close. Leave empty for any."}}},
+ "ko": {"grading": {"help": {"standing_criteria": "최근 학기 마감의 학업 상태. 비우면 모두."}}},
+ "zh_CN": {"grading": {"help": {"standing_criteria": "最近一次学期结算的学业状态。留空表示全部。"}}}}

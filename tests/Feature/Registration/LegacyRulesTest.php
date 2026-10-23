@@ -2,7 +2,7 @@
 
 /*
 | Phase 5 completion criterion: the legacy YUST registration rules are reproduced by
-| configuration alone (profile yust-legacy-registration and data), without the legacy
+| configuration alone (profile yust-legacy and data), without the legacy
 | bug of section 3.4 (nursing students from 2014 limited to 18 instead of 21).
 */
 
@@ -30,13 +30,13 @@ use App\Models\Term\TermWindow;
 use App\Models\User;
 use App\Support\Targeting\TargetCriteria;
 use Database\Seeders\Essential\EssentialSeeder;
-use Database\Seeders\Profiles\YustLegacyRegistrationProfileSeeder;
+use Database\Seeders\Profiles\YustLegacyProfileSeeder;
 
 beforeEach(function () {
     $this->seed(EssentialSeeder::class);
     $this->nursingUnit = OrgUnit::factory()->create(['code' => 'NURS']);
     $this->otherUnit = OrgUnit::factory()->create(['code' => 'CSE']);
-    $this->seed(YustLegacyRegistrationProfileSeeder::class);
+    $this->seed(YustLegacyProfileSeeder::class);
 
     $this->nursing = Program::factory()->create(['org_unit_id' => $this->nursingUnit->id]);
     $this->other = Program::factory()->create(['org_unit_id' => $this->otherUnit->id]);
@@ -85,7 +85,7 @@ it('lets a 2014 nursing student register 21 credits, not 18, and leaves credit b
     }
 
     $bank = $section('0091001', 3);
-    $this->seed(YustLegacyRegistrationProfileSeeder::class); // marks credit bank courses
+    $this->seed(YustLegacyProfileSeeder::class); // marks credit bank courses
 
     expect(app(EnrollStudent::class)->handle($record, $section('NUR1980', 3), null)->succeeded())->toBeTrue() // 21: the legacy bug refused this
         ->and(app(EnrollStudent::class)->handle($record, $section('NUR1990', 3), null)->outcome)->toBe(AttemptOutcome::Refused) // 24 > 21

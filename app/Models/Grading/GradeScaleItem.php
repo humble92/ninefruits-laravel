@@ -2,6 +2,7 @@
 
 namespace App\Models\Grading;
 
+use App\Domain\Grading\Enums\GradeAppliesTo;
 use App\Models\Concerns\HasTranslatableAttributes;
 use App\Models\Contracts\Translatable;
 use Database\Factories\Grading\GradeScaleItemFactory;
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $max_percentage
  * @property bool $counts_in_gpa
  * @property bool $is_passing
+ * @property GradeAppliesTo $applies_to
  * @property int $sort_order
  * @property-read GradeScale $scale
  */
@@ -30,9 +32,9 @@ class GradeScaleItem extends Model implements Translatable
     /** @var list<string> */
     public array $translatable = ['name'];
 
-    protected $fillable = ['grade_scale_id', 'code', 'name', 'grade_points', 'min_percentage', 'max_percentage', 'counts_in_gpa', 'is_passing', 'sort_order'];
+    protected $fillable = ['grade_scale_id', 'code', 'name', 'grade_points', 'min_percentage', 'max_percentage', 'counts_in_gpa', 'is_passing', 'applies_to', 'sort_order'];
 
-    protected $attributes = ['name' => null, 'grade_points' => null, 'min_percentage' => null, 'max_percentage' => null, 'counts_in_gpa' => true, 'is_passing' => true, 'sort_order' => 0];
+    protected $attributes = ['name' => null, 'grade_points' => null, 'min_percentage' => null, 'max_percentage' => null, 'counts_in_gpa' => true, 'is_passing' => true, 'applies_to' => 'graded', 'sort_order' => 0];
 
     protected function casts(): array
     {
@@ -42,6 +44,7 @@ class GradeScaleItem extends Model implements Translatable
             'max_percentage' => 'decimal:2',
             'counts_in_gpa' => 'boolean',
             'is_passing' => 'boolean',
+            'applies_to' => GradeAppliesTo::class,
             'sort_order' => 'integer',
         ];
     }

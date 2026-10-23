@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Support;
 
+use App\Domain\Grading\Enums\AcademicStanding;
 use App\Filament\Admin\Resources\Reference\OrgUnits\OrgUnitResource;
 use App\Models\Organization\OrgUnit;
 use App\Models\Organization\Program;
@@ -34,6 +35,9 @@ final class TargetCriteriaFields
                 Select::make('org_unit_ids')->label(__('reference.fields.org_units'))->multiple()
                     ->options(fn () => OrgUnitResource::unitOptions())
                     ->helperText(__('reference.help.org_unit_descendants')),
+                CheckboxList::make('academic_standings')->label(__('grading.fields.standing'))->columns(3)
+                    ->options(collect(AcademicStanding::cases())->mapWithKeys(fn (AcademicStanding $standing) => [$standing->value => $standing->label()])->all())
+                    ->helperText(__('grading.help.standing_criteria')),
             ]);
     }
 
@@ -67,6 +71,7 @@ final class TargetCriteriaFields
             $years === null ? null : __('reference.fields.admission_years').' '.$years,
             $criteria->programIds === [] ? null : Program::query()->whereKey($criteria->programIds)->orderBy('code')->pluck('code')->implode(', '),
             $criteria->orgUnitIds === [] ? null : OrgUnit::query()->whereKey($criteria->orgUnitIds)->orderBy('code')->pluck('code')->implode(', '),
+            $criteria->academicStandings === [] ? null : collect($criteria->academicStandings)->map(fn (string $value) => AcademicStanding::tryFrom($value)?->label() ?? $value)->implode(', '),
         ]));
     }
 }

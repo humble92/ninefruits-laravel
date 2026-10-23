@@ -11,6 +11,7 @@ return [
         'admissions' => 'Admissions',
         'curriculum' => 'Curriculum and sections',
         'registration' => 'Registration',
+        'grading' => 'Grades',
     ],
     'users' => [
         'label' => 'user',
