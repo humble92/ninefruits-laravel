@@ -95,4 +95,11 @@
 
 ## 7. CI 결과
 
-(푸시 후 기록)
+커밋 `3c5d42c`, GitHub Actions 실행 39919417111: 성공.
+
+| 작업 | 결과 | 소요 |
+|---|---|---|
+| Style, static analysis, conventions | 성공 | 49초 |
+| Tests (PostgreSQL 18) | 성공 | 11분 11초 |
+
+테스트 작업이 Phase 7(10분 26초)보다 45초 늘었다. 증명서 테스트 6개가 Gotenberg로 PDF를 실제 생성한다.
