@@ -2,6 +2,7 @@
 
 namespace App\Domain\Lms\Actions;
 
+use App\Domain\Grading\Actions\SaveGrades;
 use App\Domain\Lms\Enums\SyncOperation;
 use App\Domain\Lms\Services\ConnectorRegistry;
 use App\Domain\Lms\Services\SyncLogger;
@@ -11,7 +12,9 @@ use App\Models\Lms\LmsPlatform;
 use App\Models\Lms\LmsUserLink;
 use App\Models\Offering\Section;
 use App\Models\Registration\Enrollment;
+use App\Models\User;
 use App\Support\Database\DatabaseSessionContext;
+use Illuminate\Auth\Access\AuthorizationException;
 
 /**
  * Final scores from the platform, mapped to enrollments. They are only a draft: the
@@ -20,13 +23,17 @@ use App\Support\Database\DatabaseSessionContext;
  */
 class PullGrades
 {
-    public function __construct(private readonly ConnectorRegistry $connectors, private readonly SyncLogger $log, private readonly DatabaseSessionContext $context) {}
+    public function __construct(private readonly ConnectorRegistry $connectors, private readonly SyncLogger $log, private readonly DatabaseSessionContext $context, private readonly SaveGrades $grades) {}
 
     /**
      * @return array<int, float> enrollment id => score
      */
-    public function handle(LmsPlatform $platform, Section $section): array
+    public function handle(LmsPlatform $platform, Section $section, ?User $actor = null): array
     {
+        if ($actor !== null && ! $this->grades->canEnter($section, $actor)) {
+            throw new AuthorizationException;
+        }
+
         $link = LmsCourseLink::query()->where('lms_platform_id', $platform->id)->where('section_id', $section->id)->first();
 
         if ($link === null || $link->external_course_id === null || ! $platform->should_pull_grades) {

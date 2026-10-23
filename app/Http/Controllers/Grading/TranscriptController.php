@@ -7,6 +7,7 @@ use App\Domain\Grading\Services\GradeReport;
 use App\Domain\Institution\Settings\InstitutionSettings;
 use App\Domain\Person\Services\CurrentStudentRecord;
 use App\Domain\Security\Enums\Permission;
+use App\Domain\Security\Services\AuditLogger;
 use App\Models\Person\StudentRecord;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
@@ -34,6 +35,7 @@ class TranscriptController
     {
         Gate::authorize('view', $studentRecord);
         abort_unless((bool) $request->user()?->can(Permission::GradesView->value), 403);
+        app(AuditLogger::class)->record('transcript.viewed', $studentRecord, null, ['student_number' => $studentRecord->student_number], $request->user());
 
         return $this->render($studentRecord, $report, $institution);
     }

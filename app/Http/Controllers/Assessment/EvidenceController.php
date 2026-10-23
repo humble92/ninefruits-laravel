@@ -22,7 +22,7 @@ class EvidenceController
             fclose($stream);
         }, 200, [
             'Content-Type' => $media->mime_type,
-            'Content-Disposition' => 'inline; filename="'.$media->file_name.'"',
+            'Content-Disposition' => 'inline; filename="'.str_replace(['"', "\r", "\n"], '', $media->file_name).'"',
             'Cache-Control' => 'private, no-store',
         ]);
     }

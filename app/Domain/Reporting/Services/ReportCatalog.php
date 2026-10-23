@@ -105,10 +105,13 @@ class ReportCatalog
 
     public static function cell(mixed $value): string
     {
-        return match (true) {
+        $text = match (true) {
             $value === null => '',
             is_bool($value) => $value ? 'Y' : 'N',
             default => (string) $value,
         };
+
+        // A cell starting with =, +, - or @ would run as a formula in a spreadsheet (CSV injection).
+        return preg_match('/^[=+\-@\t\r]/', $text) ? "'".$text : $text;
     }
 }

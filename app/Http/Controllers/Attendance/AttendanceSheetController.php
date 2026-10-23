@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Attendance;
 use App\Domain\Attendance\Services\AttendanceSummary;
 use App\Domain\Attendance\Services\SectionRoster;
 use App\Domain\Institution\Settings\InstitutionSettings;
+use App\Domain\Security\Services\AuditLogger;
 use App\Models\Attendance\AttendanceRecord;
 use App\Models\Attendance\ClassMeeting;
 use App\Models\Offering\Section;
@@ -19,9 +20,10 @@ use Illuminate\Http\Response;
  */
 class AttendanceSheetController
 {
-    public function __invoke(Request $request, Section $section, SectionRoster $roster, AttendanceSummary $summary, PdfRenderer $pdf, InstitutionSettings $institution): Response
+    public function __invoke(Request $request, Section $section, SectionRoster $roster, AttendanceSummary $summary, PdfRenderer $pdf, InstitutionSettings $institution, AuditLogger $audit): Response
     {
         SectionRoster::authorizeView($section, $request->user());
+        $audit->record('attendance.sheet_exported', $section, null, ['section_id' => $section->id], $request->user());
         $section->load(['course', 'version', 'term', 'instructors.person']);
         $enrollments = $roster->enrollments($section);
         $meetings = ClassMeeting::query()->where('section_id', $section->id)->scheduled()->orderBy('meeting_date')->orderBy('start_time')->get();

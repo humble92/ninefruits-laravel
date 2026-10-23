@@ -75,7 +75,7 @@ class Demo extends AuditedCommand
         $rows = ['email,password'];
 
         foreach (StudentRecord::query()->where('status', StudentStatus::Enrolled)->with('person.user')->cursor() as $record) {
-            $email = $record->person->user?->email ?? "student{$record->student_number}@{$domain}";
+            $email = $record->person->user === null ? "student{$record->student_number}@{$domain}" : $record->person->user->email;
 
             if ($record->person->user === null) {
                 User::factory()->create(['person_id' => $record->person_id, 'name' => null, 'email' => $email, 'password' => config('setup.demo.password')]);

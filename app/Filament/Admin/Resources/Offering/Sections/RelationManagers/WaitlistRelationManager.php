@@ -66,7 +66,7 @@ class WaitlistRelationManager extends RelationManager
             ])
             ->headerActions([
                 Action::make('promote')->label(__('registration.actions.promote_waitlist'))->icon(Heroicon::OutlinedArrowUpCircle)
-                    ->visible($manages)->requiresConfirmation()
+                    ->visible($manages)->authorize($manages)->requiresConfirmation()
                     ->action(function (PromoteWaitlist $promote) use ($section) {
                         Notification::make()->success()->title(__('registration.notifications.promoted', $promote->handle($section)))->send();
                     }),

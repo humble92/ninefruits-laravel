@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AssignRequestContext;
 use App\Http\Middleware\EnforceMfaPolicy;
+use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\SetDatabaseSessionContext;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // The admin panel lists the same middleware in AdminPanelProvider.
         $middleware->web(append: [
+            EnsureUserIsActive::class,
             SetDatabaseSessionContext::class,
             SetLocale::class,
         ]);

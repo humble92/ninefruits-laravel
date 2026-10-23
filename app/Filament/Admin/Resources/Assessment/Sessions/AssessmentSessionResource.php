@@ -114,7 +114,7 @@ class AssessmentSessionResource extends Resource
         return Action::make('import')->label(__('assessment.actions.import'))->icon(Heroicon::OutlinedArrowUpTray)->color('gray')
             ->visible(fn () => self::actor()->can('assessments.record'))
             ->modalDescription(__('assessment.help.import'))
-            ->schema([FileUpload::make('file')->label(__('assessment.fields.file'))->required()->storeFiles(false)->acceptedFileTypes(['text/csv', 'text/plain', 'application/vnd.ms-excel'])])
+            ->schema([FileUpload::make('file')->label(__('assessment.fields.file'))->required()->storeFiles(false)->maxSize(5120)->acceptedFileTypes(['text/csv', 'text/plain', 'application/vnd.ms-excel'])])
             ->action(function (AssessmentSession $record, array $data, AssessmentResultImporter $importer) {
                 /** @var TemporaryUploadedFile $file */
                 $file = $data['file'];

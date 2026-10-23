@@ -70,6 +70,14 @@ class SaveGrades
                 ]);
 
                 if ($enrollment->isDirty()) {
+                    // Staff changing a submitted grade: the previous value goes to the audit trail (security review M1).
+                    if ($byStaff && $enrollment->getOriginal('grade_status') === GradeStatus::Submitted) {
+                        $this->audit->record('grades.submitted_changed', $enrollment, null, [
+                            'section_id' => $section->id, 'from' => ['grade_code' => $enrollment->getOriginal('grade_code'), 'score' => $enrollment->getOriginal('score')],
+                            'to' => ['grade_code' => $enrollment->grade_code, 'score' => $enrollment->score],
+                        ], $actor);
+                    }
+
                     $enrollment->forceFill(['grade_entered_at' => $now, 'grade_entered_by_id' => $actor->id])->save();
                     $saved++;
                 }

@@ -56,7 +56,7 @@ class CreateAdministrator extends AuditedCommand
             $user = User::query()->create(['name' => $name, 'email' => $email, 'password' => $secret]);
             $user->forceFill(['email_verified_at' => now()])->save();
 
-            $assignRole->handle($user, $role, 'Initial administrator created by security:create-administrator', assignedBy: $this->actor());
+            $assignRole->handle($user, $role, 'Initial administrator created by security:create-administrator', assignedBy: $this->actor(), enforceActorLimits: false);
 
             return $user;
         });

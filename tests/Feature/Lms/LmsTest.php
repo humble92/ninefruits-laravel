@@ -15,6 +15,7 @@ use App\Domain\Registration\Actions\DropEnrollment;
 use App\Domain\Security\Actions\SyncPermissionCatalog;
 use App\Domain\Security\Enums\MfaEnforcement;
 use App\Domain\Security\Enums\Permission;
+use App\Domain\Term\Enums\TermWindowType;
 use App\Filament\Admin\Resources\Lms\CourseLinks\LmsCourseLinkResource;
 use App\Filament\Admin\Resources\Lms\Platforms\LmsPlatformResource;
 use App\Filament\Admin\Resources\Lms\Platforms\Pages\CreateLmsPlatform;
@@ -31,6 +32,7 @@ use App\Models\Person\Instructor;
 use App\Models\Person\StudentRecord;
 use App\Models\Registration\Enrollment;
 use App\Models\Term\Term;
+use App\Models\Term\TermWindow;
 use App\Models\User;
 use App\Support\Database\DatabaseSessionContext;
 use Database\Seeders\Essential\EssentialSeeder;
@@ -102,6 +104,8 @@ it('links the course, its members and the user, logs every step, and reconciles'
 });
 
 it('loads platform scores into the grade entry screen as a draft', function () {
+    // Importing scores is grade entry: the instructor needs an open grade entry window (security review H5).
+    TermWindow::factory()->for($this->term)->ofType(TermWindowType::GradeEntry)->between(now()->subDay(), now()->addWeek())->create(['term_session_id' => $this->section->term_session_id]);
     app(ChangeSectionStatus::class)->handle($this->section, SectionStatus::Published, $this->admin);
     $enrollment = Enrollment::factory()->inSection($this->section->refresh())->create(['student_record_id' => $this->record->id]);
     $this->artisan('lms:sync', ['platform' => 'TEST', '--term' => $this->term->code]);

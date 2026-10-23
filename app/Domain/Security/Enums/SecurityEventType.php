@@ -25,6 +25,9 @@ enum SecurityEventType: string
     case RolePermissionsChanged = 'role.permissions_changed';
     case SensitiveDataRevealed = 'sensitive_data.revealed';
     case DataExported = 'data.exported';
+    case AuditPruned = 'audit.pruned';
+    case PasswordChanged = 'password.changed';
+    case EmailChanged = 'email.changed';
 
     public function label(): string
     {

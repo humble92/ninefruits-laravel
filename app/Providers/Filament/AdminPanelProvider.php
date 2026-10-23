@@ -6,6 +6,7 @@ use App\Domain\Institution\Settings\InstitutionSettings;
 use App\Filament\Admin\NavigationGroup;
 use App\Filament\Admin\Support\TranslatableFormData;
 use App\Http\Middleware\EnforceMfaPolicy;
+use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\SetDatabaseSessionContext;
 use App\Http\Middleware\SetLocale;
 use Filament\Actions\Action;
@@ -99,6 +100,7 @@ class AdminPanelProvider extends PanelProvider
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 AuthenticateSession::class,
+                EnsureUserIsActive::class,
                 ShareErrorsFromSession::class,
                 PreventRequestForgery::class,
                 SubstituteBindings::class,

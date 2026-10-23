@@ -14,6 +14,7 @@ use App\Support\Pii\PiiHasher;
 use App\Support\Pii\PiiType;
 use Carbon\CarbonImmutable;
 use Database\Factories\Person\PersonFactory;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -48,6 +49,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property int|null $created_by_id
  * @property-read User|null $user
  */
+#[Hidden(['national_id_encrypted', 'national_id_hash', 'passport_number_encrypted', 'passport_number_hash'])]
 class Person extends Model implements EncryptsPersonalData, HasMedia
 {
     /** @use HasFactory<PersonFactory> */

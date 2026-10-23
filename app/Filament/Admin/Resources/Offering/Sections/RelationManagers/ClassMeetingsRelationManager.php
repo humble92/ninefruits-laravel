@@ -59,7 +59,7 @@ class ClassMeetingsRelationManager extends RelationManager
             ->defaultSort('meeting_date')
             ->paginated([25, 50])
             ->headerActions([
-                Action::make('generate')->label(__('attendance.actions.generate'))->icon(Heroicon::OutlinedCalendarDays)->visible($canEdit)
+                Action::make('generate')->label(__('attendance.actions.generate'))->icon(Heroicon::OutlinedCalendarDays)->visible($canEdit)->authorize($canEdit)
                     ->requiresConfirmation()->modalDescription(__('attendance.help.generate'))
                     ->action(function (GenerateClassMeetings $generate) use ($section) {
                         $created = $generate->forSection($section, $this->actor());

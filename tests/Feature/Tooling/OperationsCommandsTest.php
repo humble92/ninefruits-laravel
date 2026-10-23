@@ -2,7 +2,9 @@
 
 use App\Console\Commands\System\HealthCheck;
 use App\Domain\Security\Actions\SyncPermissionCatalog;
+use App\Domain\Security\Enums\SecurityEventType;
 use App\Models\Person\Person;
+use App\Models\Security\SecurityEvent;
 use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -68,6 +70,11 @@ it('prunes sealed audit rows past the retention date', function () {
     expect(migrator()->table('audit.activity_log')->where('id', $old)->exists())->toBeFalse()
         ->and(migrator()->table('audit.activity_log')->where('event', 'test.new')->exists())->toBeTrue();
     $this->artisan('audit:verify-chain', ['--table' => ['activity_log']])->assertSuccessful();
+
+    // The deletion itself is on record: which table, the cut-off, the id range and the chain hash at the boundary.
+    $event = SecurityEvent::query()->where('type', SecurityEventType::AuditPruned)->sole();
+    expect($event->properties)->toMatchArray(['table' => 'audit.activity_log', 'rows' => 1, 'first_id' => $old, 'last_id' => $old])
+        ->and($event->properties['boundary_chain_hash'])->toBeString();
 });
 
 it('removes orphan media rows and directories', function () {

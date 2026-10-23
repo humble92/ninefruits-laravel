@@ -228,11 +228,12 @@ class GradeEntry extends Component
      */
     public function importLmsScores(PullGrades $pull): void
     {
+        abort_unless(app(SaveGrades::class)->canEnter($this->section, $this->user()), 403);
         $this->messages = [];
         $imported = 0;
 
         foreach (LmsPlatform::query()->where('is_active', true)->where('should_pull_grades', true)->get() as $platform) {
-            foreach ($pull->handle($platform, $this->section) as $enrollmentId => $score) {
+            foreach ($pull->handle($platform, $this->section, $this->user()) as $enrollmentId => $score) {
                 if (array_key_exists($enrollmentId, $this->grades)) {
                     $this->grades[$enrollmentId]['score'] = (string) $score;
                     $imported++;

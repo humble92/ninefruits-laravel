@@ -3,6 +3,7 @@
 namespace App\Domain\Attendance\Services;
 
 use App\Domain\Registration\Enums\EnrollmentStatus;
+use App\Domain\Reporting\Services\ReportCatalog;
 use App\Domain\Security\Enums\Permission;
 use App\Models\Offering\Section;
 use App\Models\Registration\Enrollment;
@@ -51,7 +52,7 @@ class SectionRoster
 
         foreach ($this->enrollments($section) as $enrollment) {
             $record = $enrollment->studentRecord;
-            $rows[] = [$record->student_number, $record->person->displayName(), $record->program->name, (string) $record->year_level, (string) ($record->person->email ?? ''), $enrollment->status->label()];
+            $rows[] = array_map([ReportCatalog::class, 'cell'], [$record->student_number, $record->person->displayName(), $record->program->name, (string) $record->year_level, (string) ($record->person->email ?? ''), $enrollment->status->label()]);
         }
 
         $handle = fopen('php://temp', 'r+');

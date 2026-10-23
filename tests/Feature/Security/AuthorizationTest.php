@@ -27,7 +27,7 @@ it('denies the admin panel without a role', function () {
 
 it('grants and removes access by changing role assignments only', function () {
     $user = User::factory()->create();
-    $admin = User::factory()->create();
+    $admin = User::factory()->withPermissions(Permission::cases())->create();
     $role = Role::factory()->withPermissions([Permission::AdminPanelAccess, Permission::UsersView])->create();
 
     $assignment = app(AssignRole::class)->handle($user, $role, 'New registrar', assignedBy: $admin);
@@ -141,12 +141,12 @@ it('does not allow assigning persona roles by hand', function () {
 })->throws(ValidationException::class);
 
 it('audits role assignments with the reason', function () {
-    $admin = User::factory()->create();
+    $admin = User::factory()->withPermissions(Permission::cases())->create();
     $role = Role::factory()->create();
 
     $assignment = app(AssignRole::class)->handle(User::factory()->create(), $role, 'Covering for a colleague', assignedBy: $admin);
 
-    $activity = Activity::query()->where('event', 'role.assigned')->sole();
+    $activity = Activity::query()->where('event', 'role.assigned')->where('subject_id', $assignment->id)->sole();
 
     expect($activity->reason)->toBe('Covering for a colleague')
         ->and($activity->causer_id)->toBe($admin->id)

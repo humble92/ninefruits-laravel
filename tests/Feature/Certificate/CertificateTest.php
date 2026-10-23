@@ -146,15 +146,17 @@ it('issues from the student record page, lists the ledger, and lets the holder d
     foreach ([CertificateIssueResource::getUrl('index'), CertificateTypeResource::getUrl('index'), CertificateTypeResource::getUrl('edit', ['record' => $this->enrollment]), ManageCertificateSettings::getUrl()] as $url) {
         $this->actingAs($this->officer)->get($url)->assertOk($url);
     }
+    $student = User::factory()->create(['person_id' => $this->record->person_id]);
+    $this->actingAs($student)->get(route('certificates.download', $issue))->assertOk()->assertHeader('Content-Type', 'application/pdf');
+    Livewire::actingAs($student)->test(MyCertificates::class)->assertSee($issue->serial_number);
+
     Livewire::actingAs($this->officer)->test(ListCertificateIssues::class)->assertCanSeeTableRecords([$issue])
         ->callTableAction('revoke', $issue, ['reason' => 'Mistake'])->assertHasNoTableActionErrors();
     expect($issue->refresh()->status)->toBe(CertificateIssueStatus::Revoked);
 
-    $this->actingAs($this->officer)->get(route('certificates.download', $issue))->assertOk()->assertHeader('Content-Type', 'application/pdf');
-
-    $student = User::factory()->create(['person_id' => $this->record->person_id]);
-    $this->actingAs($student)->get(route('certificates.download', $issue))->assertOk();
-    Livewire::actingAs($student)->test(MyCertificates::class)->assertSee($issue->serial_number);
+    // Staff keep the file for the record; the holder cannot download a revoked certificate.
+    $this->actingAs($this->officer)->get(route('certificates.download', $issue))->assertOk();
+    $this->actingAs($student)->get(route('certificates.download', $issue))->assertForbidden();
 
     $other = User::factory()->create(['person_id' => StudentRecord::factory()->create()->person_id]);
     $this->actingAs($other)->get(route('certificates.download', $issue))->assertForbidden();
