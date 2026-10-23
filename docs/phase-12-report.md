@@ -60,4 +60,9 @@
 
 ## 7. CI 결과
 
-(푸시 후 기록)
+커밋 `ab3ca66`, GitHub Actions 실행 39995031167: 성공.
+
+| 작업 | 결과 | 소요 |
+|---|---|---|
+| Style, static analysis, conventions | 성공 | 44초 |
+| Tests (PostgreSQL 18) | 성공 | 8분 9초 |
