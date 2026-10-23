@@ -13,6 +13,7 @@ return [
         'teaching' => 'My teaching',
         'registration' => 'Registration',
         'grades' => 'Grades',
+        'certificates' => 'Certificates',
         'evaluations' => 'Course evaluation',
     ],
     'dashboard' => [

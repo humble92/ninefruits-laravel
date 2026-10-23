@@ -78,6 +78,9 @@ enum Permission: string
     case EvaluationsView = 'evaluations.view';
     case EvaluationsManage = 'evaluations.manage';
 
+    case CertificatesIssue = 'certificates.issue';
+    case CertificatesManage = 'certificates.manage';
+
     public function resource(): string
     {
         return explode('.', $this->value, 2)[0];

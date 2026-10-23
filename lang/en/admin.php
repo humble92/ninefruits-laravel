@@ -13,6 +13,7 @@ return [
         'registration' => 'Registration',
         'grading' => 'Grades',
         'evaluation' => 'Course evaluation',
+        'certificates' => 'Certificates',
     ],
     'users' => [
         'label' => 'user',

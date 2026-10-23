@@ -17,6 +17,7 @@ enum NavigationGroup implements HasLabel
     case Registration;
     case Grading;
     case Evaluation;
+    case Certificates;
     case ReferenceData;
     case Access;
     case Audit;

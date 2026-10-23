@@ -13,6 +13,7 @@ return [
         'registration' => '수강신청',
         'grading' => '성적',
         'evaluation' => '강의평가',
+        'certificates' => '증명서',
     ],
     'users' => [
         'label' => '사용자',

@@ -15,6 +15,9 @@ use App\Domain\Security\Services\PersonaResolver;
 use App\Http\Middleware\EnforceMfaPolicy;
 use App\Http\Middleware\SetDatabaseSessionContext;
 use App\Http\Middleware\SetLocale;
+use App\Models\Certificate\CertificateIssue;
+use App\Models\Certificate\CertificateTemplate;
+use App\Models\Certificate\CertificateType;
 use App\Models\Curriculum\Course;
 use App\Models\Curriculum\CourseCategory;
 use App\Models\Curriculum\CourseEquivalency;
@@ -55,6 +58,8 @@ use App\Models\Term\TermType;
 use App\Models\Term\TermWindow;
 use App\Models\Term\TimeSlot;
 use App\Models\User;
+use App\Policies\Certificate\CertificateIssuePolicy;
+use App\Policies\Certificate\CertificateSetupPolicy;
 use App\Policies\Curriculum\CoursePolicy;
 use App\Policies\Curriculum\CurriculumPolicy;
 use App\Policies\Evaluation\EvaluationSetupPolicy;
@@ -132,6 +137,9 @@ class AppServiceProvider extends ServiceProvider
         RegistrationRuleSet::class => RegistrationRulePolicy::class,
         RegistrationRule::class => RegistrationRulePolicy::class,
         CreditLimitPolicy::class => RegistrationRulePolicy::class,
+        CertificateType::class => CertificateSetupPolicy::class,
+        CertificateTemplate::class => CertificateSetupPolicy::class,
+        CertificateIssue::class => CertificateIssuePolicy::class,
         EvaluationForm::class => EvaluationSetupPolicy::class,
         EvaluationQuestion::class => EvaluationSetupPolicy::class,
         TermEvaluation::class => EvaluationSetupPolicy::class,

@@ -5,6 +5,8 @@ use App\Http\Controllers\Admission\ApplicationDocumentController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\Auth\TwoFactorEmailChallengeController;
+use App\Http\Controllers\Certificate\DownloadCertificateController;
+use App\Http\Controllers\Certificate\VerifyCertificateController;
 use App\Http\Controllers\Grading\TranscriptController;
 use App\Http\Controllers\Person\PersonPhotoController;
 use App\Http\Controllers\UpdateLocaleController;
@@ -15,6 +17,7 @@ use App\Livewire\Portal\CourseCatalog;
 use App\Livewire\Portal\Dashboard;
 use App\Livewire\Portal\Evaluations;
 use App\Livewire\Portal\GradeEntry;
+use App\Livewire\Portal\MyCertificates;
 use App\Livewire\Portal\MyGrades;
 use App\Livewire\Portal\MyProfile;
 use App\Livewire\Portal\MyRecords;
@@ -29,6 +32,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/portal');
 
 Route::get('/admissions', AdmissionCycleListController::class)->name('admissions.index');
+Route::get('/verify/{code?}', VerifyCertificateController::class)->middleware('throttle:30,1')->name('certificates.verify');
 
 Route::post('/locale', UpdateLocaleController::class)->name('locale.update');
 
@@ -44,6 +48,7 @@ Route::middleware(['guest', 'throttle:two-factor'])->prefix('two-factor-challeng
 });
 
 Route::get('/people/{person}/photo', PersonPhotoController::class)->middleware(['auth', 'mfa'])->name('people.photo');
+Route::get('/certificates/{certificateIssue}/download', DownloadCertificateController::class)->middleware(['auth', 'mfa'])->name('certificates.download');
 Route::get('/student-records/{studentRecord}/transcript', [TranscriptController::class, 'show'])->middleware(['auth', 'mfa'])->name('transcripts.show');
 Route::get('/applications/{application}/documents/{media}', ApplicationDocumentController::class)->middleware(['auth', 'mfa'])->name('applications.documents.show');
 
@@ -61,6 +66,7 @@ Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(fun
     Route::livewire('/sections/{section}/grades', GradeEntry::class)->name('grades.entry');
     Route::livewire('/grades', MyGrades::class)->name('grades');
     Route::livewire('/evaluations', Evaluations::class)->name('evaluations');
+    Route::livewire('/certificates', MyCertificates::class)->name('certificates');
     Route::livewire('/sections/{section}/evaluation', SectionEvaluation::class)->name('evaluations.results');
     Route::get('/grades/transcript', [TranscriptController::class, 'own'])->name('grades.transcript');
 

@@ -18,6 +18,7 @@ use App\Models\Grading\EvaluationMethodRequest;
 use App\Models\Grading\GradeScale;
 use App\Models\Offering\Section;
 use App\Models\Offering\SectionInstructor;
+use App\Models\Organization\OrgUnit;
 use App\Models\Person\Instructor;
 use App\Models\Registration\Enrollment;
 use App\Models\Security\Activity;
@@ -47,6 +48,8 @@ beforeEach(function () {
     $this->teacher = User::factory()->create(['person_id' => $instructor->person_id]);
     $this->registrar = User::factory()->withPermissions([Permission::GradesManage, Permission::GradeExceptionsReview])->create();
     $this->reviewer = User::factory()->withPermissions([Permission::GradeExceptionsReview], ScopeType::OrgUnit, $this->section->org_unit_id)->create();
+    // A reviewer of another department: not told about this section.
+    $this->otherReviewer = User::factory()->withPermissions([Permission::GradeExceptionsReview], ScopeType::OrgUnit, OrgUnit::factory()->create()->id)->create();
     $this->enrollments = Enrollment::factory()->count(10)->inSection($this->section)->create();
     $this->section->forceFill(['enrolled_count' => 10])->save();
 });
@@ -98,6 +101,7 @@ it('lets staff submit outside the caps only as a recorded exception with a reaso
         ->and(Activity::query()->where('event', 'grades.submitted_with_exception')->count())->toBe(1);
     Notification::assertSentTo($this->reviewer, GradeExceptionNotification::class);
     Notification::assertNotSentTo($this->registrar, GradeExceptionNotification::class);
+    Notification::assertNotSentTo($this->otherReviewer, GradeExceptionNotification::class);
 
     Livewire::actingAs($this->registrar)->test(GradeEntry::class, ['section' => $this->section])->assertSee(__('grading.entry.exception_title'));
 });

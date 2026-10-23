@@ -42,6 +42,7 @@ return [
         'grading_policies' => '成绩处理政策',
         'grade_exceptions' => '成绩例外提交',
         'evaluations' => '课程评价',
+        'certificates' => '证明书',
     ],
     'admin_panel' => ['access' => '使用管理界面'],
     'users' => [
@@ -91,4 +92,5 @@ return [
     'grading_policies' => ['manage' => '管理绩点、重修、学业警告和成绩优秀政策'],
     'grade_exceptions' => ['review' => '教职员超出等级比例例外提交成绩时接收通知（系主任、教务负责人）'],
     'evaluations' => ['view' => '查看课程评价回答率和结果', 'manage' => '管理评价表、学期课程评价和结果公布'],
+    'certificates' => ['issue' => '开具、重新生成和撤销证明书', 'manage' => '管理证明书种类、模板和设置'],
 ];

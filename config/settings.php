@@ -1,6 +1,7 @@
 <?php
 
 use App\Domain\Admission\Settings\AdmissionSettings;
+use App\Domain\Certificate\Settings\CertificateSettings;
 use App\Domain\Evaluation\Settings\EvaluationSettings;
 use App\Domain\Grading\Settings\GradingSettings;
 use App\Domain\Institution\Settings\InstitutionSettings;
@@ -26,6 +27,7 @@ return [
         AdmissionSettings::class,
         GradingSettings::class,
         EvaluationSettings::class,
+        CertificateSettings::class,
     ],
 
     /*

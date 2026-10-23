@@ -42,6 +42,7 @@ return [
         'grading_policies' => 'Grading policy',
         'grade_exceptions' => 'Grade exceptions',
         'evaluations' => 'Course evaluation',
+        'certificates' => 'Certificates',
     ],
     'admin_panel' => ['access' => 'Open the administration panel'],
     'users' => [
@@ -91,4 +92,5 @@ return [
     'grading_policies' => ['manage' => 'Manage GPA, retake, academic standing and honors policy'],
     'grade_exceptions' => ['review' => 'Be told when staff submit grades outside the grade caps (department heads, academic office)'],
     'evaluations' => ['view' => 'View course evaluation response rates and results', 'manage' => 'Manage evaluation forms, term evaluations and publication'],
+    'certificates' => ['issue' => 'Issue, re-render and revoke certificates', 'manage' => 'Manage certificate kinds, templates and settings'],
 ];
