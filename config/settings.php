@@ -4,6 +4,7 @@ use App\Domain\Admission\Settings\AdmissionSettings;
 use App\Domain\Certificate\Settings\CertificateSettings;
 use App\Domain\Evaluation\Settings\EvaluationSettings;
 use App\Domain\Grading\Settings\GradingSettings;
+use App\Domain\Graduation\Settings\GraduationSettings;
 use App\Domain\Institution\Settings\InstitutionSettings;
 use App\Domain\Person\Settings\StudentRecordSettings;
 use App\Domain\Security\Settings\AuthenticationSettings;
@@ -28,6 +29,7 @@ return [
         GradingSettings::class,
         EvaluationSettings::class,
         CertificateSettings::class,
+        GraduationSettings::class,
     ],
 
     /*

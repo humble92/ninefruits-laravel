@@ -14,6 +14,8 @@ return [
         'grading' => '성적',
         'evaluation' => '강의평가',
         'assessments' => '어학/종합시험',
+        'graduation' => '졸업',
+        'reports' => '보고서',
         'certificates' => '증명서',
     ],
     'users' => [

@@ -19,6 +19,7 @@
                 <a href="{{ route('portal.grades') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.grades') }}</a>
                 <a href="{{ route('portal.attendance') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.attendance') }}</a>
                 <a href="{{ route('portal.assessments') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.assessments') }}</a>
+                <a href="{{ route('portal.graduation') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.graduation') }}</a>
                 <a href="{{ route('portal.certificates') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.certificates') }}</a>
                 @if (in_array(\App\Domain\Security\Enums\Persona::Student, $personas, true))
                     <a href="{{ route('portal.registration') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.registration') }}</a>

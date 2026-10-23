@@ -15,6 +15,7 @@ return [
         'grades' => '성적',
         'attendance' => '출석',
         'assessments' => '어학/종합시험',
+        'graduation' => '졸업',
         'certificates' => '증명서',
         'evaluations' => '강의평가',
     ],

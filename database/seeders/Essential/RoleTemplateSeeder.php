@@ -55,6 +55,9 @@ class RoleTemplateSeeder extends Seeder
                     Permission::CertificatesManage,
                     Permission::AssessmentsRecord,
                     Permission::AssessmentsManage,
+                    Permission::GraduationAudit,
+                    Permission::GraduationProcess,
+                    Permission::ReportsView,
                 ],
             ],
             'academic_affairs' => [
@@ -86,6 +89,8 @@ class RoleTemplateSeeder extends Seeder
                     Permission::CertificatesManage,
                     Permission::AssessmentsRecord,
                     Permission::AssessmentsManage,
+                    Permission::GraduationAudit,
+                    Permission::ReportsView,
                 ],
             ],
             'certificate_officer' => [
@@ -98,6 +103,7 @@ class RoleTemplateSeeder extends Seeder
                 'permissions' => [
                     ...$staff,
                     Permission::StudentRecordsView,
+                    Permission::ReportsView,
                     Permission::AdvisorsManage,
                     Permission::ApplicationsView,
                     Permission::SectionsView,

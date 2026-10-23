@@ -43,6 +43,8 @@ return [
         'grade_exceptions' => '成绩例外提交',
         'evaluations' => '课程评价',
         'assessments' => '语言/综合考试',
+        'graduation' => '毕业',
+        'reports' => '报表',
         'certificates' => '证明书',
     ],
     'admin_panel' => ['access' => '使用管理界面'],
@@ -94,5 +96,7 @@ return [
     'grade_exceptions' => ['review' => '教职员超出等级比例例外提交成绩时接收通知（系主任、教务负责人）'],
     'evaluations' => ['view' => '查看课程评价回答率和结果', 'manage' => '管理评价表、学期课程评价和结果公布'],
     'assessments' => ['record' => '登记考生、录入和公布成绩、登记外部成绩', 'manage' => '管理考试种类、领域和场次'],
+    'graduation' => ['audit' => '执行和查看毕业资格审核', 'process' => '办理毕业、批准要求豁免'],
+    'reports' => ['view' => '查看和下载标准报表'],
     'certificates' => ['issue' => '开具、重新生成和撤销证明书', 'manage' => '管理证明书种类、模板和设置'],
 ];

@@ -38,6 +38,7 @@ use App\Models\Facility\Building;
 use App\Models\Facility\Room;
 use App\Models\Grading\GradeScale;
 use App\Models\Grading\GradeScaleItem;
+use App\Models\Graduation\DegreeAudit;
 use App\Models\Institution\Country;
 use App\Models\Institution\Language;
 use App\Models\Institution\LookupType;
@@ -71,6 +72,7 @@ use App\Policies\Certificate\CertificateSetupPolicy;
 use App\Policies\Curriculum\CoursePolicy;
 use App\Policies\Curriculum\CurriculumPolicy;
 use App\Policies\Evaluation\EvaluationSetupPolicy;
+use App\Policies\Graduation\DegreeAuditPolicy;
 use App\Policies\Offering\SectionPolicy;
 use App\Policies\Reference\CourseCategoryPolicy;
 use App\Policies\Reference\FacilityPolicy;
@@ -151,6 +153,7 @@ class AppServiceProvider extends ServiceProvider
         AssessmentRegistration::class => AssessmentRecordPolicy::class,
         AssessmentResult::class => AssessmentRecordPolicy::class,
         AssessmentResultCorrection::class => AssessmentRecordPolicy::class,
+        DegreeAudit::class => DegreeAuditPolicy::class,
         CertificateType::class => CertificateSetupPolicy::class,
         CertificateTemplate::class => CertificateSetupPolicy::class,
         CertificateIssue::class => CertificateIssuePolicy::class,

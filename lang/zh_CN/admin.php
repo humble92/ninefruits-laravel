@@ -14,6 +14,8 @@ return [
         'grading' => '成绩',
         'evaluation' => '课程评价',
         'assessments' => '语言/综合考试',
+        'graduation' => '毕业',
+        'reports' => '报表',
         'certificates' => '证明',
     ],
     'users' => [

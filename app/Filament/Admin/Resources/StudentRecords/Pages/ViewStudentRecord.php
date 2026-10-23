@@ -2,12 +2,18 @@
 
 namespace App\Filament\Admin\Resources\StudentRecords\Pages;
 
+use App\Domain\Graduation\Actions\RunDegreeAudits;
+use App\Domain\Graduation\Actions\WaiveRequirement;
+use App\Domain\Graduation\Services\DegreeAudit;
 use App\Domain\Person\Actions\AssignAdvisor;
 use App\Domain\Person\Actions\RecordStatusChange;
 use App\Domain\Person\Enums\AdvisorRole;
 use App\Domain\Security\Enums\Permission;
 use App\Filament\Admin\Resources\StudentRecords\StudentRecordResource;
 use App\Filament\Admin\Support\IssueCertificateAction;
+use App\Filament\Admin\Support\ShowsActionErrors;
+use App\Models\Curriculum\CurriculumRequirement;
+use App\Models\Curriculum\CurriculumRequirementSet;
 use App\Models\Person\Instructor;
 use App\Models\Person\StudentRecord;
 use App\Models\Person\StudentStatusChangeType;
@@ -32,6 +38,36 @@ class ViewStudentRecord extends ViewRecord
     {
         return [
             EditAction::make(),
+            Action::make('degreeAudit')->label(__('graduation.actions.audit_now'))->icon(Heroicon::OutlinedAcademicCap)->color('gray')
+                ->visible(fn () => (bool) auth()->user()?->can(Permission::GraduationAudit->value))
+                ->modalHeading(__('graduation.actions.audit_now'))
+                ->modalContent(fn (StudentRecord $record) => view('filament.admin.degree-audits', ['results' => array_map(fn ($r) => $r->toArray(), app(DegreeAudit::class)->evaluateAll($record))]))
+                ->modalSubmitActionLabel(__('graduation.actions.save_audit'))
+                ->action(function (StudentRecord $record) {
+                    /** @var User $user */
+                    $user = auth()->user();
+                    ShowsActionErrors::run(fn () => app(RunDegreeAudits::class)->forRecord($record, $user));
+                    Notification::make()->success()->title(__('graduation.notifications.audit_saved'))->send();
+                }),
+            Action::make('waiveRequirement')->label(__('graduation.actions.waive'))->icon(Heroicon::OutlinedShieldCheck)->color('gray')
+                ->visible(fn () => (bool) auth()->user()?->can(Permission::GraduationProcess->value))
+                ->schema([
+                    Select::make('curriculum_requirement_id')->label(__('curriculum.sections.requirements'))->required()
+                        ->options(function (StudentRecord $record) {
+                            $sets = CurriculumRequirementSet::query()->where('program_id', $record->program_id)->forCatalogYear($record->catalog_year)->with('requirements.assessmentType')->get();
+
+                            return $sets->flatMap(fn (CurriculumRequirementSet $set) => $set->requirements->mapWithKeys(fn (CurriculumRequirement $requirement) => [
+                                $requirement->id => $set->program_role->label().' · '.($requirement->name ?? ($requirement->assessmentType !== null ? $requirement->assessmentType->name : $requirement->kind->label())),
+                            ]))->all();
+                        }),
+                    Textarea::make('reason')->label(__('common.reason'))->required()->maxLength(1000),
+                ])
+                ->action(function (StudentRecord $record, array $data) {
+                    /** @var User $user */
+                    $user = auth()->user();
+                    ShowsActionErrors::run(fn () => app(WaiveRequirement::class)->grant($record, CurriculumRequirement::query()->findOrFail($data['curriculum_requirement_id']), (string) $data['reason'], $user));
+                    Notification::make()->success()->title(__('graduation.notifications.waived'))->send();
+                }),
             IssueCertificateAction::make(),
             Action::make('transcript')->label(__('grading.transcript.title'))->icon(Heroicon::OutlinedDocumentText)->color('gray')
                 ->visible(fn () => (bool) auth()->user()?->can(Permission::GradesView->value))

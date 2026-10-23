@@ -15,6 +15,7 @@ return [
         'grades' => 'Grades',
         'attendance' => 'Attendance',
         'assessments' => 'Examinations',
+        'graduation' => 'Graduation',
         'certificates' => 'Certificates',
         'evaluations' => 'Course evaluation',
     ],

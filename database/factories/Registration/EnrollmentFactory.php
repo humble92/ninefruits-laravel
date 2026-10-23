@@ -33,6 +33,7 @@ class EnrollmentFactory extends Factory
             'course_id' => fn (array $attributes) => Section::query()->findOrFail($attributes['section_id'])->course_id,
             'course_version_id' => fn (array $attributes) => Section::query()->findOrFail($attributes['section_id'])->course_version_id,
             'credits' => fn (array $attributes) => Section::query()->with('version')->findOrFail($attributes['section_id'])->version->credits,
+            'course_category_id' => fn (array $attributes) => Section::query()->with('version')->findOrFail($attributes['section_id'])->version->course_category_id,
             'enrolled_at' => now(),
         ];
     }

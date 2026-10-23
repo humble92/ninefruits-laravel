@@ -15,6 +15,7 @@ return [
         'grades' => '成绩',
         'attendance' => '考勤',
         'assessments' => '语言/综合考试',
+        'graduation' => '毕业',
         'certificates' => '证明',
         'evaluations' => '课程评价',
     ],

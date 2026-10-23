@@ -43,6 +43,8 @@ return [
         'grade_exceptions' => 'Grade exceptions',
         'evaluations' => 'Course evaluation',
         'assessments' => 'Examinations',
+        'graduation' => 'Graduation',
+        'reports' => 'Reports',
         'certificates' => 'Certificates',
     ],
     'admin_panel' => ['access' => 'Open the administration panel'],
@@ -94,5 +96,7 @@ return [
     'grade_exceptions' => ['review' => 'Be told when staff submit grades outside the grade caps (department heads, academic office)'],
     'evaluations' => ['view' => 'View course evaluation response rates and results', 'manage' => 'Manage evaluation forms, term evaluations and publication'],
     'assessments' => ['record' => 'Register students, enter and publish results, record external results', 'manage' => 'Manage examination kinds, areas and sessions'],
+    'graduation' => ['audit' => 'Run and view degree audits', 'process' => 'Process graduations, grant requirement waivers'],
+    'reports' => ['view' => 'View standard reports and download them'],
     'certificates' => ['issue' => 'Issue, re-render and revoke certificates', 'manage' => 'Manage certificate kinds, templates and settings'],
 ];

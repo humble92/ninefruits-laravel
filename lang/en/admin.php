@@ -14,6 +14,8 @@ return [
         'grading' => 'Grades',
         'evaluation' => 'Course evaluation',
         'assessments' => 'Examinations',
+        'graduation' => 'Graduation',
+        'reports' => 'Reports',
         'certificates' => 'Certificates',
     ],
     'users' => [

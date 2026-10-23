@@ -43,6 +43,8 @@ return [
         'grade_exceptions' => '성적 예외 제출',
         'evaluations' => '강의평가',
         'assessments' => '어학/종합시험',
+        'graduation' => '졸업',
+        'reports' => '보고서',
         'certificates' => '증명서',
     ],
     'admin_panel' => ['access' => '관리 화면 사용'],
@@ -94,5 +96,7 @@ return [
     'grade_exceptions' => ['review' => '직원이 등급 비율을 넘겨 예외 제출하면 알림을 받음(학과장, 학사팀장)'],
     'evaluations' => ['view' => '강의평가 응답률과 결과 조회', 'manage' => '강의평가 양식, 학기 강의평가, 결과 공개 관리'],
     'assessments' => ['record' => '응시 등록, 결과 입력·공개, 외부 성적 등록', 'manage' => '시험 종류, 영역, 회차 관리'],
+    'graduation' => ['audit' => '졸업 요건 점검 실행·조회', 'process' => '졸업 처리, 요건 면제 승인'],
+    'reports' => ['view' => '표준 보고서 조회와 내려받기'],
     'certificates' => ['issue' => '증명서 발급, 재생성, 취소', 'manage' => '증명서 종류, 서식, 설정 관리'],
 ];
