@@ -4,6 +4,7 @@ namespace App\Domain\Assessment\Services;
 
 use App\Domain\Assessment\Actions\RecordAssessmentResult;
 use App\Domain\Assessment\Actions\RegisterForAssessment;
+use App\Domain\Assessment\Enums\AssessmentRegistrationStatus;
 use App\Models\Assessment\AssessmentRegistration;
 use App\Models\Assessment\AssessmentSession;
 use App\Models\Person\StudentRecord;
@@ -14,7 +15,8 @@ use League\Csv\Reader;
 /**
  * Results of a session from a CSV: one row per student with `student_number`, a column
  * per area code (or `total` for kinds without areas), optional `passed` (Y/N, pass/fail
- * kinds) and `absent` (Y). Students not registered are registered by the importer.
+ * kinds) and `absent` (Y). Rows of students not registered for the session are reported
+ * and skipped: a result needs a registration made before the session.
  */
 class AssessmentResultImporter
 {
@@ -52,7 +54,14 @@ class AssessmentResultImporter
                 continue;
             }
 
-            $registration = AssessmentRegistration::query()->where('assessment_session_id', $session->id)->where('student_record_id', $record->id)->first();
+            $registration = AssessmentRegistration::query()->where('assessment_session_id', $session->id)->where('student_record_id', $record->id)
+                ->where('status', '!=', AssessmentRegistrationStatus::Cancelled)->first();
+
+            if ($registration === null) {
+                $summary['errors'][] = "Line {$line}: [{$number}] is not registered for this session.";
+
+                continue;
+            }
 
             try {
                 if ($dryRun) {
@@ -64,8 +73,6 @@ class AssessmentResultImporter
 
                     continue;
                 }
-
-                $registration ??= $this->registrations->register($session, $record, $staff, byStaff: true, forResult: true);
 
                 if ($this->isYes($row['absent'] ?? null)) {
                     $this->registrations->markAbsent($registration, $staff);

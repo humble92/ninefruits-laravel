@@ -47,7 +47,7 @@ return [
         'min_score' => 'Below this the student fails whatever the total.',
         'session_pass_score' => 'Leave empty to use the kind\'s pass score.',
         'publish' => 'Students see their results from now on. Results entered later are visible at once.',
-        'import' => 'CSV with a header row: student_number, a column per area code (or total), optionally passed (Y/N), absent (Y) and note. Students not registered are registered.',
+        'import' => 'CSV with a header row: student_number, a column per area code (or total), optionally passed (Y/N), absent (Y) and note. Rows of students not registered are skipped.',
         'decision_automatic' => 'Decided from the scores: total at or above :score and every area at or above its minimum.',
     ],
     'actions' => [

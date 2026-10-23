@@ -6,6 +6,7 @@ use App\Domain\Assessment\Actions\RecordAssessmentResult;
 use App\Domain\Assessment\Actions\RegisterForAssessment;
 use App\Domain\Curriculum\Enums\RequirementKind;
 use App\Domain\Person\Enums\StudentStatus;
+use App\Models\Assessment\AssessmentRegistration;
 use App\Models\Assessment\AssessmentSession;
 use App\Models\Assessment\AssessmentType;
 use App\Models\Curriculum\CurriculumRequirement;
@@ -44,8 +45,10 @@ class DemoAssessmentSeeder extends Seeder
             ]);
 
             foreach ($students->slice($index * 10, 20) as $student) {
-                // Past sessions: the registration is created with the result (no registration after the date).
-                $registration = $register->register($session, $student, $registrar, byStaff: true, forResult: true);
+                // Past sessions: registrations are written directly (nobody registers after the date).
+                $registration = AssessmentRegistration::query()->create([
+                    'assessment_session_id' => $session->id, 'student_record_id' => $student->id, 'registered_at' => $heldDate->subWeeks(2), 'registered_by_id' => $registrar->id,
+                ]);
 
                 if (mt_rand(1, 12) === 1) {
                     $register->markAbsent($registration, $registrar);
@@ -63,7 +66,10 @@ class DemoAssessmentSeeder extends Seeder
         $computerSession = AssessmentSession::query()->create(['assessment_type_id' => $computer->id, 'held_date' => $today->subMonths(2), 'venue' => 'Computer Lab B']);
 
         foreach ($students->slice(5, 15) as $student) {
-            $results->forRegistration($register->register($computerSession, $student, $registrar, byStaff: true, forResult: true), [], mt_rand(1, 5) !== 1, $registrar);
+            $registration = AssessmentRegistration::query()->create([
+                'assessment_session_id' => $computerSession->id, 'student_record_id' => $student->id, 'registered_at' => $today->subMonths(3), 'registered_by_id' => $registrar->id,
+            ]);
+            $results->forRegistration($registration, [], mt_rand(1, 5) !== 1, $registrar);
         }
 
         $results->publish($computerSession, $registrar);

@@ -26,10 +26,7 @@ class RegisterForAssessment
 {
     public function __construct(private readonly AuditLogger $audit, private readonly DatabaseSessionContext $context) {}
 
-    /**
-     * @param  bool  $forResult  staff recording a result of a held session for a student who was not registered (CSV import)
-     */
-    public function register(AssessmentSession $session, StudentRecord $record, User $actor, bool $byStaff = false, bool $forResult = false): AssessmentRegistration
+    public function register(AssessmentSession $session, StudentRecord $record, User $actor, bool $byStaff = false): AssessmentRegistration
     {
         $session->loadMissing('type');
 
@@ -53,8 +50,8 @@ class RegisterForAssessment
             throw ValidationException::withMessages(['session' => __('assessment.errors.registration_closed')]);
         }
 
-        // After the session only a result being recorded (import) adds a student, not a registration.
-        if ((! $byStaff || ! $forResult) && $session->held_date->lt(CarbonImmutable::today())) {
+        // Nobody registers after the session date; a result needs a registration made before it.
+        if ($session->held_date->lt(CarbonImmutable::today())) {
             throw ValidationException::withMessages(['session' => __('assessment.errors.session_past')]);
         }
 

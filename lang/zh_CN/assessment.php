@@ -47,7 +47,7 @@ return [
         'min_score' => '低于此分数即不合格，与总分无关。',
         'session_pass_score' => '留空则使用种类的合格分数。',
         'publish' => '从现在起学生可以查看成绩。之后录入的成绩立即可见。',
-        'import' => '带标题行的 CSV：student_number、每个领域代码一列（或 total），可选 passed（Y/N）、absent（Y）、note。未报名的学生将被登记报名。',
+        'import' => '带标题行的 CSV：student_number、每个领域代码一列（或 total），可选 passed（Y/N）、absent（Y）、note。未报名学生的行将被跳过。',
         'decision_automatic' => '按分数判定：总分不低于 :score 且各领域不低于最低分。',
     ],
     'actions' => [

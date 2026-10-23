@@ -47,7 +47,7 @@ return [
         'min_score' => '이 점수 미만이면 총점과 관계없이 불합격.',
         'session_pass_score' => '비우면 종류의 합격 점수를 쓴다.',
         'publish' => '지금부터 학생이 결과를 본다. 나중에 입력한 결과는 바로 보인다.',
-        'import' => '머리글 행이 있는 CSV: student_number, 영역 코드별 열(또는 total), 선택으로 passed(Y/N), absent(Y), note. 접수하지 않은 학생은 접수 처리한다.',
+        'import' => '머리글 행이 있는 CSV: student_number, 영역 코드별 열(또는 total), 선택으로 passed(Y/N), absent(Y), note. 접수하지 않은 학생 행은 건너뛴다.',
         'decision_automatic' => '점수로 판정한다: 총점 :score 이상이고 모든 영역이 최저점 이상.',
     ],
     'actions' => [

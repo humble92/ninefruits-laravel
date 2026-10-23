@@ -87,10 +87,9 @@ it('lets students register while the window is open and seats remain', function 
     expect(fn () => $this->register->register($this->session, $this->record, $this->student))->toThrow(ValidationException::class, __('assessment.errors.registration_closed'));
     expect($this->register->register($this->session, $this->record, $this->staff, byStaff: true)->status)->toBe(AssessmentRegistrationStatus::Registered);
 
-    // After the session date staff cannot register anyone either; only a result being recorded (import) adds a student.
+    // After the session date nobody registers, staff included.
     $past = AssessmentSession::query()->create(['assessment_type_id' => $this->english->id, 'held_date' => CarbonImmutable::yesterday()]);
     expect(fn () => $this->register->register($past, $other, $this->staff, byStaff: true))->toThrow(ValidationException::class, __('assessment.errors.session_past'));
-    expect($this->register->register($past, $other, $this->staff, byStaff: true, forResult: true)->status)->toBe(AssessmentRegistrationStatus::Registered);
 
     expect(fn () => $this->register->register($this->session, $other, $this->student))->toThrow(AuthorizationException::class);
     expect(fn () => $this->register->register($this->session, StudentRecord::factory()->graduated()->create(), $this->staff, byStaff: true))->toThrow(ValidationException::class, __('assessment.errors.record_inactive'));
@@ -166,6 +165,20 @@ it('locks published results and changes them only through an approved correction
     $manager->assertTableActionHidden('result', $registration)->assertTableActionVisible('correct', $registration);
 });
 
+it('fails a student below an area minimum whatever the total, and passes one exactly at it', function () {
+    // Writing requires at least 10 of 25; the kind's pass score stays 60.
+    $this->english->components->firstWhere('code', 'WRITING')->forceFill(['min_score' => 10])->save();
+    $registration = $this->register->register($this->session, $this->record, $this->staff, byStaff: true);
+
+    expect($this->results->forRegistration($registration, scores([25, 25, 9, 25]), null, $this->staff))->total_score->toBe('84.0')->is_passed->toBeFalse()
+        ->and($this->results->forRegistration($registration, scores([25, 25, 10, 25]), null, $this->staff))->total_score->toBe('85.0')->is_passed->toBeTrue()
+        ->and($this->results->forRegistration($registration, scores([10, 10, 10, 10]), null, $this->staff))->total_score->toBe('40.0')->is_passed->toBeFalse();
+
+    // Without area minimums the same 84 passes: the profile seeds none, so only the total applies.
+    $this->english->components->firstWhere('code', 'WRITING')->forceFill(['min_score' => null])->save();
+    expect($this->results->forRegistration($registration, scores([25, 25, 9, 25]), null, $this->staff)->is_passed)->toBeTrue();
+});
+
 it('shows results to the student only once published, and external results at once', function () {
     $registration = $this->register->register($this->session, $this->record, $this->staff, byStaff: true);
     $this->results->forRegistration($registration, scores([20, 20, 20, 20]), null, $this->staff);
@@ -206,23 +219,29 @@ it('shows results to the student only once published, and external results at on
 
 it('imports results from a CSV and reports problems', function () {
     $other = StudentRecord::factory()->create();
+    $unregistered = StudentRecord::factory()->create();
     $this->register->register($this->session, $this->record, $this->staff, byStaff: true);
+    $this->register->register($this->session, $other, $this->staff, byStaff: true);
     $path = tempnam(sys_get_temp_dir(), 'csv');
     file_put_contents($path, implode("\n", [
         'student_number,listening,reading,writing,grammar,absent,note',
         "{$this->record->student_number},20,20,20,20,,Good",
         "{$other->student_number},,,,,Y,",
+        "{$unregistered->student_number},25,25,25,25,,",
         '00000000,1,1,1,1,,',
     ]));
 
     $args = ['type' => 'ENG_COMP', 'held_date' => $this->session->held_date->toDateString(), 'file' => $path, '--actor' => $this->staff->email];
     $this->artisan('assessment:import-results', ['type' => 'NOPE', 'held_date' => '2020-01-01', 'file' => $path, '--actor' => $this->staff->email])->assertFailed();
-    $this->artisan('assessment:import-results', [...$args, '--dry-run' => true])->expectsOutputToContain('Dry run: 3 row(s): 1 recorded, 1 absent, 1 error(s).')->assertExitCode(2);
+    $this->artisan('assessment:import-results', [...$args, '--dry-run' => true])->expectsOutputToContain('Dry run: 4 row(s): 1 recorded, 1 absent, 2 error(s).')->assertExitCode(2);
     expect(AssessmentResult::query()->count())->toBe(0);
 
-    $this->artisan('assessment:import-results', $args)->expectsOutputToContain('3 row(s): 1 recorded, 1 absent, 1 error(s).')->assertExitCode(2);
+    // A student who was not registered is reported and skipped, never registered after the fact.
+    $this->artisan('assessment:import-results', $args)->expectsOutputToContain('4 row(s): 1 recorded, 1 absent, 2 error(s).')
+        ->expectsOutputToContain('is not registered for this session')->assertExitCode(2);
     expect(AssessmentResult::query()->sole())->total_score->toBe('80.0')->is_passed->toBeTrue()->note->toBe('Good')
-        ->and(AssessmentRegistration::query()->where('student_record_id', $other->id)->sole()->status)->toBe(AssessmentRegistrationStatus::Absent);
+        ->and(AssessmentRegistration::query()->where('student_record_id', $other->id)->sole()->status)->toBe(AssessmentRegistrationStatus::Absent)
+        ->and(AssessmentRegistration::query()->where('student_record_id', $unregistered->id)->exists())->toBeFalse();
 
     $this->artisan('assessment:publish-results', ['type' => 'ENG_COMP', 'held_date' => $this->session->held_date->toDateString(), '--actor' => $this->staff->email])
         ->expectsOutputToContain('Published 1 result(s)')->assertSuccessful();
