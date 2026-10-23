@@ -4,9 +4,11 @@ namespace App\Console\Commands\Setup;
 
 use App\Console\Commands\AuditedCommand;
 use App\Domain\Institution\Settings\InstitutionSettings;
+use App\Models\Grading\GradeScale;
 use App\Models\Security\RoleAssignment;
 use App\Support\Setup\SetupProfile;
 use Database\Seeders\Essential\EssentialSeeder;
+use Database\Seeders\Profiles\KoreanUniversityProfileSeeder;
 use DateTimeZone;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -24,6 +26,7 @@ use function Laravel\Prompts\text;
     {--locale= : Default language, e.g. ko}
     {--timezone= : IANA time zone, e.g. Asia/Seoul}
     {--profile=* : Profile keys to apply (see config/setup.php)}
+    {--grade-scale= : Grade scale of the institution, 4.5 or 4.3, fixed once set (otherwise the scale of the first profile)}
     {--admin-email= : First administrator email (skipped if an administrator exists)}
     {--admin-name= : First administrator name}
     {--force : Run without questions; the administrator password is read from standard input}
@@ -48,6 +51,11 @@ class Install extends AuditedCommand
         ]) === 0);
 
         $this->configureInstitution($institution);
+
+        if (! $this->fixGradeScale()) {
+            return self::FAILURE;
+        }
+
         $profiles = $this->applyProfiles();
         $administratorCreated = $this->createAdministrator();
 
@@ -104,6 +112,49 @@ class Install extends AuditedCommand
         $institution->save();
 
         $this->components->twoColumnDetail('Institution', "{$locale}, {$timezone}");
+    }
+
+    /**
+     * The grade scale is the institution's scale for good: grades and GPAs are on it. It is
+     * chosen here (or by the first profile) and cannot change afterwards.
+     */
+    private function fixGradeScale(): bool
+    {
+        $wanted = $this->option('grade-scale');
+
+        if ($wanted === null || $wanted === '') {
+            return true;
+        }
+
+        $current = GradeScale::query()->where('is_default', true)->first();
+
+        if ($current !== null) {
+            if ((float) $current->max_grade_points !== (float) $wanted) {
+                $this->components->error("The grade scale is fixed at {$current->max_grade_points} ({$current->code}) and cannot change.");
+
+                return false;
+            }
+
+            $this->components->info("Grade scale {$current->code} (fixed).");
+
+            return true;
+        }
+
+        $scale = match ((string) $wanted) {
+            '4.5' => KoreanUniversityProfileSeeder::seedScale45(true),
+            '4.3' => KoreanUniversityProfileSeeder::seedScale43(true),
+            default => null,
+        };
+
+        if ($scale === null) {
+            $this->components->error('--grade-scale must be 4.5 or 4.3.');
+
+            return false;
+        }
+
+        $this->components->info("Grade scale {$scale->code} fixed.");
+
+        return true;
     }
 
     /**

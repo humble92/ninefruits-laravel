@@ -2,7 +2,6 @@
 
 namespace Database\Seeders\Profiles;
 
-use App\Domain\Grading\Actions\SaveGradeScale;
 use App\Domain\Grading\Settings\GradingSettings;
 use App\Models\Curriculum\CourseVersion;
 use App\Models\Organization\OrgUnit;
@@ -61,6 +60,8 @@ class YustLegacyProfileSeeder extends Seeder implements SetupProfile
 
     public function run(): void
     {
+        // Before the Korean data, so the 4.3 scale is the one fixed as the institution's.
+        $this->gradeScale();
         $this->call(KoreanUniversityProfileSeeder::class);
 
         $types = TermType::query()->pluck('id', 'code');
@@ -106,22 +107,17 @@ class YustLegacyProfileSeeder extends Seeder implements SetupProfile
         CourseVersion::query()->whereHas('course', fn ($course) => $course->where('code', 'like', '009%')->orWhere('code', 'like', '900%'))
             ->update(['counts_toward_credit_limit' => false]);
 
-        $this->gradeScale();
         $this->gradingPolicy();
     }
 
     /**
-     * The 4.3 scale becomes the institution's scale (the absolute evaluation base); the 4.5
-     * scale of the Korean profile stays as the comparison scale.
+     * The 4.3 scale is the institution's scale unless one was fixed already (e.g. by
+     * setup:install --grade-scale).
      */
     private function gradeScale(): void
     {
-        $scale = KoreanUniversityProfileSeeder::seedScale('YUST43', ['en' => '4.3 scale (YUST)', 'ko' => '4.3 만점(YUST)', 'zh_CN' => '4.3 分制（YUST）'], 4.3, false,
+        KoreanUniversityProfileSeeder::seedScale('YUST43', ['en' => '4.3 scale (YUST)', 'ko' => '4.3 만점(YUST)', 'zh_CN' => '4.3 分制（YUST）'], 4.3, true,
             KoreanUniversityProfileSeeder::scale43(['P' => [true], 'N' => [false], 'I' => [false, 'both']]));
-
-        if (! $scale->is_default) {
-            app(SaveGradeScale::class)->handle($scale, ['is_default' => true]);
-        }
     }
 
     private function gradingPolicy(): void

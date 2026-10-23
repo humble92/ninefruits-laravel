@@ -10,12 +10,39 @@
         </p>
     </div>
 
-    <p class="rounded-lg border border-sky-200 bg-sky-50 p-3 text-sm">
-        <span class="font-medium">{{ $section->evaluation_method->label() }}</span> ·
-        {{ $absolute
-            ? __('grading.entry.absolute_help', ['scale' => $scale->name, 'comparison' => $comparisonScale?->name ?? '-'])
-            : __('grading.entry.relative_help') }}
-    </p>
+    <div class="rounded-lg border border-sky-200 bg-sky-50 p-3 text-sm">
+        <p>
+            <span class="font-medium">{{ $section->evaluation_method->label() }}</span> ·
+            {{ $absolute
+                ? __('grading.entry.absolute_help', ['scale' => $scale->name])
+                : __('grading.entry.relative_help') }}
+        </p>
+        @if ($methodRequest)
+            <p class="mt-2 text-amber-800">
+                {{ __('grading.entry.method_pending', ['method' => $methodRequest->requested_method->label()]) }}
+                @if ($methodRequest->requested_by_id === auth()->id())
+                    <button type="button" wire:click="cancelMethodRequest({{ $methodRequest->id }})" class="underline">{{ __('grading.actions.cancel_request') }}</button>
+                @endif
+            </p>
+        @elseif ($canRequestMethod)
+            <form wire:submit="requestMethod" class="mt-2 flex flex-wrap items-end gap-2">
+                <label class="grow text-xs">
+                    {{ __('grading.entry.method_request_help', ['method' => $otherMethod->label()]) }}
+                    <input type="text" wire:model="methodReason" maxlength="2000" placeholder="{{ __('common.reason') }}" class="mt-1 w-full rounded border border-zinc-300 px-2 py-1 text-sm">
+                </label>
+                <button type="submit" class="rounded border border-zinc-300 bg-white px-3 py-1">{{ __('grading.actions.request_method', ['method' => $otherMethod->label()]) }}</button>
+                @error('methodReason') <p class="w-full text-xs text-red-600">{{ $message }}</p> @enderror
+            </form>
+        @endif
+    </div>
+
+    @if ($section->grade_exception_at)
+        <p role="status" class="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm">
+            <span class="font-medium">{{ __('grading.entry.exception_title') }}</span>
+            {{ __('grading.entry.exception_detail', ['user' => $exceptionBy ?? '-', 'date' => $section->grade_exception_at->timezone(app(\App\Domain\Institution\Settings\InstitutionSettings::class)->timezone)->isoFormat('LLL')]) }}
+            · {{ __('common.reason') }}: {{ $section->grade_exception_reason }}
+        </p>
+    @endif
 
     @if ($messages !== [])
         <div role="status" @class([
@@ -41,9 +68,7 @@
                         <th class="px-3 py-2">{{ __('grading.fields.score') }}</th>
                     @endif
                     <th class="px-3 py-2">{{ __('grading.fields.grade') }} ({{ $scale->code }})</th>
-                    @if ($absolute && $comparisonScale)
-                        <th class="px-3 py-2">{{ __('grading.fields.comparison_grade') }} ({{ $comparisonScale->code }})</th>
-                    @endif
+
                     <th class="px-3 py-2">{{ __('registration.fields.status') }}</th>
                 </tr>
             </thead>
@@ -69,7 +94,7 @@
                             @endif
                             <td class="px-3 py-2">
                                 @if ($takesScore($enrollment))
-                                    <span class="font-medium">{{ $previews[$enrollment->id]['grade'] ?? $enrollment->grade_code }}</span>
+                                    <span class="font-medium">{{ $previews[$enrollment->id] ?? $enrollment->grade_code }}</span>
                                     @if ($options($enrollment)->isNotEmpty())
                                         <select wire:model="grades.{{ $enrollment->id }}.grade_code" aria-label="{{ __('grading.fields.grade') }} {{ $enrollment->studentRecord->student_number }}" class="ms-1 rounded border border-zinc-300 px-1 py-0.5 text-xs">
                                             <option value="">{{ __('grading.entry.by_score') }}</option>
@@ -87,17 +112,11 @@
                                     </select>
                                 @endif
                             </td>
-                            @if ($absolute && $comparisonScale)
-                                <td class="px-3 py-2 text-zinc-600">{{ $previews[$enrollment->id]['comparison'] ?? $enrollment->comparison_grade_code }}</td>
-                            @endif
                         @else
                             @if ($absolute)
                                 <td class="px-3 py-2">{{ $enrollment->score === null ? '' : (float) $enrollment->score }}</td>
                             @endif
                             <td class="px-3 py-2 font-medium">{{ $enrollment->displayGrade() }}</td>
-                            @if ($absolute && $comparisonScale)
-                                <td class="px-3 py-2 text-zinc-600">{{ $enrollment->comparison_grade_code }}</td>
-                            @endif
                         @endif
                         <td class="px-3 py-2">
                             {{ $enrollment->status === \App\Domain\Registration\Enums\EnrollmentStatus::Withdrawn ? $enrollment->status->label() : $enrollment->grade_status->label() }}
@@ -136,17 +155,52 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="7" class="px-3 py-6 text-center text-zinc-500">{{ __('grading.entry.no_students') }}</td></tr>
+                    <tr><td colspan="6" class="px-3 py-6 text-center text-zinc-500">{{ __('grading.entry.no_students') }}</td></tr>
                 @endforelse
             </tbody>
         </table>
     </section>
 
+    @if ($relative && $distribution)
+        <section class="rounded-lg border border-zinc-200 bg-white p-4 text-sm">
+            <h2 class="mb-2 font-medium">{{ __('grading.entry.distribution_title') }}</h2>
+            <p class="mb-2 text-zinc-600">
+                {{ $distribution->checked
+                    ? __('grading.entry.distribution_checked', ['graded' => $distribution->graded])
+                    : __('grading.entry.distribution_exempt', ['graded' => $distribution->graded, 'minimum' => $distribution->minimumStudents]) }}
+            </p>
+            <table class="text-sm">
+                <thead class="text-left text-zinc-500">
+                    <tr><th class="pe-4">{{ __('grading.fields.grade_group') }}</th><th class="pe-4">{{ __('grading.fields.count') }}</th><th class="pe-4">%</th><th class="pe-4">{{ __('grading.fields.cap') }}</th></tr>
+                </thead>
+                <tbody>
+                    @foreach ($distribution->groups as $group => $row)
+                        <tr @class(['text-red-700 font-medium' => $row['over']])>
+                            <td class="pe-4">{{ $group }}</td>
+                            <td class="pe-4">{{ $row['count'] }}</td>
+                            <td class="pe-4">{{ $row['percent'] }}</td>
+                            <td class="pe-4">{{ $row['cap'] === null ? '-' : $row['cap'].'% (+'.($row['limit'] - $row['cap']).')' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </section>
+    @endif
+
     @if ($canEnter)
         <div class="flex flex-wrap gap-2">
             <button type="button" wire:click="save" wire:loading.attr="disabled" class="rounded border border-zinc-300 px-4 py-2">{{ __('grading.actions.save_draft') }}</button>
+            @if ($relative)
+                <button type="button" wire:click="validateDistribution" wire:loading.attr="disabled" class="rounded border border-zinc-300 px-4 py-2">{{ __('grading.actions.validate_distribution') }}</button>
+            @endif
             <button type="button" wire:click="submit" wire:confirm="{{ __('grading.entry.submit_confirm') }}" wire:loading.attr="disabled" class="rounded bg-zinc-900 px-4 py-2 font-medium text-white">{{ __('grading.actions.submit') }}</button>
         </div>
+        @if ($relative && $distribution && ! $distribution->passes() && $section->isInScopeOf(auth()->user(), \App\Domain\Security\Enums\Permission::GradesManage))
+            <label class="block text-sm">
+                {{ __('grading.entry.exception_reason_help') }}
+                <textarea wire:model="exceptionReason" rows="2" maxlength="2000" class="mt-1 w-full rounded border border-zinc-300 px-2 py-1" aria-label="{{ __('grading.fields.exception_reason') }}"></textarea>
+            </label>
+        @endif
         <p class="text-sm text-zinc-600">{{ __('grading.entry.help') }}</p>
     @endif
 </div>

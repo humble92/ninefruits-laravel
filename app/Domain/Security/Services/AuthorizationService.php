@@ -9,6 +9,7 @@ use App\Models\Organization\OrgUnit;
 use App\Models\Security\Role;
 use App\Models\Security\RoleAssignment;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -114,6 +115,24 @@ class AuthorizationService
         }
 
         return $this->grants[$user->id] = $grants;
+    }
+
+    /**
+     * Active users holding the permission through a role assignment whose scope covers the
+     * org unit and program, e.g. the reviewers to notify.
+     *
+     * @return Collection<int, User>
+     */
+    public function usersHolding(Permission $permission, int $orgUnitId, ?int $programId = null): Collection
+    {
+        $userIds = RoleAssignment::query()->active()
+            ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'role_assignments.role_id')
+            ->join('permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+            ->where('permissions.name', $permission->value)
+            ->distinct()->pluck('role_assignments.user_id');
+
+        return User::query()->whereIn('id', $userIds)->where('is_active', true)->get()
+            ->filter(fn (User $user) => $this->scopeFor($user, $permission)->covers($orgUnitId, $programId ?? 0))->values();
     }
 
     /**

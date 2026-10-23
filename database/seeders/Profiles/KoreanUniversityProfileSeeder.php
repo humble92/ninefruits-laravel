@@ -180,14 +180,21 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
     }
 
     /**
-     * The 4.5 scale (default) and the 4.3 scale with minus grades. Both have score ranges, so
-     * absolutely evaluated grades are kept on both (the one not chosen as the absolute
-     * evaluation base is the comparison scale).
+     * The 4.5 scale, the institution's scale unless one is fixed already (the scale is fixed
+     * at installation: setup:install --grade-scale, or the first profile's scale).
      */
     private function gradeScale(): void
     {
+        self::seedScale45(true);
+    }
+
+    /**
+     * The 4.5 scale (default only while the installation has no scale yet).
+     */
+    public static function seedScale45(bool $isDefault): GradeScale
+    {
         // code => [points, min %, max %, counts in GPA, passing]
-        self::seedScale('KR45', ['en' => '4.5 scale', 'ko' => '4.5 만점', 'zh_CN' => '4.5 分制'], 4.5, ! GradeScale::query()->where('is_default', true)->exists(), [
+        return self::seedScale('KR45', ['en' => '4.5 scale', 'ko' => '4.5 만점', 'zh_CN' => '4.5 分制'], 4.5, $isDefault, [
             'A+' => [4.5, 95, 100, true, true],
             'A0' => [4.0, 90, 94.99, true, true],
             'B+' => [3.5, 85, 89.99, true, true],
@@ -200,7 +207,14 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
             'P' => [null, null, null, false, true],
             'NP' => [null, null, null, false, false],
         ]);
-        self::seedScale('KR43', ['en' => '4.3 scale', 'ko' => '4.3 만점', 'zh_CN' => '4.3 分制'], 4.3, false, self::scale43(['P' => [true], 'NP' => [false]]));
+    }
+
+    /**
+     * The 4.3 scale with minus grades, for installations that choose it.
+     */
+    public static function seedScale43(bool $isDefault): GradeScale
+    {
+        return self::seedScale('KR43', ['en' => '4.3 scale', 'ko' => '4.3 만점', 'zh_CN' => '4.3 分制'], 4.3, $isDefault, self::scale43(['P' => [true], 'NP' => [false]]));
     }
 
     /**
@@ -233,13 +247,16 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
 
     /**
      * Creates the scale and its missing grades; existing grades and scales are not changed.
+     * A new default is only set when no scale is the default yet (the scale is fixed).
      *
      * @param  array<string, string>  $name
      * @param  array<string, array{0: float|null, 1: float|null, 2: float|null, 3: bool, 4: bool, 5?: string}>  $items
      */
     public static function seedScale(string $code, array $name, float $maxPoints, bool $isDefault, array $items): GradeScale
     {
-        $scale = GradeScale::query()->firstOrCreate(['code' => $code], ['name' => $name, 'max_grade_points' => $maxPoints, 'is_default' => $isDefault]);
+        $scale = GradeScale::query()->firstOrCreate(['code' => $code], [
+            'name' => $name, 'max_grade_points' => $maxPoints, 'is_default' => $isDefault && ! GradeScale::query()->where('is_default', true)->exists(),
+        ]);
         $order = 0;
 
         foreach ($items as $itemCode => $item) {

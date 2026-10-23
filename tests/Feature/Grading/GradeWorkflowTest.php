@@ -4,7 +4,6 @@ use App\Domain\Curriculum\Enums\GradingBasis;
 use App\Domain\Grading\Actions\FinalizeGrades;
 use App\Domain\Grading\Actions\ManageGradeChanges;
 use App\Domain\Grading\Actions\SaveGrades;
-use App\Domain\Grading\Actions\SaveGradeScale;
 use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Enums\GradeChangeStatus;
 use App\Domain\Grading\Enums\GradeStatus;
@@ -35,7 +34,8 @@ beforeEach(function () {
     $this->term = Term::factory()->published()->between(now()->subMonths(4)->toDateString(), now()->addWeek()->toDateString())->create();
     $this->window = TermWindow::factory()->for($this->term)->ofType(TermWindowType::GradeEntry)
         ->between(now()->subDay(), now()->addWeek())->create(['term_session_id' => $this->term->fullTermSession()->id]);
-    $this->section = Section::factory()->published()->inTerm($this->term)->create(['capacity' => 10]);
+    // Relative evaluation (grades only) unless a test switches to absolute (scores).
+    $this->section = Section::factory()->published()->inTerm($this->term)->create(['capacity' => 10, 'evaluation_method' => EvaluationMethod::Relative]);
 
     $instructor = Instructor::factory()->create();
     SectionInstructor::query()->create(['section_id' => $this->section->id, 'instructor_id' => $instructor->id, 'role' => 'primary']);
@@ -59,14 +59,13 @@ it('lets the instructor save drafts and submit, then locks the grades for them',
     expect($save->save($this->section, gradeAll($this, ['A+', 'B0', null]), $this->teacher))->toBe(2);
     expect(fn () => $save->submit($this->section, $this->teacher))->toThrow(ValidationException::class);
 
-    // Relative evaluation (the default): grades only.
+    // Relative evaluation: grades only.
     expect(fn () => $save->save($this->section, [$this->enrollments[2]->id => ['score' => '91.5']], $this->teacher))->toThrow(ValidationException::class);
     $save->save($this->section, [$this->enrollments[2]->id => ['grade_code' => 'A0']], $this->teacher);
     expect($this->enrollments[2]->refresh())
         ->grade_code->toBe('A0')
         ->score->toBeNull()
         ->grade_points->toBe('4.00')
-        ->comparison_grade_code->toBeNull()
         ->grade_status->toBe(GradeStatus::Draft);
 
     expect($save->submit($this->section, $this->teacher))->toBe(3)
@@ -74,13 +73,7 @@ it('lets the instructor save drafts and submit, then locks the grades for them',
         ->and($this->enrollments[0]->refresh()->grade_code)->toBe('A+');
 });
 
-it('turns scores into grades on both scales for absolute evaluation', function () {
-    GradeScale::factory()->create(['code' => 'KR43', 'max_grade_points' => 4.3])->items()->createMany([
-        ['code' => 'A+', 'grade_points' => 4.3, 'min_percentage' => 97, 'max_percentage' => 100, 'sort_order' => 1],
-        ['code' => 'A0', 'grade_points' => 4.0, 'min_percentage' => 93, 'max_percentage' => 96.99, 'sort_order' => 2],
-        ['code' => 'A-', 'grade_points' => 3.7, 'min_percentage' => 90, 'max_percentage' => 92.99, 'sort_order' => 3],
-        ['code' => 'F', 'grade_points' => 0, 'min_percentage' => 0, 'max_percentage' => 89.99, 'is_passing' => false, 'sort_order' => 4],
-    ]);
+it('turns scores into grades for absolute evaluation', function () {
     $this->section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
     $save = app(SaveGrades::class);
 
@@ -89,17 +82,8 @@ it('turns scores into grades on both scales for absolute evaluation', function (
 
     $save->save($this->section, [$this->enrollments[0]->id => ['score' => '91.5'], $this->enrollments[1]->id => ['score' => '97']], $this->teacher);
 
-    expect($this->enrollments[0]->refresh())
-        ->grade_code->toBe('A0')->grade_points->toBe('4.00')->score->toBe('91.50')
-        ->comparison_grade_code->toBe('A-')->comparison_grade_points->toBe('3.70')
-        ->and($this->enrollments[1]->refresh())
-        ->grade_code->toBe('A+')->grade_points->toBe('4.50')
-        ->comparison_grade_code->toBe('A+')->comparison_grade_points->toBe('4.30');
-
-    // The base scale is the default scale: with 4.3 as the base, 4.5 is the comparison.
-    app(SaveGradeScale::class)->handle(GradeScale::query()->where('code', 'KR43')->sole(), ['is_default' => true]);
-    app(SaveGrades::class)->save($this->section, [$this->enrollments[2]->id => ['score' => '91.5']], $this->teacher);
-    expect($this->enrollments[2]->refresh())->grade_code->toBe('A-')->grade_points->toBe('3.70')->comparison_grade_code->toBe('A0');
+    expect($this->enrollments[0]->refresh())->grade_code->toBe('A0')->grade_points->toBe('4.00')->score->toBe('91.50')
+        ->and($this->enrollments[1]->refresh())->grade_code->toBe('A+')->grade_points->toBe('4.50');
 });
 
 it('lowers an absolute retake above the cap to the cap and keeps the score', function () {
@@ -131,12 +115,7 @@ it('changes an absolute grade by a new score and refuses a bare grade', function
     expect($enrollment->refresh())->grade_code->toBe('A0')->score->toBe('92.00');
 });
 
-it('keeps the retake cap through GPA, grade changes and the comparison scale, and only for retakes', function () {
-    GradeScale::factory()->create(['code' => 'KR43', 'max_grade_points' => 4.3])->items()->createMany([
-        ['code' => 'A+', 'grade_points' => 4.3, 'min_percentage' => 97, 'max_percentage' => 100, 'sort_order' => 1],
-        ['code' => 'B+', 'grade_points' => 3.3, 'min_percentage' => 87, 'max_percentage' => 96.99, 'sort_order' => 2],
-        ['code' => 'F', 'grade_points' => 0, 'min_percentage' => 0, 'max_percentage' => 86.99, 'is_passing' => false, 'sort_order' => 3],
-    ]);
+it('keeps the retake cap through GPA and grade changes, and only for retakes', function () {
     $this->section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
     [$retake, $first, $other] = [$this->enrollments[0], $this->enrollments[1], $this->enrollments[2]];
     $retake->forceFill(['is_retake' => true])->save();
@@ -146,10 +125,9 @@ it('keeps the retake cap through GPA, grade changes and the comparison scale, an
 
     app(SaveGrades::class)->save($this->section, [$retake->id => ['score' => '98'], $first->id => ['score' => '98'], $other->id => ['score' => '70']], $this->teacher);
 
-    // Same score: the retake is capped on both scales, the first attempt is not.
+    // Same score: the retake is capped, the first attempt is not.
     expect($retake->refresh())->grade_code->toBe('B+')->grade_points->toBe('3.50')->score->toBe('98.00')
-        ->comparison_grade_code->toBe('B+')->comparison_grade_points->toBe('3.30')
-        ->and($first->refresh())->grade_code->toBe('A+')->grade_points->toBe('4.50')->comparison_grade_code->toBe('A+');
+        ->and($first->refresh())->grade_code->toBe('A+')->grade_points->toBe('4.50');
 
     app(SaveGrades::class)->submit($this->section, $this->teacher);
     app(FinalizeGrades::class)->finalize($this->section, $this->registrar);
@@ -164,7 +142,7 @@ it('keeps the retake cap through GPA, grade changes and the comparison scale, an
     expect($request->to_grade_code)->toBe('B+');
     $changes->approve($request, $this->registrar);
 
-    expect($retake->refresh())->grade_code->toBe('B+')->score->toBe('100.00')->comparison_grade_code->toBe('B+')
+    expect($retake->refresh())->grade_code->toBe('B+')->score->toBe('100.00')
         ->and(TermRecord::query()->where('student_record_id', $retake->student_record_id)->sole()->term_gpa)->toBe('3.50');
 });
 

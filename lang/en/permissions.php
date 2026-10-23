@@ -40,6 +40,7 @@ return [
         'grades' => 'Grades',
         'grade_changes' => 'Grade changes',
         'grading_policies' => 'Grading policy',
+        'grade_exceptions' => 'Grade exceptions',
         'evaluations' => 'Course evaluation',
     ],
     'admin_panel' => ['access' => 'Open the administration panel'],
@@ -88,5 +89,6 @@ return [
     'grades' => ['view' => 'View grades, grade progress and term records', 'manage' => 'Finalize and return grades, enter grades for instructors, close terms'],
     'grade_changes' => ['request' => 'Request a change to a finalized grade', 'approve' => 'Approve or reject grade changes (not your own requests)'],
     'grading_policies' => ['manage' => 'Manage GPA, retake, academic standing and honors policy'],
+    'grade_exceptions' => ['review' => 'Be told when staff submit grades outside the grade caps (department heads, academic office)'],
     'evaluations' => ['view' => 'View course evaluation response rates and results', 'manage' => 'Manage evaluation forms, term evaluations and publication'],
 ];

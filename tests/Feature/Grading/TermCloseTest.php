@@ -3,6 +3,7 @@
 use App\Domain\Grading\Actions\CloseTerm;
 use App\Domain\Grading\Actions\ManageGradeChanges;
 use App\Domain\Grading\Enums\AcademicStanding;
+use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Settings\GradingSettings;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Term\Enums\TermStatus;
@@ -153,6 +154,7 @@ it('recalculates later cumulative GPAs when an earlier grade changes', function 
     expect(closeNow($second, $this->staff)->cumulative_gpa)->toBe('3.00');
 
     $enrollment = Enrollment::query()->where('term_id', $first->id)->sole();
+    $enrollment->section->forceFill(['evaluation_method' => EvaluationMethod::Relative])->save();
     $changes = app(ManageGradeChanges::class);
     $changes->approve($changes->request($enrollment, 'B0', 'Exam re-marked', User::factory()->withPermissions([Permission::GradeChangesRequest])->create()), $this->staff);
 

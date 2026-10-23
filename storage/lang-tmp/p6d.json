@@ -1,0 +1,126 @@
+{"en": {"grading": {
+  "resources": {"method_requests": {"label": "evaluation method request", "plural_label": "evaluation method requests"}},
+  "fields": {"grade_group": "Grade group", "count": "Students", "cap": "Cap", "exception": "Exception", "exception_submitted": "Submitted as an exception", "exception_reason": "Reason for the exception"},
+  "help": {
+    "evaluation_method": "Absolute (default): instructors enter scores and the grades follow. Relative: instructors give grades within the institution's grade caps. Instructors ask for a change from the grade entry screen; it cannot change once grades are submitted.",
+    "scale_fixed": "The grade scale is fixed at installation: grades and GPAs are on it. It cannot be moved to another scale.",
+    "approve_method": "The section's evaluation method changes now. Draft grades entered under the old method are cleared; the instructor is told by email."
+  },
+  "actions": {"request_method": "Request :method", "validate_distribution": "Check grade caps"},
+  "entry": {
+    "absolute_help": "Enter each student's score (0–100). The grade follows from the score on :scale. Choose a grade directly only for one without a score (e.g. I).",
+    "method_pending": "Change to :method requested and waiting for the scheduling staff.",
+    "method_request_help": "To change to :method, ask the scheduling staff with a reason (possible until grades are submitted).",
+    "method_requested": "Change to :method requested. You will be told by email.",
+    "distribution_title": "Grades against the caps", "distribution_checked": ":graded graded students: each grade group must stay within its cap.",
+    "distribution_exempt": ":graded graded students: sections under :minimum are not checked against the caps.",
+    "distribution_ok": "The grades are within the caps.",
+    "exception_title": "Submitted as an exception.", "exception_detail": "By :user on :date, outside the grade caps.",
+    "exception_reason_help": "The grades are outside the caps. Staff may submit anyway as a recorded exception: give the reason (reviewers are told, and the section shows it)."
+  },
+  "distribution": {"over": ":group: :percent% of the students, cap :cap% (up to :limit% allowed)"},
+  "errors": {
+    "over_caps": "The grades are outside the institution's grade caps. Adjust them, or ask the office.",
+    "exception_reason_required": "Submitting outside the grade caps needs a reason.",
+    "same_method": "The section already uses that evaluation method.",
+    "method_request_pending": "A change request for this section is already waiting.",
+    "scale_fixed": "The grade scale is fixed at installation and cannot change."
+  },
+  "notifications": {"method_approved": "Approved. :count draft grade(s) cleared."},
+  "mail": {
+    "method_approved_subject": "Evaluation method changed: :section", "method_approved_intro": ":section is now evaluated by :method.",
+    "method_rejected_subject": "Evaluation method request rejected: :section", "method_rejected_intro": "The request to evaluate :section by :method was rejected.",
+    "method_drafts_cleared": ":count draft grade(s) entered under the old method were cleared; please enter them again.",
+    "exception_subject": "Grades submitted outside the caps: :section", "exception_intro": ":user submitted the grades of :section outside the institution's grade caps."
+  },
+  "settings": {
+    "scale_fixed": "Grade scale: :scale (fixed at installation).",
+    "relative": "Relative evaluation", "relative_grade_caps": "Grade caps", "relative_grade_caps_help": "The most a grade group (the letter: A for A+, A0, A-) may take of a section's graded students. Groups without a cap are free.",
+    "add_cap": "Add a group", "relative_cap_tolerance_percent": "Tolerance above the cap",
+    "relative_minimum_students": "Check from this many graded students", "relative_minimum_students_help": "Smaller sections are not checked against the caps."
+  }
+}},
+"ko": {"grading": {
+  "resources": {"method_requests": {"label": "평가 방식 변경 요청", "plural_label": "평가 방식 변경 요청"}},
+  "fields": {"grade_group": "등급군", "count": "학생 수", "cap": "상한", "exception": "예외", "exception_submitted": "예외 제출", "exception_reason": "예외 사유"},
+  "help": {
+    "evaluation_method": "절대평가(기본): 교원이 점수를 입력하면 성적이 계산된다. 상대평가: 교원이 학교의 등급 비율 안에서 성적을 준다. 변경은 교원이 성적 입력 화면에서 요청하며, 성적을 제출한 뒤에는 바꿀 수 없다.",
+    "scale_fixed": "성적 척도는 설치할 때 정해진다. 성적과 평점이 이 척도에 있으므로 다른 척도로 바꿀 수 없다.",
+    "approve_method": "강좌의 평가 방식이 지금 바뀐다. 이전 방식으로 임시 저장한 성적은 지워지고 교원에게 메일로 안내한다."
+  },
+  "actions": {"request_method": ":method 요청", "validate_distribution": "등급 비율 검사"},
+  "entry": {
+    "absolute_help": "학생마다 점수(0~100)를 입력하세요. :scale 기준 성적이 점수로 정해집니다. 점수가 없는 성적(예: I)만 직접 고릅니다.",
+    "method_pending": ":method(으)로 변경을 요청했고 개설 담당자의 처리를 기다리는 중입니다.",
+    "method_request_help": ":method(으)로 바꾸려면 사유와 함께 개설 담당자에게 요청하세요(성적 제출 전까지).",
+    "method_requested": ":method(으)로 변경을 요청했습니다. 처리 결과를 메일로 안내합니다.",
+    "distribution_title": "등급 비율 검사", "distribution_checked": "성적을 받은 학생 :graded명. 등급군마다 상한을 넘지 않아야 합니다.",
+    "distribution_exempt": "성적을 받은 학생 :graded명. :minimum명 미만인 강좌는 비율을 검사하지 않습니다.",
+    "distribution_ok": "등급 비율이 상한 안에 있습니다.",
+    "exception_title": "예외 제출된 성적입니다.", "exception_detail": ":user이(가) :date에 등급 비율을 넘겨 제출했습니다.",
+    "exception_reason_help": "등급 비율을 넘었습니다. 직원은 사유를 적고 예외로 제출할 수 있습니다(검토자에게 알림이 가고, 강좌에 예외 표시가 남습니다)."
+  },
+  "distribution": {"over": ":group군 :percent%, 상한 :cap%(허용 :limit%까지)"},
+  "errors": {
+    "over_caps": "학교의 등급 비율을 넘었습니다. 성적을 조정하거나 학사 담당에게 문의하세요.",
+    "exception_reason_required": "등급 비율을 넘겨 제출하려면 사유가 필요합니다.",
+    "same_method": "이미 그 평가 방식입니다.",
+    "method_request_pending": "이 강좌의 변경 요청이 이미 대기 중입니다.",
+    "scale_fixed": "성적 척도는 설치할 때 정해지며 바꿀 수 없습니다."
+  },
+  "notifications": {"method_approved": "승인했습니다. 임시 저장 성적 :count건을 지웠습니다."},
+  "mail": {
+    "method_approved_subject": "평가 방식 변경: :section", "method_approved_intro": ":section은(는) 이제 :method(으)로 평가합니다.",
+    "method_rejected_subject": "평가 방식 변경 요청 반려: :section", "method_rejected_intro": ":section을(를) :method(으)로 바꾸는 요청이 반려되었습니다.",
+    "method_drafts_cleared": "이전 방식으로 임시 저장한 성적 :count건이 지워졌습니다. 다시 입력해 주세요.",
+    "exception_subject": "등급 비율 초과 성적 제출: :section", "exception_intro": ":user이(가) :section의 성적을 학교의 등급 비율을 넘겨 제출했습니다."
+  },
+  "settings": {
+    "scale_fixed": "성적 척도: :scale (설치 때 확정).",
+    "relative": "상대평가", "relative_grade_caps": "등급 비율 상한", "relative_grade_caps_help": "등급군(글자 기준. A+·A0·A-는 A군)이 강좌의 성적 받은 학생 중 차지할 수 있는 최대 비율. 상한이 없는 등급군은 제한 없음.",
+    "add_cap": "등급군 추가", "relative_cap_tolerance_percent": "상한 초과 허용폭",
+    "relative_minimum_students": "검사 최소 학생 수", "relative_minimum_students_help": "이보다 적은 강좌는 비율을 검사하지 않는다."
+  }
+}},
+"zh_CN": {"grading": {
+  "resources": {"method_requests": {"label": "评价方式更改申请", "plural_label": "评价方式更改申请"}},
+  "fields": {"grade_group": "等级组", "count": "学生数", "cap": "上限", "exception": "例外", "exception_submitted": "例外提交", "exception_reason": "例外理由"},
+  "help": {
+    "evaluation_method": "绝对评价（默认）：教师录入分数，成绩自动计算。相对评价：教师在学校的等级比例内给出成绩。更改由教师在成绩录入页面申请，提交成绩后不能更改。",
+    "scale_fixed": "成绩等级制在安装时确定。成绩和绩点都基于它，不能改为其他等级制。",
+    "approve_method": "课程班的评价方式立即更改。按原方式暂存的成绩将被清除，并通过邮件通知教师。"
+  },
+  "actions": {"request_method": "申请:method", "validate_distribution": "检查等级比例"},
+  "entry": {
+    "absolute_help": "请为每位学生录入分数（0–100）。按 :scale 由分数确定成绩。只有没有分数的成绩（如 I）才直接选择。",
+    "method_pending": "已申请改为:method，正在等待开课负责人处理。",
+    "method_request_help": "如需改为:method，请填写理由向开课负责人申请（提交成绩前）。",
+    "method_requested": "已申请改为:method，处理结果将通过邮件通知。",
+    "distribution_title": "等级比例检查", "distribution_checked": "已有成绩的学生 :graded 人，各等级组不得超过上限。",
+    "distribution_exempt": "已有成绩的学生 :graded 人，少于 :minimum 人的课程班不检查比例。",
+    "distribution_ok": "等级比例在上限之内。",
+    "exception_title": "该成绩为例外提交。", "exception_detail": ":user 于 :date 超出等级比例提交。",
+    "exception_reason_help": "已超出等级比例。教职员可填写理由作为例外提交（审核人将收到通知，课程班会显示例外标记）。"
+  },
+  "distribution": {"over": ":group 组 :percent%，上限 :cap%（最多允许 :limit%）"},
+  "errors": {
+    "over_caps": "超出学校的等级比例。请调整成绩或联系教务。",
+    "exception_reason_required": "超出等级比例提交需要填写理由。",
+    "same_method": "已经是该评价方式。",
+    "method_request_pending": "该课程班已有待处理的更改申请。",
+    "scale_fixed": "成绩等级制在安装时确定，不能更改。"
+  },
+  "notifications": {"method_approved": "已批准，清除了 :count 条暂存成绩。"},
+  "mail": {
+    "method_approved_subject": "评价方式已更改：:section", "method_approved_intro": ":section 现在按:method评价。",
+    "method_rejected_subject": "评价方式更改申请被驳回：:section", "method_rejected_intro": "将 :section 改为:method的申请已被驳回。",
+    "method_drafts_cleared": "按原方式暂存的 :count 条成绩已清除，请重新录入。",
+    "exception_subject": "超出等级比例的成绩提交：:section", "exception_intro": ":user 超出学校等级比例提交了 :section 的成绩。"
+  },
+  "settings": {
+    "scale_fixed": "成绩等级制：:scale（安装时确定）。",
+    "relative": "相对评价", "relative_grade_caps": "等级比例上限", "relative_grade_caps_help": "等级组（按字母：A+、A0、A- 属于 A 组）在课程班已有成绩学生中可占的最大比例。没有上限的等级组不限制。",
+    "add_cap": "添加等级组", "relative_cap_tolerance_percent": "超出上限的允许幅度",
+    "relative_minimum_students": "检查的最少学生数", "relative_minimum_students_help": "少于此人数的课程班不检查比例。"
+  }
+}}}

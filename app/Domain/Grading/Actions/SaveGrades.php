@@ -3,10 +3,13 @@
 namespace App\Domain\Grading\Actions;
 
 use App\Domain\Grading\Enums\GradeStatus;
+use App\Domain\Grading\Notifications\GradeExceptionNotification;
+use App\Domain\Grading\Services\GradeDistributionCheck;
 use App\Domain\Grading\Services\GradeOptions;
 use App\Domain\Registration\Enums\EnrollmentStatus;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Security\Services\AuditLogger;
+use App\Domain\Security\Services\AuthorizationService;
 use App\Domain\Term\Enums\TermWindowType;
 use App\Domain\Term\Services\TermResolver;
 use App\Models\Offering\Section;
@@ -28,8 +31,10 @@ class SaveGrades
 {
     public function __construct(
         private readonly GradeOptions $options,
+        private readonly GradeDistributionCheck $distribution,
         private readonly TermResolver $terms,
         private readonly AuditLogger $audit,
+        private readonly AuthorizationService $authorization,
     ) {}
 
     /**
@@ -75,13 +80,27 @@ class SaveGrades
     }
 
     /**
-     * Submits every grade of the section; all registered students need a grade.
+     * Submits every grade of the section; all registered students need a grade. Relative
+     * grades must follow the grade caps (decided 2026-10-23): instructors cannot submit
+     * otherwise; staff can, as a recorded exception with a reason, which the reviewers are
+     * told about and which the section shows from then on.
      */
-    public function submit(Section $section, User $actor): int
+    public function submit(Section $section, User $actor, ?string $exceptionReason = null): int
     {
         $byStaff = $this->authorize($section, $actor);
+        $distribution = $this->distribution->forSection($section);
 
-        return DB::transaction(function () use ($section, $actor, $byStaff) {
+        if (! $distribution->passes()) {
+            if (! $byStaff) {
+                throw ValidationException::withMessages(['grades' => [__('grading.errors.over_caps'), ...$distribution->violations]]);
+            }
+
+            if (blank($exceptionReason)) {
+                throw ValidationException::withMessages(['exception_reason' => __('grading.errors.exception_reason_required')]);
+            }
+        }
+
+        $count = DB::transaction(function () use ($section, $actor, $byStaff, $distribution, $exceptionReason) {
             $enrollments = $this->editable($section, $byStaff)->where('grade_status', '!=', GradeStatus::Submitted)->get();
             $missing = $enrollments->filter(fn (Enrollment $enrollment) => $enrollment->grade_code === null)->count();
 
@@ -92,10 +111,28 @@ class SaveGrades
             Enrollment::query()->whereIn('id', $enrollments->modelKeys())->update([
                 'grade_status' => GradeStatus::Submitted, 'grade_submitted_at' => CarbonImmutable::now(), 'grade_submitted_by_id' => $actor->id,
             ]);
-            $this->audit->record('grades.submitted', $section, null, ['count' => $enrollments->count()], $actor);
+
+            if ($distribution->passes()) {
+                $this->audit->record('grades.submitted', $section, null, ['count' => $enrollments->count()], $actor);
+            } else {
+                $section->forceFill(['grade_exception_reason' => $exceptionReason, 'grade_exception_by_id' => $actor->id, 'grade_exception_at' => CarbonImmutable::now()])->save();
+                $this->audit->record('grades.submitted_with_exception', $section, $exceptionReason, [
+                    'count' => $enrollments->count(), 'distribution' => $distribution->groups, 'violations' => $distribution->violations,
+                ], $actor);
+            }
 
             return $enrollments->count();
         });
+
+        if (! $distribution->passes()) {
+            foreach ($this->authorization->usersHolding(Permission::GradeExceptionsReview, $section->org_unit_id) as $reviewer) {
+                if ($reviewer->id !== $actor->id) {
+                    $reviewer->notify(new GradeExceptionNotification($section, $actor, (string) $exceptionReason, $distribution));
+                }
+            }
+        }
+
+        return $count;
     }
 
     /**

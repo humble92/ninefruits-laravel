@@ -38,7 +38,8 @@ class GradeScaleResource extends ReferenceResource
             TextInput::make('code')->label(__('reference.fields.code'))->required()->maxLength(32)->unique(ignoreRecord: true),
             TranslatableFields::make('name', __('reference.fields.name')),
             TextInput::make('max_grade_points')->label(__('reference.fields.max_grade_points'))->numeric()->minValue(0)->maxValue(99.99)->required(),
-            Toggle::make('is_default')->label(__('reference.fields.is_default'))->helperText(__('reference.help.is_default_scale')),
+            Toggle::make('is_default')->label(__('reference.fields.is_default'))->helperText(__('grading.help.scale_fixed'))
+                ->disabled(fn () => GradeScale::query()->where('is_default', true)->exists())->dehydrated(fn (?GradeScale $record) => $record === null || ! $record->is_default),
         ]);
     }
 

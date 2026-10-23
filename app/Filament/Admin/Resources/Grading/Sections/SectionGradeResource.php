@@ -100,6 +100,9 @@ class SectionGradeResource extends Resource
                 TextColumn::make('pending_count')->label(__('grading.fields.pending'))->color(fn (int $state) => $state > 0 ? 'warning' : null),
                 TextColumn::make('submitted_count')->label(__('grading.fields.submitted')),
                 TextColumn::make('finalized_count')->label(__('grading.fields.finalized')),
+                TextColumn::make('grade_exception_at')->label(__('grading.fields.exception'))->badge()->color('warning')
+                    ->formatStateUsing(fn () => __('grading.fields.exception_submitted'))->placeholder('-')
+                    ->tooltip(fn (Section $record) => $record->grade_exception_reason),
             ])
             ->defaultSort('course_id')
             ->filters([
@@ -107,6 +110,8 @@ class SectionGradeResource extends Resource
                     ->options(fn () => Term::query()->orderByDesc('start_date')->get()->mapWithKeys(fn (Term $term) => [$term->id => $term->name.' ('.$term->code.')']))
                     ->default(fn () => SectionResource::defaultTermId()),
                 SelectFilter::make('org_unit_id')->label(__('offering.fields.offering_unit'))->options(fn () => OrgUnitResource::unitOptions()),
+                TernaryFilter::make('exception')->label(__('grading.fields.exception_submitted'))
+                    ->queries(true: fn (Builder $query) => $query->whereNotNull('grade_exception_at'), false: fn (Builder $query) => $query->whereNull('grade_exception_at')),
                 TernaryFilter::make('ready')->label(__('grading.fields.ready_to_finalize'))
                     ->queries(
                         true: fn (Builder $query) => $query->whereHas('enrollments', fn (Builder $enrollment) => $enrollment->where('grade_status', GradeStatus::Submitted))

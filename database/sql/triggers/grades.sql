@@ -19,11 +19,9 @@ BEGIN
 
     IF TG_OP = 'UPDATE' AND (
         NEW.grade_status, NEW.grade_code, NEW.score, NEW.grade_points, NEW.counts_in_gpa, NEW.is_passed, NEW.grade_scale_id,
-        NEW.comparison_grade_scale_id, NEW.comparison_grade_code, NEW.comparison_grade_points,
         NEW.status, NEW.credits, NEW.student_record_id, NEW.section_id, NEW.term_id, NEW.course_id, NEW.course_version_id
     ) IS NOT DISTINCT FROM (
         OLD.grade_status, OLD.grade_code, OLD.score, OLD.grade_points, OLD.counts_in_gpa, OLD.is_passed, OLD.grade_scale_id,
-        OLD.comparison_grade_scale_id, OLD.comparison_grade_code, OLD.comparison_grade_points,
         OLD.status, OLD.credits, OLD.student_record_id, OLD.section_id, OLD.term_id, OLD.course_id, OLD.course_version_id
     ) THEN
         RETURN NEW;

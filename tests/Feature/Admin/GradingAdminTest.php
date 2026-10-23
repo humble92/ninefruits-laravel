@@ -107,15 +107,15 @@ it('lets the instructor enter grades in the portal and the student see final one
     $enrollment = $section->enrollments()->where('status', 'enrolled')->first();
     $section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
 
-    // Absolute evaluation: the score shows its grade on the 4.5 scale and on the 4.3 scale.
+    // Absolute evaluation: the score shows its grade right away.
     Livewire::actingAs($instructor)->test(GradeEntry::class, ['section' => $section])
         ->assertSee(__('grading.evaluation_methods.absolute'))
         ->set("grades.{$enrollment->id}.score", '86')
-        ->assertSet("previews.{$enrollment->id}", ['grade' => 'B+', 'comparison' => 'B0'])
+        ->assertSet("previews.{$enrollment->id}", 'B+')
         ->call('save')
         ->assertSet('messageTone', 'success');
 
-    expect($enrollment->refresh())->grade_code->toBe('B+')->comparison_grade_code->toBe('B0')->score->toBe('86.00')->grade_status->toBe(GradeStatus::Draft);
+    expect($enrollment->refresh())->grade_code->toBe('B+')->score->toBe('86.00')->grade_status->toBe(GradeStatus::Draft);
 
     // Drafts stay hidden from the student; final grades show.
     $student = User::query()->whereHas('person.studentRecords', fn ($query) => $query->whereKey($enrollment->student_record_id))->first()

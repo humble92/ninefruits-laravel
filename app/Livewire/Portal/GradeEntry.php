@@ -2,16 +2,20 @@
 
 namespace App\Livewire\Portal;
 
+use App\Domain\Curriculum\Enums\GradingBasis;
+use App\Domain\Grading\Actions\ManageEvaluationMethodRequests;
 use App\Domain\Grading\Actions\ManageGradeChanges;
 use App\Domain\Grading\Actions\SaveGrades;
 use App\Domain\Grading\Enums\EvaluationMethod;
 use App\Domain\Grading\Enums\GradeChangeStatus;
 use App\Domain\Grading\Enums\GradeStatus;
+use App\Domain\Grading\Services\GradeDistributionCheck;
 use App\Domain\Grading\Services\GradeOptions;
 use App\Domain\Registration\Enums\EnrollmentStatus;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Term\Enums\TermWindowType;
 use App\Domain\Term\Services\TermResolver;
+use App\Models\Grading\EvaluationMethodRequest;
 use App\Models\Grading\GradeChangeRequest;
 use App\Models\Grading\GradeScaleItem;
 use App\Models\Offering\Section;
@@ -27,9 +31,9 @@ use Livewire\Component;
 
 /**
  * Grade entry for a section (legacy prof/opobj*). Absolute evaluation: the instructors
- * enter scores and the grades follow (on the institution's scale and the comparison
- * scale). Relative evaluation: grades only, no scores. Drafts and submission while the
- * grade entry window is open; after finalization a grade change request with a reason.
+ * enter scores and the grades follow. Relative evaluation: grades only, no scores, and
+ * the grade caps are checked before submission. Drafts and submission while the grade
+ * entry window is open; after finalization a grade change request with a reason.
  */
 #[Layout('components.layouts.portal')]
 class GradeEntry extends Component
@@ -47,6 +51,11 @@ class GradeEntry extends Component
 
     public string $changeReason = '';
 
+    /** Staff: why relative grades outside the caps are submitted anyway. */
+    public string $exceptionReason = '';
+
+    public string $methodReason = '';
+
     /** @var list<string> */
     public array $messages = [];
 
@@ -62,10 +71,15 @@ class GradeEntry extends Component
         $this->fillGrades();
     }
 
+    public function hydrate(): void
+    {
+        $this->section->loadMissing(['course', 'version', 'session', 'term']);
+    }
+
     /**
-     * Absolute evaluation: a score shows the grade it gives (on both scales) right away.
+     * Absolute evaluation: a score shows the grade it gives right away.
      *
-     * @var array<int, array{grade: string|null, comparison: string|null}>
+     * @var array<int, string|null> by enrollment id
      */
     public array $previews = [];
 
@@ -81,10 +95,10 @@ class GradeEntry extends Component
 
         try {
             $choice = $enrollment === null || blank($value) ? null : app(GradeOptions::class)->resolve($enrollment, null, (string) $value);
-            $this->previews[(int) $id] = ['grade' => $choice?->item?->code, 'comparison' => $choice?->comparison?->code];
+            $this->previews[(int) $id] = $choice?->item?->code;
             $this->grades[(int) $id]['grade_code'] = null;
         } catch (ValidationException) {
-            $this->previews[(int) $id] = ['grade' => null, 'comparison' => null];
+            $this->previews[(int) $id] = null;
         }
     }
 
@@ -93,12 +107,44 @@ class GradeEntry extends Component
         $this->run(fn () => $this->say([__('grading.entry.saved', ['count' => app(SaveGrades::class)->save($this->section, $this->editableGrades(), $this->user())])], 'success'));
     }
 
+    /**
+     * Relative evaluation: saves the drafts and shows how the grades sit against the caps.
+     */
+    public function validateDistribution(): void
+    {
+        $this->run(function () {
+            app(SaveGrades::class)->save($this->section, $this->editableGrades(), $this->user());
+            $distribution = app(GradeDistributionCheck::class)->forSection($this->section->refresh());
+            $this->say($distribution->passes() ? [__('grading.entry.distribution_ok')] : $distribution->violations, $distribution->passes() ? 'success' : 'error');
+        });
+    }
+
     public function submit(): void
     {
         $this->run(function () {
             app(SaveGrades::class)->save($this->section, $this->editableGrades(), $this->user());
-            $this->say([__('grading.entry.submitted', ['count' => app(SaveGrades::class)->submit($this->section, $this->user())])], 'success');
+            $count = app(SaveGrades::class)->submit($this->section, $this->user(), $this->exceptionReason ?: null);
+            $this->exceptionReason = '';
+            $this->say([__('grading.entry.submitted', ['count' => $count])], 'success');
         });
+    }
+
+    public function requestMethod(): void
+    {
+        $this->validate(['methodReason' => 'required|string|max:2000']);
+        $other = $this->section->evaluation_method === EvaluationMethod::Absolute ? EvaluationMethod::Relative : EvaluationMethod::Absolute;
+
+        $this->run(function () use ($other) {
+            app(ManageEvaluationMethodRequests::class)->request($this->section, $other, $this->methodReason, $this->user());
+            $this->methodReason = '';
+            $this->say([__('grading.entry.method_requested', ['method' => $other->label()])], 'success');
+        });
+    }
+
+    public function cancelMethodRequest(int $requestId): void
+    {
+        $request = EvaluationMethodRequest::query()->where('section_id', $this->section->id)->findOrFail($requestId);
+        $this->run(fn () => app(ManageEvaluationMethodRequests::class)->cancel($request, $this->user()));
     }
 
     public function startChange(int $enrollmentId): void
@@ -137,6 +183,7 @@ class GradeEntry extends Component
     public function render(GradeOptions $options, TermResolver $terms): View
     {
         $enrollments = $this->enrollments();
+        $counts = $enrollments->countBy(fn (Enrollment $enrollment) => $enrollment->grade_status->value)->all();
         $canEnter = app(SaveGrades::class)->canEnter($this->section, $this->user());
         $byStaff = $this->section->isInScopeOf($this->user(), Permission::GradesManage);
 
@@ -146,13 +193,18 @@ class GradeEntry extends Component
             'takesScore' => fn (Enrollment $enrollment) => $options->takesScore($enrollment),
             'absolute' => $this->section->evaluation_method === EvaluationMethod::Absolute,
             'scale' => $options->scale(),
-            'comparisonScale' => $options->comparisonScale(),
+            'relative' => $relative = $this->section->evaluation_method === EvaluationMethod::Relative && $this->section->version->grading_basis === GradingBasis::Graded,
+            'distribution' => $relative ? app(GradeDistributionCheck::class)->forSection($this->section) : null,
+            'methodRequest' => EvaluationMethodRequest::query()->where('section_id', $this->section->id)->pending()->first(),
+            'canRequestMethod' => $this->section->isTaughtBy($this->user()) && ($counts['submitted'] ?? 0) + ($counts['finalized'] ?? 0) === 0,
+            'otherMethod' => $this->section->evaluation_method === EvaluationMethod::Absolute ? EvaluationMethod::Relative : EvaluationMethod::Absolute,
+            'exceptionBy' => $this->section->grade_exception_at === null ? null : User::query()->find($this->section->grade_exception_by_id)?->email,
             'editable' => fn (Enrollment $enrollment) => $canEnter && $enrollment->status === EnrollmentStatus::Enrolled
                 && in_array($enrollment->grade_status, $byStaff ? [GradeStatus::None, GradeStatus::Draft, GradeStatus::Submitted] : [GradeStatus::None, GradeStatus::Draft], true),
             'canEnter' => $canEnter,
             'windowOpen' => $terms->isOpenInSession(TermWindowType::GradeEntry, $this->section->session),
             'pendingStatus' => GradeChangeStatus::Pending,
-            'counts' => $enrollments->countBy(fn (Enrollment $enrollment) => $enrollment->grade_status->value),
+            'counts' => $counts,
         ])->title(__('grading.entry.title').' '.$this->section->label());
     }
 

@@ -22,7 +22,7 @@ use Illuminate\Database\Seeder;
 
 /**
  * Grade entry in the current term for demonstration: every third section evaluated
- * absolutely (scores), a grade entry window open now, one section with every grade
+ * relatively (grades, the rest by score), a grade entry window open now, one section with every grade
  * submitted (ready to finalize), one with drafts, and a pending grade change request on
  * last term's grades by its instructor.
  */
@@ -47,8 +47,8 @@ class DemoGradingSeeder extends Seeder
             'eligibility' => TargetCriteria::everyone(),
         ]);
 
-        // Every third section of the term is evaluated absolutely (scores), the rest relatively.
-        Section::query()->where('term_id', $current->id)->whereRaw('id % 3 = 0')->update(['evaluation_method' => EvaluationMethod::Absolute]);
+        // Every third section of the term is evaluated relatively (grades), the rest absolutely.
+        Section::query()->where('term_id', $current->id)->whereRaw('id % 3 = 0')->update(['evaluation_method' => EvaluationMethod::Relative]);
 
         $instructor = User::query()->where('email', 'instructor@'.config('setup.demo.email_domain'))->first();
         // An absolutely evaluated section submitted with scores, a relative one half done.
@@ -98,7 +98,12 @@ class DemoGradingSeeder extends Seeder
             ->whereNotNull('grade_points')->with('version')->orderBy('id')->first();
 
         if ($requester !== null && $enrollment !== null) {
-            $changes->request($enrollment, $enrollment->grade_code === 'A0' ? 'B+' : 'A0', 'The final project was graded before the late submission was added.', $requester);
+            $reason = 'The final project was graded before the late submission was added.';
+
+            // Absolute sections take a new score, relative ones a new grade.
+            app(GradeOptions::class)->takesScore($enrollment->loadMissing('section'))
+                ? $changes->request($enrollment, null, $reason, $requester, (string) ((float) ($enrollment->score ?? 80) + 5))
+                : $changes->request($enrollment, $enrollment->grade_code === 'A0' ? 'B+' : 'A0', $reason, $requester);
         }
     }
 }

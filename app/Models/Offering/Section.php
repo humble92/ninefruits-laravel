@@ -21,6 +21,7 @@ use App\Models\Term\TermSession;
 use App\Models\User;
 use App\Support\Targeting\TargetCriteria;
 use App\Support\Targeting\TargetSubject;
+use Carbon\CarbonImmutable;
 use Database\Factories\Offering\SectionFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -45,6 +46,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $capacity
  * @property SectionStatus $status
  * @property EvaluationMethod $evaluation_method
+ * @property string|null $grade_exception_reason
+ * @property int|null $grade_exception_by_id
+ * @property CarbonImmutable|null $grade_exception_at
  * @property TargetCriteria $eligibility
  * @property TargetCriteria $exclusion
  * @property string|null $instruction_language
@@ -78,7 +82,7 @@ class Section extends Model implements Translatable
 
     protected $attributes = [
         'status' => 'draft', 'eligibility' => null, 'exclusion' => null, 'instruction_language' => null, 'note' => null,
-        'copied_from_section_id' => null, 'enrolled_count' => 0, 'waitlist_capacity' => 0, 'evaluation_method' => 'relative',
+        'copied_from_section_id' => null, 'enrolled_count' => 0, 'waitlist_capacity' => 0, 'evaluation_method' => 'absolute', 'grade_exception_reason' => null, 'grade_exception_by_id' => null, 'grade_exception_at' => null,
     ];
 
     protected function casts(): array
@@ -89,6 +93,7 @@ class Section extends Model implements Translatable
             'waitlist_capacity' => 'integer',
             'status' => SectionStatus::class,
             'evaluation_method' => EvaluationMethod::class,
+            'grade_exception_at' => 'immutable_datetime',
             'eligibility' => TargetCriteria::class,
             'exclusion' => TargetCriteria::class,
         ];

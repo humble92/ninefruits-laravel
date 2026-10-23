@@ -2,26 +2,28 @@
 
 namespace App\Filament\Admin\Pages;
 
-use App\Domain\Grading\Actions\SaveGradeScale;
 use App\Domain\Grading\Enums\GpaRounding;
 use App\Domain\Grading\Enums\RetakePolicy;
 use App\Domain\Grading\Settings\GradingSettings;
 use App\Domain\Security\Enums\Permission;
-use App\Domain\Security\Services\AuditLogger;
 use App\Models\Grading\GradeScale;
 use App\Models\Grading\GradeScaleItem;
 use BackedEnum;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Text;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Spatie\LaravelSettings\Settings;
 
 /**
- * Grading policy: GPA precision, retakes, academic standing and honors. Changes apply to
- * calculations from now on; recalculate term records to apply them to past terms.
+ * Grading policy: GPA precision, retakes, grade caps for relative evaluation, academic
+ * standing and honors. The grade scale itself is fixed at installation and only shown.
+ * Changes apply to calculations from now on; recalculate term records to apply them to
+ * past terms.
  */
 class ManageGradingSettings extends SettingsPage
 {
@@ -56,10 +58,7 @@ class ManageGradingSettings extends SettingsPage
 
         return $schema->components([
             Section::make(__('grading.settings.scale'))->schema([
-                Select::make('absolute_scale_id')->label(__('grading.settings.absolute_scale'))->required()
-                    ->options(fn () => GradeScale::query()->whereHas('items', fn ($item) => $item->whereNotNull('min_percentage'))->orderBy('code')->get()
-                        ->mapWithKeys(fn (GradeScale $scale) => [$scale->id => $scale->name.' ('.$scale->code.')']))
-                    ->helperText(__('grading.settings.absolute_scale_help')),
+                Text::make(fn () => __('grading.settings.scale_fixed', ['scale' => GradeScale::query()->where('is_default', true)->value('name') ?? '-'])),
             ]),
             Section::make(__('grading.settings.gpa'))->columns(2)->schema([
                 TextInput::make('gpa_decimals')->label(__('grading.settings.gpa_decimals'))->integer()->minValue(0)->maxValue(3)->required(),
@@ -69,6 +68,17 @@ class ManageGradingSettings extends SettingsPage
                     ->options(collect(RetakePolicy::cases())->mapWithKeys(fn (RetakePolicy $case) => [$case->value => $case->label()])),
                 Select::make('retake_max_grade')->label(__('grading.settings.retake_max_grade'))->options($grades)
                     ->placeholder(__('grading.settings.no_cap'))->helperText(__('grading.settings.retake_max_grade_help')),
+            ]),
+            Section::make(__('grading.settings.relative'))->columns(2)->schema([
+                Repeater::make('relative_grade_caps')->label(__('grading.settings.relative_grade_caps'))->columnSpanFull()
+                    ->helperText(__('grading.settings.relative_grade_caps_help'))
+                    ->schema([
+                        TextInput::make('group')->label(__('grading.fields.grade_group'))->required()->maxLength(1)->alpha(),
+                        TextInput::make('cap')->label(__('grading.fields.cap'))->integer()->minValue(0)->maxValue(100)->required()->suffix('%'),
+                    ])->columns(2)->reorderable(false)->addActionLabel(__('grading.settings.add_cap')),
+                TextInput::make('relative_cap_tolerance_percent')->label(__('grading.settings.relative_cap_tolerance_percent'))->integer()->minValue(0)->maxValue(20)->required()->suffix('%p'),
+                TextInput::make('relative_minimum_students')->label(__('grading.settings.relative_minimum_students'))->integer()->minValue(0)->maxValue(200)->required()
+                    ->helperText(__('grading.settings.relative_minimum_students_help')),
             ]),
             Section::make(__('grading.settings.standing'))->columns(2)->schema([
                 TextInput::make('warning_gpa_below')->label(__('grading.settings.warning_gpa_below'))->numeric()->minValue(0)->maxValue(5)->required()
@@ -88,27 +98,30 @@ class ManageGradingSettings extends SettingsPage
 
     protected function formDataFromSettings(Settings $settings): array
     {
-        return [...parent::formDataFromSettings($settings), 'absolute_scale_id' => GradeScale::query()->where('is_default', true)->value('id')];
-    }
+        $data = parent::formDataFromSettings($settings);
+        $rows = [];
 
-    /**
-     * The absolute evaluation scale is the default grade scale, not a setting value.
-     */
-    public function save(AuditLogger $audit): void
-    {
-        parent::save($audit);
-
-        $scale = GradeScale::query()->findOrFail($this->form->getState()['absolute_scale_id']);
-
-        if (! $scale->is_default) {
-            app(SaveGradeScale::class)->handle($scale, ['is_default' => true]);
-            $audit->record('grading.absolute_scale_changed', $scale, null, ['code' => $scale->code]);
+        foreach ((array) ($data['relative_grade_caps'] ?? []) as $group => $cap) {
+            $rows[] = ['group' => (string) $group, 'cap' => (int) $cap];
         }
+
+        $data['relative_grade_caps'] = $rows;
+
+        return $data;
     }
 
     protected function settingsDataFromForm(array $state): array
     {
+        $caps = [];
+
+        foreach ($state['relative_grade_caps'] ?? [] as $row) {
+            $caps[strtoupper((string) $row['group'])] = (int) $row['cap'];
+        }
+
         return [
+            'relative_grade_caps' => $caps,
+            'relative_cap_tolerance_percent' => (int) $state['relative_cap_tolerance_percent'],
+            'relative_minimum_students' => (int) $state['relative_minimum_students'],
             'gpa_decimals' => (int) $state['gpa_decimals'],
             'gpa_rounding' => (string) $state['gpa_rounding'],
             'retake_policy' => (string) $state['retake_policy'],

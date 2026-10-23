@@ -22,6 +22,20 @@ class GradingSettings extends Settings
     /** Highest grade a retake may receive (e.g. A0), or null for no cap. */
     public ?string $retake_max_grade;
 
+    /**
+     * Relative evaluation: the most a grade group (the letter: A for A+, A0, A-) may take
+     * of a section's graded students, in percent. E.g. ['A' => 30, 'B' => 40].
+     *
+     * @var array<string, int>
+     */
+    public array $relative_grade_caps;
+
+    /** Percent points a group may exceed its cap by. */
+    public int $relative_cap_tolerance_percent;
+
+    /** Sections with fewer graded students are not checked against the caps. */
+    public int $relative_minimum_students;
+
     /** Judge warnings and count them only in regular terms (not summer or winter). */
     public bool $standing_regular_terms_only;
 

@@ -5,15 +5,14 @@ namespace App\Domain\Grading\Data;
 use App\Models\Grading\GradeScaleItem;
 
 /**
- * A grade as entered: the grade on the institution's scale, the score it came from
- * (absolute evaluation), and the same score's grade on the comparison scale.
+ * A grade as entered: the grade on the institution's scale and, for absolute evaluation,
+ * the score it came from.
  */
 final readonly class GradeChoice
 {
     public function __construct(
         public ?GradeScaleItem $item,
         public ?string $score,
-        public ?GradeScaleItem $comparison = null,
     ) {}
 
     public function isEmpty(): bool
@@ -35,9 +34,6 @@ final readonly class GradeChoice
             'grade_points' => $this->item?->grade_points,
             'counts_in_gpa' => $this->item?->counts_in_gpa,
             'is_passed' => $this->item?->is_passing,
-            'comparison_grade_scale_id' => $this->comparison?->grade_scale_id,
-            'comparison_grade_code' => $this->comparison?->code,
-            'comparison_grade_points' => $this->comparison?->grade_points,
         ];
     }
 }

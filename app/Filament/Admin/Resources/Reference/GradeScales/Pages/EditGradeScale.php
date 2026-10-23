@@ -24,6 +24,6 @@ class EditGradeScale extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        return [SafeDeleteAction::make()];
+        return [SafeDeleteAction::make()->visible(fn (GradeScale $record) => ! $record->is_default)];
     }
 }

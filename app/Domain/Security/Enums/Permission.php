@@ -73,6 +73,7 @@ enum Permission: string
     case GradeChangesRequest = 'grade_changes.request';
     case GradeChangesApprove = 'grade_changes.approve';
     case GradingPoliciesManage = 'grading_policies.manage';
+    case GradeExceptionsReview = 'grade_exceptions.review';
 
     case EvaluationsView = 'evaluations.view';
     case EvaluationsManage = 'evaluations.manage';

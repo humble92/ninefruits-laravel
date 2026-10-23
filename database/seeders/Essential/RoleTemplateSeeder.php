@@ -50,6 +50,7 @@ class RoleTemplateSeeder extends Seeder
                     Permission::GradesView,
                     Permission::GradesManage,
                     Permission::GradeChangesApprove,
+                    Permission::GradeExceptionsReview,
                 ],
             ],
             'academic_affairs' => [
