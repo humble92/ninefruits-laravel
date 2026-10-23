@@ -18,6 +18,7 @@ use App\Http\Middleware\SetLocale;
 use App\Models\Assessment\AssessmentComponent;
 use App\Models\Assessment\AssessmentRegistration;
 use App\Models\Assessment\AssessmentResult;
+use App\Models\Assessment\AssessmentResultCorrection;
 use App\Models\Assessment\AssessmentSession;
 use App\Models\Assessment\AssessmentType;
 use App\Models\Certificate\CertificateIssue;
@@ -149,6 +150,7 @@ class AppServiceProvider extends ServiceProvider
         AssessmentSession::class => AssessmentSetupPolicy::class,
         AssessmentRegistration::class => AssessmentRecordPolicy::class,
         AssessmentResult::class => AssessmentRecordPolicy::class,
+        AssessmentResultCorrection::class => AssessmentRecordPolicy::class,
         CertificateType::class => CertificateSetupPolicy::class,
         CertificateTemplate::class => CertificateSetupPolicy::class,
         CertificateIssue::class => CertificateIssuePolicy::class,

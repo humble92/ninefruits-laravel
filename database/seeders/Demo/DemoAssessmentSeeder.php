@@ -44,7 +44,8 @@ class DemoAssessmentSeeder extends Seeder
             ]);
 
             foreach ($students->slice($index * 10, 20) as $student) {
-                $registration = $register->register($session, $student, $registrar, byStaff: true);
+                // Past sessions: the registration is created with the result (no registration after the date).
+                $registration = $register->register($session, $student, $registrar, byStaff: true, forResult: true);
 
                 if (mt_rand(1, 12) === 1) {
                     $register->markAbsent($registration, $registrar);
@@ -62,7 +63,7 @@ class DemoAssessmentSeeder extends Seeder
         $computerSession = AssessmentSession::query()->create(['assessment_type_id' => $computer->id, 'held_date' => $today->subMonths(2), 'venue' => 'Computer Lab B']);
 
         foreach ($students->slice(5, 15) as $student) {
-            $results->forRegistration($register->register($computerSession, $student, $registrar, byStaff: true), [], mt_rand(1, 5) !== 1, $registrar);
+            $results->forRegistration($register->register($computerSession, $student, $registrar, byStaff: true, forResult: true), [], mt_rand(1, 5) !== 1, $registrar);
         }
 
         $results->publish($computerSession, $registrar);

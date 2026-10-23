@@ -1,14 +1,17 @@
 <?php
 
+use App\Domain\Assessment\Actions\CorrectAssessmentResult;
 use App\Domain\Assessment\Actions\RecordAssessmentResult;
 use App\Domain\Assessment\Actions\RegisterForAssessment;
 use App\Domain\Assessment\Enums\AssessmentRegistrationStatus;
+use App\Domain\Assessment\Enums\CorrectionStatus;
 use App\Domain\Assessment\Services\AssessmentPassCheck;
 use App\Domain\Curriculum\Enums\ProgramRole;
 use App\Domain\Curriculum\Enums\RequirementKind;
 use App\Domain\Security\Actions\SyncPermissionCatalog;
 use App\Domain\Security\Enums\MfaEnforcement;
 use App\Domain\Security\Enums\Permission;
+use App\Filament\Admin\Resources\Assessment\Corrections\AssessmentCorrectionResource;
 use App\Filament\Admin\Resources\Assessment\Results\AssessmentResultResource;
 use App\Filament\Admin\Resources\Assessment\Results\Pages\ListAssessmentResults;
 use App\Filament\Admin\Resources\Assessment\Sessions\AssessmentSessionResource;
@@ -84,6 +87,11 @@ it('lets students register while the window is open and seats remain', function 
     expect(fn () => $this->register->register($this->session, $this->record, $this->student))->toThrow(ValidationException::class, __('assessment.errors.registration_closed'));
     expect($this->register->register($this->session, $this->record, $this->staff, byStaff: true)->status)->toBe(AssessmentRegistrationStatus::Registered);
 
+    // After the session date staff cannot register anyone either; only a result being recorded (import) adds a student.
+    $past = AssessmentSession::query()->create(['assessment_type_id' => $this->english->id, 'held_date' => CarbonImmutable::yesterday()]);
+    expect(fn () => $this->register->register($past, $other, $this->staff, byStaff: true))->toThrow(ValidationException::class, __('assessment.errors.session_past'));
+    expect($this->register->register($past, $other, $this->staff, byStaff: true, forResult: true)->status)->toBe(AssessmentRegistrationStatus::Registered);
+
     expect(fn () => $this->register->register($this->session, $other, $this->student))->toThrow(AuthorizationException::class);
     expect(fn () => $this->register->register($this->session, StudentRecord::factory()->graduated()->create(), $this->staff, byStaff: true))->toThrow(ValidationException::class, __('assessment.errors.record_inactive'));
 });
@@ -120,6 +128,42 @@ it('decides passes from the scores, the pass score and the area minimums', funct
 
     $clerk = User::factory()->withPermissions([Permission::StudentRecordsView])->create();
     expect(fn () => $this->results->forRegistration($registration, scores([25, 25, 20, 20]), null, $clerk))->toThrow(AuthorizationException::class);
+});
+
+it('locks published results and changes them only through an approved correction', function () {
+    $registration = $this->register->register($this->session, $this->record, $this->staff, byStaff: true);
+    $result = $this->results->forRegistration($registration, scores([20, 20, 20, 20]), null, $this->staff);
+    $corrections = app(CorrectAssessmentResult::class);
+    expect(fn () => $corrections->request($result, ['scores' => scores([25, 20, 20, 20])], 'Marking error', $this->staff))->toThrow(ValidationException::class, __('assessment.errors.not_locked'));
+
+    $this->results->publish($this->session, $this->staff);
+    expect(fn () => $this->results->forRegistration($registration, scores([25, 20, 20, 20]), null, $this->staff))->toThrow(ValidationException::class, __('assessment.errors.published_locked'));
+    expect(fn () => $this->results->remove($result, $this->staff, 'x'))->toThrow(ValidationException::class, __('assessment.errors.published_locked'));
+
+    $correction = $corrections->request($result, ['scores' => scores([25, 20, 20, 20])], 'Marking error', $this->staff);
+    expect($correction->previous['total'])->toBe('80.0')->and($correction->status)->toBe(CorrectionStatus::Pending);
+    expect(fn () => $corrections->request($result, ['scores' => scores([25, 20, 20, 20])], 'Again', $this->staff))->toThrow(ValidationException::class, __('assessment.errors.correction_pending'));
+    expect(fn () => $corrections->approve($correction, $this->staff))->toThrow(ValidationException::class, __('assessment.errors.own_correction'));
+    $recorder = User::factory()->withPermissions([Permission::AssessmentsRecord, Permission::StudentRecordsView])->create();
+    expect(fn () => $corrections->approve($correction, $recorder))->toThrow(AuthorizationException::class);
+
+    $approver = User::factory()->withPermissions([Permission::AdminPanelAccess, Permission::AssessmentsManage, Permission::AssessmentsRecord, Permission::StudentRecordsView])->create();
+    $corrections->approve($correction, $approver, 'Checked the paper');
+    expect($result->refresh()->total_score)->toBe('85.0')->and($correction->refresh()->status)->toBe(CorrectionStatus::Approved)
+        ->and(Activity::query()->where('event', 'assessment.result_corrected')->exists())->toBeTrue();
+    expect(fn () => $corrections->approve($correction, $approver))->toThrow(ValidationException::class);
+
+    $second = $corrections->request($result, ['scores' => scores([25, 25, 20, 20])], 'Second look', $this->staff);
+    $corrections->reject($second, $approver, 'No grounds');
+    expect($second->refresh()->status)->toBe(CorrectionStatus::Rejected)->and($result->refresh()->total_score)->toBe('85.0');
+
+    $third = $corrections->request($result, ['scores' => scores([25, 25, 20, 20])], 'Typo', $this->staff);
+    $corrections->cancel($third, $this->staff);
+    expect($third->refresh()->status)->toBe(CorrectionStatus::Cancelled);
+
+    $this->actingAs($approver)->get(AssessmentCorrectionResource::getUrl('index'))->assertOk();
+    $manager = Livewire::actingAs($this->staff)->test(RegistrationsRelationManager::class, ['ownerRecord' => $this->session->refresh(), 'pageClass' => EditAssessmentSession::class]);
+    $manager->assertTableActionHidden('result', $registration)->assertTableActionVisible('correct', $registration);
 });
 
 it('shows results to the student only once published, and external results at once', function () {

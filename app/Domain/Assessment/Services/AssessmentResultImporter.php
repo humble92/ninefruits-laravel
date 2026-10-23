@@ -65,7 +65,7 @@ class AssessmentResultImporter
                     continue;
                 }
 
-                $registration ??= $this->registrations->register($session, $record, $staff, byStaff: true);
+                $registration ??= $this->registrations->register($session, $record, $staff, byStaff: true, forResult: true);
 
                 if ($this->isYes($row['absent'] ?? null)) {
                     $this->registrations->markAbsent($registration, $staff);

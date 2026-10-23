@@ -37,6 +37,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property-read AssessmentRegistration|null $registration
  * @property-read User|null $enteredBy
  * @property-read Collection<int, AssessmentComponentScore> $componentScores
+ * @property-read Collection<int, AssessmentResultCorrection> $corrections
  */
 class AssessmentResult extends Model implements HasMedia
 {
@@ -109,5 +110,36 @@ class AssessmentResult extends Model implements HasMedia
     public function componentScores(): HasMany
     {
         return $this->hasMany(AssessmentComponentScore::class);
+    }
+
+    /**
+     * @return HasMany<AssessmentResultCorrection, $this>
+     */
+    public function corrections(): HasMany
+    {
+        return $this->hasMany(AssessmentResultCorrection::class);
+    }
+
+    /**
+     * Published session results change only through an approved correction.
+     */
+    public function isLocked(): bool
+    {
+        // Queried, not read from a possibly stale loaded relation.
+        return $this->assessment_session_id !== null
+            && AssessmentSession::query()->whereKey($this->assessment_session_id)->whereNotNull('results_published_at')->exists();
+    }
+
+    /**
+     * The values a correction proposes or records: scores by component code, total, passed, note.
+     *
+     * @return array{scores: array<string, string>, total: string|null, passed: bool, note: string|null}
+     */
+    public function values(): array
+    {
+        return [
+            'scores' => $this->componentScores->mapWithKeys(fn (AssessmentComponentScore $score) => [$score->component->code => $score->score])->all(),
+            'total' => $this->total_score, 'passed' => $this->is_passed, 'note' => $this->note,
+        ];
     }
 }

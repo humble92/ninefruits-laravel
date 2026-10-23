@@ -4,9 +4,12 @@ return [
     'resources' => [
         'types' => ['label' => '考试种类', 'plural_label' => '考试种类'],
         'sessions' => ['label' => '考试场次', 'plural_label' => '考试场次'],
+        'corrections' => ['label' => '成绩更正申请', 'plural_label' => '成绩更正申请'],
         'results' => ['label' => '考试成绩', 'plural_label' => '考试成绩'],
     ],
     'fields' => [
+        'previous' => '当前值',
+        'proposed' => '更正值',
         'type' => '种类',
         'category' => '类别',
         'scoring' => '判定方式',
@@ -35,6 +38,7 @@ return [
         'file' => 'CSV 文件',
     ],
     'help' => [
+        'correction' => '此场次成绩已公布并锁定。填写新值和理由提出申请，由具有管理权限的其他经办人审批，审批通过即生效。',
         'scoring' => '分数：各领域分数（或总分）与合格分数比较，且每个领域不低于其最低分。合格/不合格：由经办人逐人判定。',
         'max_score' => '用于没有领域的种类。有领域时满分为各领域满分之和。',
         'pass_score' => '合格所需总分。场次可以覆盖。',
@@ -47,6 +51,7 @@ return [
         'decision_automatic' => '按分数判定：总分不低于 :score 且各领域不低于最低分。',
     ],
     'actions' => [
+        'request_correction' => '申请更正',
         'publish' => '公布成绩',
         'import' => '导入成绩（CSV）',
         'register_student' => '登记考生',
@@ -63,8 +68,13 @@ return [
     'categories' => ['language' => '语言', 'comprehensive' => '综合考试', 'thesis' => '毕业论文', 'external' => '外部认证考试'],
     'scoring_methods' => ['score' => '分数', 'pass_fail' => '合格/不合格'],
     'registration_statuses' => ['registered' => '已报名', 'cancelled' => '已取消', 'absent' => '缺考'],
+    'correction_statuses' => ['pending' => '待处理', 'approved' => '已批准', 'rejected' => '已驳回', 'cancelled' => '已取消'],
     'sources' => ['session' => '校内场次', 'external' => '外部'],
     'errors' => [
+        'published_locked' => '此场次成绩已公布，请通过更正申请处理。',
+        'not_locked' => '此成绩尚未公布，请直接录入。',
+        'correction_pending' => '此成绩已有待处理的更正申请。',
+        'own_correction' => '不能审批自己提出的更正申请。',
         'type_inactive' => '此考试已不再举办。',
         'record_inactive' => '仅在校生可以报名。',
         'registration_closed' => '此场次不在报名期间。',

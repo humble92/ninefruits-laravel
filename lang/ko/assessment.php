@@ -4,9 +4,12 @@ return [
     'resources' => [
         'types' => ['label' => '시험 종류', 'plural_label' => '시험 종류'],
         'sessions' => ['label' => '시험 회차', 'plural_label' => '시험 회차'],
+        'corrections' => ['label' => '결과 정정 요청', 'plural_label' => '결과 정정 요청'],
         'results' => ['label' => '시험 결과', 'plural_label' => '시험 결과'],
     ],
     'fields' => [
+        'previous' => '현재 값',
+        'proposed' => '정정 값',
         'type' => '종류',
         'category' => '구분',
         'scoring' => '판정 방식',
@@ -35,6 +38,7 @@ return [
         'file' => 'CSV 파일',
     ],
     'help' => [
+        'correction' => '이 회차는 결과가 공개되어 잠겨 있습니다. 새 값과 사유를 적어 요청하면 관리 권한이 있는 다른 담당자가 승인하고, 승인과 함께 반영됩니다.',
         'scoring' => '점수: 영역 점수(또는 총점)를 합격 점수와 비교하고, 영역마다 최저점 이상이어야 한다. 합격/불합격: 담당자가 학생마다 판정한다.',
         'max_score' => '영역이 없는 종류에 쓴다. 영역이 있으면 영역 만점의 합이 만점이다.',
         'pass_score' => '합격에 필요한 총점. 회차에서 바꿀 수 있다.',
@@ -47,6 +51,7 @@ return [
         'decision_automatic' => '점수로 판정한다: 총점 :score 이상이고 모든 영역이 최저점 이상.',
     ],
     'actions' => [
+        'request_correction' => '정정 요청',
         'publish' => '결과 공개',
         'import' => '결과 가져오기(CSV)',
         'register_student' => '학생 접수',
@@ -63,8 +68,13 @@ return [
     'categories' => ['language' => '어학', 'comprehensive' => '종합시험', 'thesis' => '졸업논문', 'external' => '외부 공인시험'],
     'scoring_methods' => ['score' => '점수', 'pass_fail' => '합격/불합격'],
     'registration_statuses' => ['registered' => '접수', 'cancelled' => '취소', 'absent' => '결시'],
+    'correction_statuses' => ['pending' => '대기', 'approved' => '승인', 'rejected' => '반려', 'cancelled' => '취소'],
     'sources' => ['session' => '교내 회차', 'external' => '외부'],
     'errors' => [
+        'published_locked' => '결과가 공개된 회차입니다. 정정 요청으로 처리하세요.',
+        'not_locked' => '공개되지 않은 결과입니다. 직접 입력하세요.',
+        'correction_pending' => '이 결과에 대기 중인 정정 요청이 이미 있습니다.',
+        'own_correction' => '자신이 요청한 정정은 결정할 수 없습니다.',
         'type_inactive' => '더 이상 시행하지 않는 시험입니다.',
         'record_inactive' => '재학 중인 학생만 접수할 수 있습니다.',
         'registration_closed' => '이 회차는 접수 기간이 아닙니다.',

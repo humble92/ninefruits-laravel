@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Assessment\Sessions\RelationManagers;
 
+use App\Domain\Assessment\Actions\CorrectAssessmentResult;
 use App\Domain\Assessment\Actions\RecordAssessmentResult;
 use App\Domain\Assessment\Actions\RegisterForAssessment;
 use App\Domain\Assessment\Enums\AssessmentRegistrationStatus;
@@ -13,6 +14,7 @@ use App\Models\Assessment\AssessmentSession;
 use App\Models\Person\Person;
 use App\Models\Person\StudentRecord;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -70,7 +72,7 @@ class RegistrationsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Action::make('register')->label(__('assessment.actions.register_student'))->icon(Heroicon::OutlinedUserPlus)
-                    ->visible(fn () => $this->actor()->can('assessments.record'))
+                    ->visible(fn () => $this->actor()->can('assessments.record') && $this->session()->held_date->gte(CarbonImmutable::today()))
                     ->schema([TextInput::make('student_number')->label(__('people.fields.student_number'))->required()])
                     ->action(function (array $data, RegisterForAssessment $register) {
                         $record = StudentRecord::query()->where('student_number', trim((string) $data['student_number']))->first();
@@ -79,7 +81,7 @@ class RegistrationsRelationManager extends RelationManager
             ])
             ->recordActions([
                 Action::make('result')->label(__('assessment.actions.enter_result'))->icon(Heroicon::OutlinedPencilSquare)
-                    ->visible(fn (AssessmentRegistration $record) => $record->status !== AssessmentRegistrationStatus::Cancelled && $this->actor()->can('assessments.record'))
+                    ->visible(fn (AssessmentRegistration $record) => $record->status !== AssessmentRegistrationStatus::Cancelled && $this->session()->results_published_at === null && $this->actor()->can('assessments.record'))
                     ->fillForm(fn (AssessmentRegistration $record) => [
                         'scores' => $record->result?->componentScores->mapWithKeys(fn ($score) => [$score->component->code => $score->score])->all() ?? [],
                         'total' => $record->result?->total_score, 'passed' => $record->result === null ? null : ($record->result->is_passed ? '1' : '0'), 'note' => $record->result?->note,
@@ -88,6 +90,19 @@ class RegistrationsRelationManager extends RelationManager
                     ->action(fn (AssessmentRegistration $record, array $data, RecordAssessmentResult $results) => ShowsActionErrors::run(fn () => $results->forRegistration(
                         $record, $data['scores'] ?? [], filled($data['passed'] ?? null) ? (bool) $data['passed'] : null, $this->actor(),
                         filled($data['total'] ?? null) ? (float) $data['total'] : null, $data['note'] ?? null,
+                    ))),
+                Action::make('correct')->label(__('assessment.actions.request_correction'))->icon(Heroicon::OutlinedPencilSquare)->color('warning')
+                    ->visible(fn (AssessmentRegistration $record) => $record->result !== null && $this->session()->results_published_at !== null && $this->actor()->can('assessments.record'))
+                    ->modalDescription(__('assessment.help.correction'))
+                    ->fillForm(fn (AssessmentRegistration $record) => [
+                        'scores' => $record->result?->componentScores->mapWithKeys(fn ($score) => [$score->component->code => $score->score])->all() ?? [],
+                        'total' => $record->result?->total_score, 'passed' => $record->result === null ? null : ($record->result->is_passed ? '1' : '0'), 'note' => $record->result?->note,
+                    ])
+                    ->schema(fn () => [...$this->resultForm(), Textarea::make('reason')->label(__('common.reason'))->required()->maxLength(1000)])
+                    ->action(fn (AssessmentRegistration $record, array $data, CorrectAssessmentResult $corrections) => ShowsActionErrors::run(fn () => $corrections->request(
+                        $record->result ?? abort(404),
+                        ['scores' => $data['scores'] ?? [], 'total' => filled($data['total'] ?? null) ? (float) $data['total'] : null, 'passed' => filled($data['passed'] ?? null) ? (bool) $data['passed'] : null, 'note' => $data['note'] ?? null],
+                        (string) $data['reason'], $this->actor(),
                     ))),
                 Action::make('absent')->label(__('assessment.actions.absent'))->icon(Heroicon::OutlinedUserMinus)->color('warning')
                     ->visible(fn (AssessmentRegistration $record) => $record->status === AssessmentRegistrationStatus::Registered && $record->result === null && $this->actor()->can('assessments.record'))

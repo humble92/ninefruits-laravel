@@ -4,9 +4,12 @@ return [
     'resources' => [
         'types' => ['label' => 'Examination kind', 'plural_label' => 'Examination kinds'],
         'sessions' => ['label' => 'Examination session', 'plural_label' => 'Examination sessions'],
+        'corrections' => ['label' => 'Result correction', 'plural_label' => 'Result corrections'],
         'results' => ['label' => 'Examination result', 'plural_label' => 'Examination results'],
     ],
     'fields' => [
+        'previous' => 'Current values',
+        'proposed' => 'Proposed values',
         'type' => 'Kind',
         'category' => 'Category',
         'scoring' => 'Scoring',
@@ -35,6 +38,7 @@ return [
         'file' => 'CSV file',
     ],
     'help' => [
+        'correction' => 'The results of this session are published. Propose the new values with a reason; someone else with the manage permission approves and the change is applied.',
         'scoring' => 'Score: the areas (or one total) against the pass score, with each area at or above its minimum. Pass/fail: staff decide for each student.',
         'max_score' => 'For kinds without areas. With areas, the maximum is their sum.',
         'pass_score' => 'Total needed to pass. A session can override it.',
@@ -47,6 +51,7 @@ return [
         'decision_automatic' => 'Decided from the scores: total at or above :score and every area at or above its minimum.',
     ],
     'actions' => [
+        'request_correction' => 'Request a correction',
         'publish' => 'Publish results',
         'import' => 'Import results (CSV)',
         'register_student' => 'Register a student',
@@ -63,8 +68,13 @@ return [
     'categories' => ['language' => 'Language', 'comprehensive' => 'Comprehensive', 'thesis' => 'Thesis', 'external' => 'External test'],
     'scoring_methods' => ['score' => 'Score', 'pass_fail' => 'Pass/fail'],
     'registration_statuses' => ['registered' => 'Registered', 'cancelled' => 'Cancelled', 'absent' => 'Absent'],
+    'correction_statuses' => ['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', 'cancelled' => 'Cancelled'],
     'sources' => ['session' => 'Session', 'external' => 'External'],
     'errors' => [
+        'published_locked' => 'The results of this session are published: request a correction instead.',
+        'not_locked' => 'This result is not published; enter it directly.',
+        'correction_pending' => 'A correction request is already pending for this result.',
+        'own_correction' => 'You cannot decide your own correction request.',
         'type_inactive' => 'This kind of examination is no longer held.',
         'record_inactive' => 'Only current students can register.',
         'registration_closed' => 'Registration for this session is closed.',

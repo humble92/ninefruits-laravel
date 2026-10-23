@@ -35,16 +35,23 @@ class RecordAssessmentResult
     /**
      * @param  array<string, mixed>  $scores  component code => score
      */
-    public function forRegistration(AssessmentRegistration $registration, array $scores, ?bool $passed, User $staff, ?float $total = null, ?string $note = null): AssessmentResult
+    public function forRegistration(AssessmentRegistration $registration, array $scores, ?bool $passed, User $staff, ?float $total = null, ?string $note = null, bool $applyingCorrection = false): AssessmentResult
     {
         $this->authorize($staff);
-        $registration->loadMissing(['session.type.components', 'studentRecord']);
+        // Loaded fresh: the session's publication state decides whether entry is still allowed.
+        $registration->load(['session.type.components', 'studentRecord']);
 
         if ($registration->status === AssessmentRegistrationStatus::Cancelled) {
             throw ValidationException::withMessages(['registration' => __('assessment.errors.not_registered')]);
         }
 
         $session = $registration->session;
+
+        // Published results are locked (decided 2026-10-23): changes go through a correction request.
+        if ($session->results_published_at !== null && ! $applyingCorrection) {
+            throw ValidationException::withMessages(['registration' => __('assessment.errors.published_locked')]);
+        }
+
         $type = $session->type;
         [$componentScores, $total] = $this->componentScores($type, $scores, $total);
         $isPassed = $this->decide($type, $session->passScore(), $componentScores, $total, $passed);
@@ -70,7 +77,7 @@ class RecordAssessmentResult
             return $result;
         });
 
-        $this->audit->record('assessment.result_recorded', $result, $note, [
+        $this->audit->record($applyingCorrection ? 'assessment.result_corrected' : 'assessment.result_recorded', $result, $note, [
             'session_id' => $session->id, 'student_number' => $registration->studentRecord->student_number, 'total' => $total, 'passed' => $isPassed, 'scores' => $scores,
         ], $staff);
 
@@ -116,6 +123,10 @@ class RecordAssessmentResult
     public function remove(AssessmentResult $result, User $staff, string $reason): void
     {
         $this->authorize($staff);
+
+        if ($result->isLocked()) {
+            throw ValidationException::withMessages(['result' => __('assessment.errors.published_locked')]);
+        }
 
         if (blank($reason)) {
             throw ValidationException::withMessages(['reason' => __('registration.errors.reason_required')]);
