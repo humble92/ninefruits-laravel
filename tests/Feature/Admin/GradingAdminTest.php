@@ -41,7 +41,10 @@ beforeEach(function () {
     Notification::fake();
     setSecuritySettings(['mfa_enforcement' => MfaEnforcement::Disabled]);
     // The smallest demo that still has every kind of data: the full one per test is slow.
-    app()->instance(DemoOptions::class, new DemoOptions('tiny'));
+    // Seeded like DemoSeeder does, so the random demo data is the same on every run.
+    app()->instance(DemoOptions::class, new DemoOptions('tiny', seed: 42));
+    fake()->seed(42);
+    mt_srand(42);
     $this->seed([EssentialSeeder::class, DemoAccountSeeder::class, DemoReferenceSeeder::class, DemoPeopleSeeder::class, DemoCurriculumSeeder::class,
         DemoGradeHistorySeeder::class, DemoRegistrationSeeder::class, DemoGradingSeeder::class]);
     app(SyncPermissionCatalog::class)->handle();
