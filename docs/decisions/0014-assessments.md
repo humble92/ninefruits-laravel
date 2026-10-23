@@ -38,7 +38,7 @@
 - 결과 공개 뒤 `RecordAssessmentResult::forRegistration`과 `remove`는 거부한다(`published_locked`). 학생이 이미 본 값이 조용히 바뀌지 않게 하기 위해서다.
 - `assessment_result_corrections`: 결과, 이전 값·정정 값(jsonb), 사유, 상태(대기/승인/반려/취소), 요청자, 결정자·의견. 결과당 대기 중 요청은 하나(부분 유니크).
 - 요청은 `assessments.record`, 결정은 `assessments.manage`이며 **요청자 본인은 결정할 수 없다**(0011 성적 정정과 같은 규칙). 승인은 같은 트랜잭션에서 값을 반영한다(`applyingCorrection`, 감사 `assessment.result_corrected`).
-- 회차의 합격 점수 변경은 데이터 감사 트리거가 기록한다. 이미 판정된 결과는 다시 판정하지 않는다(저장된 `is_passed` 유지).
+- 회차의 합격 점수는 **공개 전에만** 바꿀 수 있고(`ChangeSessionPassScore`), 바꾸면 그 회차의 입력된 결과를 저장된 점수로 모두 재판정한다(시험이 어려워 커트라인을 낮추는 흔한 경우를 위해). 업무 감사에 이전·이후 기준과 판정이 바뀐 학번을 남긴다. 영역 최저점은 종류에만 있고 회차 override는 두지 않는다. 공개 뒤에는 정정 요청뿐이다.
 
 ### 졸업 요건 연계
 

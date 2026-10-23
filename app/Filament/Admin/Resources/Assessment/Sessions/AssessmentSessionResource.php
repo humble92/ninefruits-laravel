@@ -20,6 +20,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -71,7 +72,10 @@ class AssessmentSessionResource extends Resource
             TextInput::make('capacity')->label(__('assessment.fields.capacity'))->integer()->minValue(1),
             DateTimePicker::make('registration_opens_at')->label(__('assessment.fields.registration_opens_at'))->seconds(false),
             DateTimePicker::make('registration_closes_at')->label(__('assessment.fields.registration_closes_at'))->seconds(false)->after('registration_opens_at'),
-            TextInput::make('pass_score')->label(__('assessment.fields.pass_score'))->numeric()->minValue(0)->helperText(__('assessment.help.session_pass_score')),
+            TextInput::make('pass_score')->label(__('assessment.fields.pass_score'))->numeric()->minValue(0)->helperText(__('assessment.help.session_pass_score'))
+                ->disabled(fn (?AssessmentSession $record) => $record?->results_published_at !== null)->dehydrated(),
+            Textarea::make('pass_score_reason')->label(__('assessment.fields.pass_score_reason'))->maxLength(500)->dehydrated()
+                ->visible(fn (?AssessmentSession $record) => $record !== null && $record->results_published_at === null)->helperText(__('assessment.help.pass_score_reason')),
         ]);
     }
 

@@ -35,9 +35,12 @@ return [
         'evidence' => 'Evidence',
         'source' => 'Source',
         'note' => 'Note',
+        'pass_score_reason' => 'Reason for changing the pass score',
         'file' => 'CSV file',
     ],
     'help' => [
+        'pass_score_reason' => 'Recorded in the audit log with the students whose result changed.',
+        'session_pass_score' => 'Leave empty to use the kind\'s pass score. Changing it before publication judges every entered result again; after publication it is fixed.',
         'correction' => 'The results of this session are published. Propose the new values with a reason; someone else with the manage permission approves and the change is applied.',
         'scoring' => 'Score: the areas (or one total) against the pass score, with each area at or above its minimum. Pass/fail: staff decide for each student.',
         'max_score' => 'For kinds without areas. With areas, the maximum is their sum.',
@@ -45,7 +48,7 @@ return [
         'allows_external' => 'Results from an outside body (TOPIK, HSK, ...) can be recorded with an evidence file.',
         'component_code' => 'Column name in the results CSV, e.g. LISTENING.',
         'min_score' => 'Below this the student fails whatever the total.',
-        'session_pass_score' => 'Leave empty to use the kind\'s pass score.',
+        'session_pass_score' => 'Leave empty to use the kind\'s pass score. Changing it before publication judges every entered result again; after publication it is fixed.',
         'publish' => 'Students see their results from now on. Results entered later are visible at once.',
         'import' => 'CSV with a header row: student_number, a column per area code (or total), optionally passed (Y/N), absent (Y) and note. Rows of students not registered are skipped.',
         'decision_automatic' => 'Decided from the scores: total at or above :score and every area at or above its minimum.',
@@ -62,6 +65,7 @@ return [
         'remove' => 'Remove',
     ],
     'notifications' => [
+        'rejudged' => ':count result(s) judged again: :passed now passed, :failed now failed.',
         'imported' => ':recorded recorded, :absent absent, :errors error(s).',
     ],
     'passed' => ['yes' => 'Passed', 'no' => 'Not passed'],
@@ -71,6 +75,7 @@ return [
     'correction_statuses' => ['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', 'cancelled' => 'Cancelled'],
     'sources' => ['session' => 'Session', 'external' => 'External'],
     'errors' => [
+        'pass_score_published' => 'The results are published: the pass score cannot change. Use correction requests.',
         'published_locked' => 'The results of this session are published: request a correction instead.',
         'not_locked' => 'This result is not published; enter it directly.',
         'correction_pending' => 'A correction request is already pending for this result.',

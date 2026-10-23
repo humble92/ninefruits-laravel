@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Assessment\Actions\ChangeSessionPassScore;
 use App\Domain\Assessment\Actions\CorrectAssessmentResult;
 use App\Domain\Assessment\Actions\RecordAssessmentResult;
 use App\Domain\Assessment\Actions\RegisterForAssessment;
@@ -177,6 +178,37 @@ it('fails a student below an area minimum whatever the total, and passes one exa
     // Without area minimums the same 84 passes: the profile seeds none, so only the total applies.
     $this->english->components->firstWhere('code', 'WRITING')->forceFill(['min_score' => null])->save();
     expect($this->results->forRegistration($registration, scores([25, 25, 9, 25]), null, $this->staff)->is_passed)->toBeTrue();
+});
+
+it('changes the cut line before publication, judging entered results again, and never after', function () {
+    $this->session->forceFill(['capacity' => null])->save();
+    [$a, $b, $c] = StudentRecord::factory()->count(3)->create();
+    $change = app(ChangeSessionPassScore::class);
+    $registrations = collect([$a, $b, $c])->map(fn (StudentRecord $record) => $this->register->register($this->session, $record, $this->staff, byStaff: true));
+    $this->results->forRegistration($registrations[0], scores([15, 15, 15, 15]), null, $this->staff); // 60: passes at 60
+    $this->results->forRegistration($registrations[1], scores([14, 14, 14, 13]), null, $this->staff); // 55: fails at 60
+    $this->results->forRegistration($registrations[2], scores([10, 10, 10, 10]), null, $this->staff); // 40
+
+    $summary = $change->handle($this->session, 55, $this->staff, 'Hard paper, agreed in the meeting');
+    expect($summary)->toMatchArray(['rejudged' => 3, 'now_passed' => [$b->student_number], 'now_failed' => []])
+        ->and(AssessmentResult::query()->where('student_record_id', $b->id)->sole()->is_passed)->toBeTrue()
+        ->and(Activity::query()->where('event', 'assessment.pass_score_changed')->sole()->properties['to'])->toBe(55);
+
+    // Lowering it further: 40 still fails at 50, and a new area minimum (grammar 14) fails the 55 whatever the cut line.
+    $this->english->components->firstWhere('code', 'GRAMMAR')->forceFill(['min_score' => 14])->save();
+    $summary = $change->handle($this->session->refresh(), 50, $this->staff);
+    expect($summary['now_failed'])->toBe([$b->student_number])->and($summary['now_passed'])->toBe([]);
+    // Even at 40 the grammar minimum keeps both below it failing; only the clean 60 passes.
+    expect($change->handle($this->session->refresh(), 40, $this->staff))->toMatchArray(['now_passed' => [], 'now_failed' => []])
+        ->and(AssessmentResult::query()->where('is_passed', true)->count())->toBe(1);
+
+    $clerk = User::factory()->withPermissions([Permission::AssessmentsRecord, Permission::StudentRecordsView])->create();
+    expect(fn () => $change->handle($this->session->refresh(), 60, $clerk))->toThrow(AuthorizationException::class);
+
+    $this->results->publish($this->session->refresh(), $this->staff);
+    expect(fn () => $change->handle($this->session->refresh(), 60, $this->staff))->toThrow(ValidationException::class, __('assessment.errors.pass_score_published'));
+
+    Livewire::actingAs($this->staff)->test(EditAssessmentSession::class, ['record' => $this->session->getRouteKey()])->assertFormFieldDisabled('pass_score');
 });
 
 it('shows results to the student only once published, and external results at once', function () {

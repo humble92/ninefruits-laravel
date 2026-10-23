@@ -35,9 +35,11 @@ return [
         'evidence' => '증빙',
         'source' => '출처',
         'note' => '비고',
+        'pass_score_reason' => '합격 점수 변경 사유',
         'file' => 'CSV 파일',
     ],
     'help' => [
+        'pass_score_reason' => '감사 기록에 판정이 바뀐 학생과 함께 남는다.',
         'correction' => '이 회차는 결과가 공개되어 잠겨 있습니다. 새 값과 사유를 적어 요청하면 관리 권한이 있는 다른 담당자가 승인하고, 승인과 함께 반영됩니다.',
         'scoring' => '점수: 영역 점수(또는 총점)를 합격 점수와 비교하고, 영역마다 최저점 이상이어야 한다. 합격/불합격: 담당자가 학생마다 판정한다.',
         'max_score' => '영역이 없는 종류에 쓴다. 영역이 있으면 영역 만점의 합이 만점이다.',
@@ -45,7 +47,7 @@ return [
         'allows_external' => '외부 기관 시험(TOPIK, HSK 등) 결과를 증빙 파일과 함께 등록할 수 있다.',
         'component_code' => '결과 CSV의 열 이름. 예: LISTENING',
         'min_score' => '이 점수 미만이면 총점과 관계없이 불합격.',
-        'session_pass_score' => '비우면 종류의 합격 점수를 쓴다.',
+        'session_pass_score' => '비우면 종류의 합격 점수를 쓴다. 공개 전에 바꾸면 입력된 결과를 모두 다시 판정한다. 공개 뒤에는 바꿀 수 없다.',
         'publish' => '지금부터 학생이 결과를 본다. 나중에 입력한 결과는 바로 보인다.',
         'import' => '머리글 행이 있는 CSV: student_number, 영역 코드별 열(또는 total), 선택으로 passed(Y/N), absent(Y), note. 접수하지 않은 학생 행은 건너뛴다.',
         'decision_automatic' => '점수로 판정한다: 총점 :score 이상이고 모든 영역이 최저점 이상.',
@@ -62,6 +64,7 @@ return [
         'remove' => '삭제',
     ],
     'notifications' => [
+        'rejudged' => '결과 :count건 재판정: 합격으로 :passed건, 불합격으로 :failed건 바뀜.',
         'imported' => '입력 :recorded건, 결시 :absent건, 오류 :errors건.',
     ],
     'passed' => ['yes' => '합격', 'no' => '불합격'],
@@ -71,6 +74,7 @@ return [
     'correction_statuses' => ['pending' => '대기', 'approved' => '승인', 'rejected' => '반려', 'cancelled' => '취소'],
     'sources' => ['session' => '교내 회차', 'external' => '외부'],
     'errors' => [
+        'pass_score_published' => '결과가 공개된 회차라 합격 점수를 바꿀 수 없습니다. 정정 요청으로 처리하세요.',
         'published_locked' => '결과가 공개된 회차입니다. 정정 요청으로 처리하세요.',
         'not_locked' => '공개되지 않은 결과입니다. 직접 입력하세요.',
         'correction_pending' => '이 결과에 대기 중인 정정 요청이 이미 있습니다.',

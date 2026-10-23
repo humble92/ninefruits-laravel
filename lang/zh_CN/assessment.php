@@ -35,9 +35,11 @@ return [
         'evidence' => '证明材料',
         'source' => '来源',
         'note' => '备注',
+        'pass_score_reason' => '更改合格分数的理由',
         'file' => 'CSV 文件',
     ],
     'help' => [
+        'pass_score_reason' => '与判定发生变化的学生一起记入审计日志。',
         'correction' => '此场次成绩已公布并锁定。填写新值和理由提出申请，由具有管理权限的其他经办人审批，审批通过即生效。',
         'scoring' => '分数：各领域分数（或总分）与合格分数比较，且每个领域不低于其最低分。合格/不合格：由经办人逐人判定。',
         'max_score' => '用于没有领域的种类。有领域时满分为各领域满分之和。',
@@ -45,7 +47,7 @@ return [
         'allows_external' => '可登记外部机构考试（TOPIK、HSK 等）的成绩并附证明文件。',
         'component_code' => '成绩 CSV 中的列名，例如 LISTENING。',
         'min_score' => '低于此分数即不合格，与总分无关。',
-        'session_pass_score' => '留空则使用种类的合格分数。',
+        'session_pass_score' => '留空则使用种类的合格分数。公布前更改会重新判定已录入的全部成绩；公布后不可更改。',
         'publish' => '从现在起学生可以查看成绩。之后录入的成绩立即可见。',
         'import' => '带标题行的 CSV：student_number、每个领域代码一列（或 total），可选 passed（Y/N）、absent（Y）、note。未报名学生的行将被跳过。',
         'decision_automatic' => '按分数判定：总分不低于 :score 且各领域不低于最低分。',
@@ -62,6 +64,7 @@ return [
         'remove' => '删除',
     ],
     'notifications' => [
+        'rejudged' => '重新判定 :count 条成绩：:passed 条变为合格，:failed 条变为不合格。',
         'imported' => '录入 :recorded 条，缺考 :absent 条，错误 :errors 条。',
     ],
     'passed' => ['yes' => '合格', 'no' => '不合格'],
@@ -71,6 +74,7 @@ return [
     'correction_statuses' => ['pending' => '待处理', 'approved' => '已批准', 'rejected' => '已驳回', 'cancelled' => '已取消'],
     'sources' => ['session' => '校内场次', 'external' => '外部'],
     'errors' => [
+        'pass_score_published' => '此场次成绩已公布，不能更改合格分数。请通过更正申请处理。',
         'published_locked' => '此场次成绩已公布，请通过更正申请处理。',
         'not_locked' => '此成绩尚未公布，请直接录入。',
         'correction_pending' => '此成绩已有待处理的更正申请。',
