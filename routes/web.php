@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admission\AdmissionCycleListController;
 use App\Http\Controllers\Admission\ApplicationDocumentController;
 use App\Http\Controllers\Assessment\EvidenceController;
+use App\Http\Controllers\Attendance\AttendanceSheetController;
+use App\Http\Controllers\Attendance\RosterCsvController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\Auth\TwoFactorEmailChallengeController;
@@ -19,12 +21,14 @@ use App\Livewire\Portal\Dashboard;
 use App\Livewire\Portal\Evaluations;
 use App\Livewire\Portal\GradeEntry;
 use App\Livewire\Portal\MyAssessments;
+use App\Livewire\Portal\MyAttendance;
 use App\Livewire\Portal\MyCertificates;
 use App\Livewire\Portal\MyGrades;
 use App\Livewire\Portal\MyProfile;
 use App\Livewire\Portal\MyRecords;
 use App\Livewire\Portal\MyTeaching;
 use App\Livewire\Portal\Registration;
+use App\Livewire\Portal\SectionAttendance;
 use App\Livewire\Portal\SectionDetail;
 use App\Livewire\Portal\SectionEvaluation;
 use App\Livewire\Portal\SecuritySettings;
@@ -50,6 +54,8 @@ Route::middleware(['guest', 'throttle:two-factor'])->prefix('two-factor-challeng
 });
 
 Route::get('/people/{person}/photo', PersonPhotoController::class)->middleware(['auth', 'mfa'])->name('people.photo');
+Route::get('/sections/{section}/roster.csv', RosterCsvController::class)->middleware(['auth', 'mfa'])->name('sections.roster.csv');
+Route::get('/sections/{section}/attendance-sheet', AttendanceSheetController::class)->middleware(['auth', 'mfa'])->name('sections.attendance.sheet');
 Route::get('/assessment-results/{assessmentResult}/evidence', EvidenceController::class)->middleware(['auth', 'mfa'])->name('assessments.evidence');
 Route::get('/certificates/{certificateIssue}/download', DownloadCertificateController::class)->middleware(['auth', 'mfa'])->name('certificates.download');
 Route::get('/student-records/{studentRecord}/transcript', [TranscriptController::class, 'show'])->middleware(['auth', 'mfa'])->name('transcripts.show');
@@ -67,6 +73,8 @@ Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(fun
     Route::livewire('/sections/{section}/syllabus', SyllabusEditor::class)->name('syllabus.edit');
     Route::livewire('/teaching', MyTeaching::class)->name('teaching');
     Route::livewire('/sections/{section}/grades', GradeEntry::class)->name('grades.entry');
+    Route::livewire('/sections/{section}/attendance', SectionAttendance::class)->name('attendance.section');
+    Route::livewire('/attendance', MyAttendance::class)->name('attendance');
     Route::livewire('/grades', MyGrades::class)->name('grades');
     Route::livewire('/evaluations', Evaluations::class)->name('evaluations');
     Route::livewire('/certificates', MyCertificates::class)->name('certificates');

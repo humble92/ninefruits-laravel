@@ -10,6 +10,7 @@ use App\Filament\Admin\NavigationGroup;
 use App\Filament\Admin\Resources\Offering\Sections\Pages\CreateSection;
 use App\Filament\Admin\Resources\Offering\Sections\Pages\EditSection;
 use App\Filament\Admin\Resources\Offering\Sections\Pages\ListSections;
+use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\ClassMeetingsRelationManager;
 use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\InstructorsRelationManager;
 use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\MeetingsRelationManager;
 use App\Filament\Admin\Resources\Offering\Sections\RelationManagers\RosterRelationManager;
@@ -162,7 +163,7 @@ class SectionResource extends Resource
 
     public static function getRelations(): array
     {
-        return [MeetingsRelationManager::class, InstructorsRelationManager::class, SeatGroupsRelationManager::class, RosterRelationManager::class, WaitlistRelationManager::class];
+        return [MeetingsRelationManager::class, InstructorsRelationManager::class, SeatGroupsRelationManager::class, RosterRelationManager::class, WaitlistRelationManager::class, ClassMeetingsRelationManager::class];
     }
 
     public static function getPages(): array

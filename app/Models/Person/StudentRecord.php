@@ -4,6 +4,7 @@ namespace App\Models\Person;
 
 use App\Domain\Person\Enums\AdditionalProgramRequestStatus;
 use App\Domain\Person\Enums\StudentStatus;
+use App\Domain\Registration\Enums\EnrollmentStatus;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Security\Services\AuthorizationService;
 use App\Models\Institution\LookupValue;
@@ -176,7 +177,7 @@ class StudentRecord extends Model implements TargetSubject
      * unit and below, program, including second majors and minors in that scope), records
      * behind second major or minor requests they decide, the student's own records, and
      * current advisees. Mirrors
-     * the row level security policies on student_records.
+     * the row level security policies on student_records (advisors and section instructors included).
      *
      * @template TModel of Model
      *
@@ -224,6 +225,11 @@ class StudentRecord extends Model implements TargetSubject
                     ->orWhereIn('student_records.id', AdvisorAssignment::query()
                         ->current()
                         ->whereHas('instructor', fn (Builder $instructor) => $instructor->where('person_id', $user->person_id))
+                        ->select('student_record_id'))
+                    // Students in the sections the user teaches (roster, attendance, grades).
+                    ->orWhereIn('student_records.id', Enrollment::query()
+                        ->whereIn('status', [EnrollmentStatus::Enrolled, EnrollmentStatus::Completed])
+                        ->whereHas('section', fn (Builder $section) => $section->taughtBy((int) $user->person_id))
                         ->select('student_record_id'));
             }
         });

@@ -7,6 +7,7 @@ use App\Domain\Offering\Enums\SectionStatus;
 use App\Domain\Security\Data\PermissionScope;
 use App\Domain\Security\Enums\Permission;
 use App\Domain\Security\Services\AuthorizationService;
+use App\Models\Attendance\ClassMeeting;
 use App\Models\Concerns\HasTranslatableAttributes;
 use App\Models\Contracts\Translatable;
 use App\Models\Curriculum\Course;
@@ -66,6 +67,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read Collection<int, SectionMeeting> $meetings
  * @property-read Collection<int, SectionSeatGroup> $seatGroups
  * @property-read Syllabus|null $syllabus
+ * @property-read Collection<int, ClassMeeting> $classMeetings
  */
 class Section extends Model implements Translatable
 {
@@ -185,6 +187,14 @@ class Section extends Model implements Translatable
     public function waitlistEntries(): HasMany
     {
         return $this->hasMany(WaitlistEntry::class)->orderBy('requested_at');
+    }
+
+    /**
+     * @return HasMany<ClassMeeting, $this>
+     */
+    public function classMeetings(): HasMany
+    {
+        return $this->hasMany(ClassMeeting::class)->orderBy('meeting_date')->orderBy('start_time');
     }
 
     /**
