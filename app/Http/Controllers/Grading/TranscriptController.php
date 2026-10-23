@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Grading;
 
+use App\Domain\Evaluation\Services\EvaluationTasks;
 use App\Domain\Grading\Services\GradeReport;
 use App\Domain\Institution\Settings\InstitutionSettings;
 use App\Domain\Person\Services\CurrentStudentRecord;
@@ -19,14 +20,14 @@ use Illuminate\Support\Facades\Gate;
  */
 class TranscriptController
 {
-    public function own(Request $request, CurrentStudentRecord $current, GradeReport $report, InstitutionSettings $institution): View
+    public function own(Request $request, CurrentStudentRecord $current, GradeReport $report, InstitutionSettings $institution, EvaluationTasks $evaluations): View
     {
         /** @var User $user */
         $user = $request->user();
         $record = $current->get($user) ?? abort(404);
         abort_if($report->blockingHold($record) !== null, 403);
 
-        return $this->render($record, $report, $institution);
+        return $this->render($record, $report, $institution, $evaluations->blockedTermIds($record));
     }
 
     public function show(Request $request, StudentRecord $studentRecord, GradeReport $report, InstitutionSettings $institution): View
@@ -37,10 +38,13 @@ class TranscriptController
         return $this->render($studentRecord, $report, $institution);
     }
 
-    private function render(StudentRecord $record, GradeReport $report, InstitutionSettings $institution): View
+    /**
+     * @param  list<int>  $hiddenTermIds
+     */
+    private function render(StudentRecord $record, GradeReport $report, InstitutionSettings $institution, array $hiddenTermIds = []): View
     {
         $record->loadMissing(['person', 'program']);
-        $terms = $report->terms($record);
+        $terms = $report->terms($record, $hiddenTermIds);
 
         return view('grading.transcript', [
             'institution' => $institution->name[app()->getLocale()] ?? reset($institution->name) ?: config('app.name'),

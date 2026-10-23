@@ -4,6 +4,8 @@ namespace Database\Seeders\Profiles;
 
 use App\Models\Admission\Application;
 use App\Models\Curriculum\CourseCategory;
+use App\Models\Evaluation\EvaluationForm;
+use App\Models\Evaluation\EvaluationQuestion;
 use App\Models\Facility\Room;
 use App\Models\Grading\GradeScale;
 use App\Models\Grading\GradeScaleItem;
@@ -47,6 +49,7 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         $this->termTypes();
         $this->courseCategories();
         $this->gradeScale();
+        $this->evaluationForm();
         $this->timeSlots();
         $this->roomTypes();
         $this->lookupValues(Application::ADMISSION_TYPE_LOOKUP, [
@@ -100,6 +103,80 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
                 $this->seedRow(CourseCategory::class, ['code' => $childCode], ['name' => $childName], ['parent_id' => $parent->id, 'sort_order' => ++$childOrder]);
             }
         }
+    }
+
+    /**
+     * A standard course evaluation: five areas of three questions on a five-point scale
+     * (the legacy areas), and one comment. Created once; admin edits are kept.
+     */
+    private function evaluationForm(): void
+    {
+        if (EvaluationForm::query()->where('code', 'STANDARD')->exists()) {
+            return;
+        }
+
+        $form = EvaluationForm::query()->create([
+            'code' => 'STANDARD',
+            'name' => ['en' => 'Standard course evaluation', 'ko' => '표준 강의평가', 'zh_CN' => '标准课程评价'],
+            'description' => [
+                'en' => 'Your answers are anonymous: instructors see only totals, after the results are published, and only when enough students answered.',
+                'ko' => '응답은 익명입니다. 교원은 결과 공개 후, 충분한 학생이 응답한 강좌의 집계만 봅니다.',
+                'zh_CN' => '回答为匿名。教师只能在结果公布后、回答人数足够时看到汇总结果。',
+            ],
+            'scale_points' => 5,
+            'scale_low_label' => ['en' => 'Strongly disagree', 'ko' => '전혀 그렇지 않다', 'zh_CN' => '完全不同意'],
+            'scale_high_label' => ['en' => 'Strongly agree', 'ko' => '매우 그렇다', 'zh_CN' => '非常同意'],
+        ]);
+
+        $areas = [
+            [['en' => 'Preparation', 'ko' => '강의 준비', 'zh_CN' => '课程准备'], [
+                ['en' => 'The syllabus explained the goals, content and grading of the course.', 'ko' => '강의계획서에 수업 목표, 내용, 평가 방법이 잘 안내되었다.', 'zh_CN' => '教学大纲清楚说明了课程目标、内容和评分方法。'],
+                ['en' => 'Classes were well prepared.', 'ko' => '수업이 충실히 준비되었다.', 'zh_CN' => '课程准备充分。'],
+                ['en' => 'Classes started and ended on time.', 'ko' => '수업이 정해진 시간에 시작하고 끝났다.', 'zh_CN' => '课程按时开始和结束。'],
+            ]],
+            [['en' => 'Teaching', 'ko' => '강의 방법', 'zh_CN' => '教学方法'], [
+                ['en' => 'Explanations were clear and easy to follow.', 'ko' => '설명이 명확하고 이해하기 쉬웠다.', 'zh_CN' => '讲解清楚易懂。'],
+                ['en' => 'Students could ask questions and take part.', 'ko' => '질문과 참여의 기회가 충분했다.', 'zh_CN' => '学生有充分的提问和参与机会。'],
+                ['en' => 'The pace of the course was hard to follow.', 'ko' => '수업 진도를 따라가기 어려웠다.', 'zh_CN' => '课程进度很难跟上。', 'reversed' => true],
+            ]],
+            [['en' => 'Content', 'ko' => '강의 내용', 'zh_CN' => '教学内容'], [
+                ['en' => 'The content followed the syllabus.', 'ko' => '수업 내용이 강의계획서에 맞게 진행되었다.', 'zh_CN' => '教学内容与教学大纲一致。'],
+                ['en' => 'The course increased my knowledge of the subject.', 'ko' => '이 과목에 대한 지식이 늘었다.', 'zh_CN' => '这门课增加了我对该学科的了解。'],
+                ['en' => 'Materials and assignments helped me learn.', 'ko' => '교재와 과제가 학습에 도움이 되었다.', 'zh_CN' => '教材和作业对学习有帮助。'],
+            ]],
+            [['en' => 'Assessment', 'ko' => '평가 방법', 'zh_CN' => '考核方法'], [
+                ['en' => 'Assessment followed the announced criteria.', 'ko' => '평가가 안내된 기준에 따라 이루어졌다.', 'zh_CN' => '考核按照公布的标准进行。'],
+                ['en' => 'Exams and assignments matched what was taught.', 'ko' => '시험과 과제가 수업 내용과 맞았다.', 'zh_CN' => '考试和作业与教学内容相符。'],
+                ['en' => 'I received useful feedback on my work.', 'ko' => '과제와 시험에 대해 도움이 되는 피드백을 받았다.', 'zh_CN' => '我得到了对学习有帮助的反馈。'],
+            ]],
+            [['en' => 'Facilities', 'ko' => '교학 시설 및 장비', 'zh_CN' => '教学设施和设备'], [
+                ['en' => 'The classroom was suitable for the course.', 'ko' => '강의실이 수업에 적합했다.', 'zh_CN' => '教室适合本课程。'],
+                ['en' => 'Equipment needed for the course worked well.', 'ko' => '수업에 필요한 장비가 잘 작동했다.', 'zh_CN' => '课程所需设备运行良好。'],
+                ['en' => 'Overall, I am satisfied with this course.', 'ko' => '전반적으로 이 수업에 만족한다.', 'zh_CN' => '总体上我对这门课感到满意。'],
+            ]],
+        ];
+        $order = 0;
+
+        foreach ($areas as [$category, $questions]) {
+            foreach ($questions as $question) {
+                EvaluationQuestion::query()->create([
+                    'evaluation_form_id' => $form->id,
+                    'sort_order' => $order += 10,
+                    'category' => $category,
+                    'text' => array_diff_key($question, ['reversed' => true]),
+                    'is_reversed' => $question['reversed'] ?? false,
+                ]);
+            }
+        }
+
+        EvaluationQuestion::query()->create([
+            'evaluation_form_id' => $form->id,
+            'sort_order' => $order + 10,
+            'category' => ['en' => 'Comments', 'ko' => '의견', 'zh_CN' => '意见'],
+            'text' => ['en' => 'What should the instructor keep or change?', 'ko' => '이 수업에서 좋았던 점이나 바뀌었으면 하는 점을 적어 주세요.', 'zh_CN' => '请写下这门课的优点或需要改进的地方。'],
+            'question_type' => 'text',
+            'is_required' => false,
+        ]);
     }
 
     /**

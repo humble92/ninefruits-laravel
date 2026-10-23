@@ -19,7 +19,7 @@ use Illuminate\Validation\ValidationException;
  */
 class ReviseCourse
 {
-    public const array ATTRIBUTES = ['title', 'description', 'credits', 'lecture_hours', 'lab_hours', 'course_category_id', 'grading_basis', 'counts_toward_credit_limit', 'is_repeatable'];
+    public const array ATTRIBUTES = ['title', 'description', 'credits', 'lecture_hours', 'lab_hours', 'course_category_id', 'grading_basis', 'counts_toward_credit_limit', 'is_repeatable', 'requires_evaluation'];
 
     public function __construct(private readonly AuditLogger $audit) {}
 

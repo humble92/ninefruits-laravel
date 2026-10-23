@@ -14,7 +14,7 @@ use Illuminate\Console\Attributes\Signature;
 use function Laravel\Prompts\confirm;
 
 #[Signature('setup:demo
-    {--size=small : small (about 100 students), medium (about 2,000) or large (about 20,000)}
+    {--size=small : tiny (about 20 students), small (about 100), medium (about 2,000) or large (about 20,000)}
     {--seed= : Faker seed for reproducible data}
     {--force : Do not ask for confirmation (still refused in production)}')]
 #[Description('Create a fictional demo university from factories. Never runs in production.')]

@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property GradingBasis $grading_basis
  * @property bool $counts_toward_credit_limit
  * @property bool $is_repeatable
+ * @property bool $requires_evaluation
  * @property-read Course $course
  * @property-read CourseCategory|null $category
  * @property-read Collection<int, CourseRequisite> $requisites
@@ -45,12 +46,12 @@ class CourseVersion extends Model implements Translatable
 
     protected $fillable = [
         'course_id', 'effective_start_date', 'effective_end_date', 'title', 'description', 'credits', 'lecture_hours', 'lab_hours',
-        'course_category_id', 'grading_basis', 'counts_toward_credit_limit', 'is_repeatable',
+        'course_category_id', 'grading_basis', 'counts_toward_credit_limit', 'is_repeatable', 'requires_evaluation',
     ];
 
     protected $attributes = [
         'effective_end_date' => null, 'description' => null, 'lecture_hours' => 0, 'lab_hours' => 0, 'course_category_id' => null,
-        'grading_basis' => 'graded', 'counts_toward_credit_limit' => true, 'is_repeatable' => false,
+        'grading_basis' => 'graded', 'counts_toward_credit_limit' => true, 'is_repeatable' => false, 'requires_evaluation' => true,
     ];
 
     protected function casts(): array
@@ -64,6 +65,7 @@ class CourseVersion extends Model implements Translatable
             'grading_basis' => GradingBasis::class,
             'counts_toward_credit_limit' => 'boolean',
             'is_repeatable' => 'boolean',
+            'requires_evaluation' => 'boolean',
         ];
     }
 

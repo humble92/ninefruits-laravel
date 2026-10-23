@@ -4,6 +4,7 @@ namespace App\Livewire\Portal;
 
 use App\Domain\Offering\Enums\SectionStatus;
 use App\Domain\Offering\Services\Timetable;
+use App\Models\Evaluation\TermEvaluation;
 use App\Models\Offering\Section;
 use App\Models\Offering\SectionMeeting;
 use App\Models\Term\Term;
@@ -42,6 +43,7 @@ class MyTeaching extends Component
         return view('livewire.portal.my-teaching', [
             'terms' => $this->terms(),
             'sections' => $sections,
+            'publishedTermIds' => TermEvaluation::query()->whereNotNull('results_published_at')->pluck('term_id')->all(),
             'timetable' => $timetable->build($sections->flatMap(fn (Section $section) => $section->meetings), fn (SectionMeeting $meeting) => [
                 $sections->firstWhere('id', $meeting->section_id)?->label() ?? '',
                 Timetable::roomLabel($meeting),

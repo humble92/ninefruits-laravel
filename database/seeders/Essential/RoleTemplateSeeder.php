@@ -76,6 +76,8 @@ class RoleTemplateSeeder extends Seeder
                     Permission::GradesView,
                     Permission::GradeChangesRequest,
                     Permission::GradingPoliciesManage,
+                    Permission::EvaluationsView,
+                    Permission::EvaluationsManage,
                 ],
             ],
             'certificate_officer' => [
@@ -96,6 +98,7 @@ class RoleTemplateSeeder extends Seeder
                     Permission::EnrollmentsView,
                     Permission::RegistrationManage,
                     Permission::GradesView,
+                    Permission::EvaluationsView,
                 ],
             ],
             'admissions_officer' => [

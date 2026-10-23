@@ -23,6 +23,7 @@
                     <th class="px-4 py-2">{{ __('offering.fields.schedule') }}</th>
                     <th class="px-4 py-2">{{ __('offering.syllabus.title') }}</th>
                     <th class="px-4 py-2">{{ __('grading.entry.title') }}</th>
+                    <th class="px-4 py-2">{{ __('evaluation.results.title') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,9 +38,16 @@
                             </a>
                         </td>
                         <td class="px-4 py-2"><a href="{{ route('portal.grades.entry', $section) }}" class="underline">{{ __('grading.entry.open') }}</a></td>
+                        <td class="px-4 py-2">
+                            @if (in_array($section->term_id, $publishedTermIds, true))
+                                <a href="{{ route('portal.evaluations.results', $section) }}" class="underline">{{ __('evaluation.results.open') }}</a>
+                            @else
+                                <span class="text-zinc-500">{{ __('evaluation.results.not_yet') }}</span>
+                            @endif
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="px-4 py-6 text-center text-zinc-500">{{ __('offering.teaching.none') }}</td></tr>
+                    <tr><td colspan="6" class="px-4 py-6 text-center text-zinc-500">{{ __('offering.teaching.none') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

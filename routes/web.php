@@ -13,6 +13,7 @@ use App\Livewire\Portal\ApplicationDetail;
 use App\Livewire\Portal\Applications;
 use App\Livewire\Portal\CourseCatalog;
 use App\Livewire\Portal\Dashboard;
+use App\Livewire\Portal\Evaluations;
 use App\Livewire\Portal\GradeEntry;
 use App\Livewire\Portal\MyGrades;
 use App\Livewire\Portal\MyProfile;
@@ -20,6 +21,7 @@ use App\Livewire\Portal\MyRecords;
 use App\Livewire\Portal\MyTeaching;
 use App\Livewire\Portal\Registration;
 use App\Livewire\Portal\SectionDetail;
+use App\Livewire\Portal\SectionEvaluation;
 use App\Livewire\Portal\SecuritySettings;
 use App\Livewire\Portal\SyllabusEditor;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +60,8 @@ Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(fun
     Route::livewire('/teaching', MyTeaching::class)->name('teaching');
     Route::livewire('/sections/{section}/grades', GradeEntry::class)->name('grades.entry');
     Route::livewire('/grades', MyGrades::class)->name('grades');
+    Route::livewire('/evaluations', Evaluations::class)->name('evaluations');
+    Route::livewire('/sections/{section}/evaluation', SectionEvaluation::class)->name('evaluations.results');
     Route::get('/grades/transcript', [TranscriptController::class, 'own'])->name('grades.transcript');
 
     // Applying needs a verified personal email (docs/porting-plan.md section 7.1).

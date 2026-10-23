@@ -18,6 +18,8 @@ return [
     'demo' => [
         // Students per size. Other volumes scale from this.
         'sizes' => [
+            // For tests and quick checks: every kind of demo data, as few rows as possible.
+            'tiny' => 20,
             'small' => 100,
             'medium' => 2000,
             'large' => 20000,

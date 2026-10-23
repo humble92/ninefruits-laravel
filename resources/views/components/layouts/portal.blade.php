@@ -19,6 +19,7 @@
                 <a href="{{ route('portal.grades') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.grades') }}</a>
                 @if (in_array(\App\Domain\Security\Enums\Persona::Student, $personas, true))
                     <a href="{{ route('portal.registration') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.registration') }}</a>
+                    <a href="{{ route('portal.evaluations') }}" class="text-sm text-zinc-600 hover:text-zinc-900">{{ __('portal.navigation.evaluations') }}</a>
                 @endif
             @endif
             @if ($portalUser->person_id !== null && (in_array(\App\Domain\Security\Enums\Persona::Applicant, $personas, true) || \App\Models\Admission\AdmissionCycle::query()->acceptingApplications()->exists()))

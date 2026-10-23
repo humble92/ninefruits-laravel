@@ -131,6 +131,43 @@ it('changes an absolute grade by a new score and refuses a bare grade', function
     expect($enrollment->refresh())->grade_code->toBe('A0')->score->toBe('92.00');
 });
 
+it('keeps the retake cap through GPA, grade changes and the comparison scale, and only for retakes', function () {
+    GradeScale::factory()->create(['code' => 'KR43', 'max_grade_points' => 4.3])->items()->createMany([
+        ['code' => 'A+', 'grade_points' => 4.3, 'min_percentage' => 97, 'max_percentage' => 100, 'sort_order' => 1],
+        ['code' => 'B+', 'grade_points' => 3.3, 'min_percentage' => 87, 'max_percentage' => 96.99, 'sort_order' => 2],
+        ['code' => 'F', 'grade_points' => 0, 'min_percentage' => 0, 'max_percentage' => 86.99, 'is_passing' => false, 'sort_order' => 3],
+    ]);
+    $this->section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
+    [$retake, $first, $other] = [$this->enrollments[0], $this->enrollments[1], $this->enrollments[2]];
+    $retake->forceFill(['is_retake' => true])->save();
+    $settings = app(GradingSettings::class);
+    $settings->retake_max_grade = 'B+';
+    $settings->save();
+
+    app(SaveGrades::class)->save($this->section, [$retake->id => ['score' => '98'], $first->id => ['score' => '98'], $other->id => ['score' => '70']], $this->teacher);
+
+    // Same score: the retake is capped on both scales, the first attempt is not.
+    expect($retake->refresh())->grade_code->toBe('B+')->grade_points->toBe('3.50')->score->toBe('98.00')
+        ->comparison_grade_code->toBe('B+')->comparison_grade_points->toBe('3.30')
+        ->and($first->refresh())->grade_code->toBe('A+')->grade_points->toBe('4.50')->comparison_grade_code->toBe('A+');
+
+    app(SaveGrades::class)->submit($this->section, $this->teacher);
+    app(FinalizeGrades::class)->finalize($this->section, $this->registrar);
+
+    // The GPA uses the capped grade points, never the score.
+    expect(TermRecord::query()->where('student_record_id', $retake->student_record_id)->sole()->term_gpa)->toBe('3.50')
+        ->and(TermRecord::query()->where('student_record_id', $first->student_record_id)->sole()->term_gpa)->toBe('4.50');
+
+    // A changed score on the retake goes through the cap again.
+    $changes = app(ManageGradeChanges::class);
+    $request = $changes->request($retake->refresh(), null, 'Exam re-marked', $this->teacher, '100');
+    expect($request->to_grade_code)->toBe('B+');
+    $changes->approve($request, $this->registrar);
+
+    expect($retake->refresh())->grade_code->toBe('B+')->score->toBe('100.00')->comparison_grade_code->toBe('B+')
+        ->and(TermRecord::query()->where('student_record_id', $retake->student_record_id)->sole()->term_gpa)->toBe('3.50');
+});
+
 it('does not change the evaluation method once grades are entered', function () {
     app(SaveGrades::class)->save($this->section, [$this->enrollments[0]->id => ['grade_code' => 'B0']], $this->teacher);
 

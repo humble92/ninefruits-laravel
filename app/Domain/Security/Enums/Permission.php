@@ -74,6 +74,9 @@ enum Permission: string
     case GradeChangesApprove = 'grade_changes.approve';
     case GradingPoliciesManage = 'grading_policies.manage';
 
+    case EvaluationsView = 'evaluations.view';
+    case EvaluationsManage = 'evaluations.manage';
+
     public function resource(): string
     {
         return explode('.', $this->value, 2)[0];

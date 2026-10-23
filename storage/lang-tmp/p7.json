@@ -1,0 +1,165 @@
+{"en": {
+"admin": {"navigation": {"evaluation": "Course evaluation"}},
+"portal": {"navigation": {"evaluations": "Course evaluation"}},
+"evaluation": {
+  "resources": {
+    "forms": {"label": "evaluation form", "plural_label": "evaluation forms"},
+    "terms": {"label": "term evaluation", "plural_label": "term evaluations"},
+    "sections": {"label": "section response", "plural_label": "responses by section"}
+  },
+  "fields": {
+    "description": "Description", "scale_points": "Scale points", "scale_low_label": "Label of 1", "scale_high_label": "Label of the highest point",
+    "questions": "Questions", "category": "Area", "question": "Question", "question_type": "Type", "is_required": "Required", "is_reversed": "Reversed",
+    "minimum_responses": "Minimum responses", "minimum_response_percent": "Minimum response rate (%)", "responses": "Responses",
+    "response_rate": "Response rate", "published_at": "Results published", "requires_evaluation": "Course evaluation"
+  },
+  "help": {
+    "is_reversed": "For negatively worded questions: the answer is reversed in averages (5 counts as 1).",
+    "minimum_responses": "A section's results show only with at least this many responses and this response rate, so few answers cannot point to a student.",
+    "publish": "Instructors see their sections' results from now on (sections with enough responses).",
+    "requires_evaluation": "Off for internships or practica that are not evaluated."
+  },
+  "actions": {"prepare": "Set up a term", "change": "Change", "publish": "Publish results", "copy_form": "Copy form"},
+  "question_types": {"scale": "Scale", "text": "Comment"},
+  "portal": {
+    "title": "Course evaluation", "anonymous": "Your answers are anonymous. Instructors see only totals, after the results are published.",
+    "none_open": "No course evaluation is open for you.", "evaluate": "Evaluate", "done": "Done", "back": "Back",
+    "optional": "optional", "submit": "Submit", "submit_confirm": "Submit the evaluation? You cannot change it afterwards.",
+    "submitted": "Thank you. Your evaluation was submitted."
+  },
+  "grades_hidden": "The grades of :term show after you finish its course evaluation.",
+  "results": {
+    "title": "Course evaluation results", "open": "Results", "not_yet": "Not published",
+    "responses": ":responses of :expected responded (:rate%)", "overall": "overall :mean",
+    "mean": "Mean", "reversed": "reversed",
+    "not_published": "The results are not published yet.",
+    "too_few": "Too few responses to show results (at least :minimum and :percent% are needed)."
+  },
+  "errors": {
+    "not_open": "The course evaluation is not open for this course.", "already_done": "You have already evaluated this course.",
+    "missing_answers": "Answer every required question (:count missing).", "invalid_answer": "An answer is not valid.",
+    "uniform_answers": "Every answer is the same. Please answer each question.",
+    "form_in_use": "The term already has responses with its form."
+  },
+  "mail": {
+    "reminder_subject": "Course evaluation is open", "reminder_intro": "Please evaluate these courses:",
+    "reminder_anonymous": "Your answers are anonymous.", "open_evaluations": "Open course evaluation"
+  },
+  "settings": {
+    "title": "Course evaluation", "grades_require_evaluation": "Hide a term's grades until its evaluation is done",
+    "grades_require_evaluation_help": "Only while the evaluation is open; the grades show when it closes.",
+    "reject_uniform_answers": "Refuse the same answer to every question",
+    "reject_uniform_answers_help": "As the legacy refused all 1s or all 5s.",
+    "minimum_help": "Defaults for a new term's evaluation."
+  }
+}},
+"ko": {
+"admin": {"navigation": {"evaluation": "강의평가"}},
+"portal": {"navigation": {"evaluations": "강의평가"}},
+"evaluation": {
+  "resources": {
+    "forms": {"label": "강의평가 양식", "plural_label": "강의평가 양식"},
+    "terms": {"label": "학기 강의평가", "plural_label": "학기 강의평가"},
+    "sections": {"label": "강좌별 응답", "plural_label": "강좌별 응답"}
+  },
+  "fields": {
+    "description": "설명", "scale_points": "척도 점수", "scale_low_label": "1점 설명", "scale_high_label": "최고점 설명",
+    "questions": "문항", "category": "영역", "question": "문항", "question_type": "유형", "is_required": "필수", "is_reversed": "역문항",
+    "minimum_responses": "최소 응답 수", "minimum_response_percent": "최소 응답률(%)", "responses": "응답",
+    "response_rate": "응답률", "published_at": "결과 공개", "requires_evaluation": "강의평가 대상"
+  },
+  "help": {
+    "is_reversed": "부정형 문항. 평균을 낼 때 응답을 뒤집는다(5점은 1점으로).",
+    "minimum_responses": "응답 수와 응답률이 이 값 이상인 강좌만 결과를 보여 준다. 응답이 적으면 학생을 짐작할 수 있기 때문이다.",
+    "publish": "지금부터 교원이 담당 강좌의 결과를 본다(응답이 충분한 강좌).",
+    "requires_evaluation": "평가하지 않는 실습·인턴십 과목은 끈다."
+  },
+  "actions": {"prepare": "학기 강의평가 설정", "change": "변경", "publish": "결과 공개", "copy_form": "양식 복사"},
+  "question_types": {"scale": "척도", "text": "주관식"},
+  "portal": {
+    "title": "강의평가", "anonymous": "응답은 익명입니다. 교원은 결과 공개 후 집계만 봅니다.",
+    "none_open": "지금 할 수 있는 강의평가가 없습니다.", "evaluate": "평가하기", "done": "완료", "back": "목록으로",
+    "optional": "선택", "submit": "제출", "submit_confirm": "강의평가를 제출할까요? 제출 후에는 바꿀 수 없습니다.",
+    "submitted": "제출했습니다. 감사합니다."
+  },
+  "grades_hidden": ":term 성적은 그 학기 강의평가를 마치면 볼 수 있습니다.",
+  "results": {
+    "title": "강의평가 결과", "open": "결과", "not_yet": "미공개",
+    "responses": ":expected명 중 :responses명 응답(:rate%)", "overall": "전체 평균 :mean",
+    "mean": "평균", "reversed": "역문항",
+    "not_published": "아직 결과가 공개되지 않았습니다.",
+    "too_few": "응답이 적어 결과를 보여 주지 않습니다(최소 :minimum명, :percent% 필요)."
+  },
+  "errors": {
+    "not_open": "이 과목의 강의평가 기간이 아닙니다.", "already_done": "이미 평가한 과목입니다.",
+    "missing_answers": "필수 문항에 모두 답해 주세요(:count개 남음).", "invalid_answer": "올바르지 않은 응답이 있습니다.",
+    "uniform_answers": "모든 응답이 같습니다. 문항마다 답해 주세요.",
+    "form_in_use": "이 학기에는 이미 해당 양식으로 응답이 있습니다."
+  },
+  "mail": {
+    "reminder_subject": "강의평가 기간 안내", "reminder_intro": "아래 과목의 강의평가를 해 주세요.",
+    "reminder_anonymous": "응답은 익명으로 처리됩니다.", "open_evaluations": "강의평가 열기"
+  },
+  "settings": {
+    "title": "강의평가", "grades_require_evaluation": "강의평가를 마칠 때까지 그 학기 성적을 가림",
+    "grades_require_evaluation_help": "평가 기간 동안만 가린다. 기간이 끝나면 성적이 보인다.",
+    "reject_uniform_answers": "모든 문항에 같은 답이면 거부",
+    "reject_uniform_answers_help": "레거시는 모두 1점이나 모두 5점인 응답을 거부했다.",
+    "minimum_help": "새 학기 강의평가의 기본값."
+  }
+}},
+"zh_CN": {
+"admin": {"navigation": {"evaluation": "课程评价"}},
+"portal": {"navigation": {"evaluations": "课程评价"}},
+"evaluation": {
+  "resources": {
+    "forms": {"label": "评价表", "plural_label": "评价表"},
+    "terms": {"label": "学期课程评价", "plural_label": "学期课程评价"},
+    "sections": {"label": "课程班回答", "plural_label": "按课程班的回答"}
+  },
+  "fields": {
+    "description": "说明", "scale_points": "量表分数", "scale_low_label": "1 分说明", "scale_high_label": "最高分说明",
+    "questions": "题目", "category": "领域", "question": "题目", "question_type": "类型", "is_required": "必答", "is_reversed": "反向题",
+    "minimum_responses": "最少回答数", "minimum_response_percent": "最低回答率（%）", "responses": "回答",
+    "response_rate": "回答率", "published_at": "结果公布", "requires_evaluation": "参与课程评价"
+  },
+  "help": {
+    "is_reversed": "否定表述的题目：计算平均分时反转（5 分按 1 分计）。",
+    "minimum_responses": "回答数和回答率达到此值的课程班才显示结果，以免回答太少时推测出学生。",
+    "publish": "从现在起教师可以看到其课程班的结果（回答足够的课程班）。",
+    "requires_evaluation": "不评价的实习课程请关闭。"
+  },
+  "actions": {"prepare": "设置学期课程评价", "change": "更改", "publish": "公布结果", "copy_form": "复制评价表"},
+  "question_types": {"scale": "量表", "text": "主观题"},
+  "portal": {
+    "title": "课程评价", "anonymous": "回答为匿名。教师只能在结果公布后看到汇总。",
+    "none_open": "现在没有可以进行的课程评价。", "evaluate": "评价", "done": "已完成", "back": "返回",
+    "optional": "选填", "submit": "提交", "submit_confirm": "确定提交课程评价吗？提交后不能修改。",
+    "submitted": "已提交，谢谢。"
+  },
+  "grades_hidden": "完成 :term 的课程评价后可以查看该学期成绩。",
+  "results": {
+    "title": "课程评价结果", "open": "结果", "not_yet": "未公布",
+    "responses": ":expected 人中 :responses 人回答（:rate%）", "overall": "总平均 :mean",
+    "mean": "平均", "reversed": "反向题",
+    "not_published": "结果尚未公布。",
+    "too_few": "回答太少，不显示结果（至少需要 :minimum 人、:percent%）。"
+  },
+  "errors": {
+    "not_open": "这门课程不在课程评价时间内。", "already_done": "你已经评价过这门课程。",
+    "missing_answers": "请回答所有必答题（还差 :count 题）。", "invalid_answer": "有无效的回答。",
+    "uniform_answers": "所有回答都相同，请逐题作答。",
+    "form_in_use": "该学期已有使用此评价表的回答。"
+  },
+  "mail": {
+    "reminder_subject": "课程评价已开放", "reminder_intro": "请评价以下课程：",
+    "reminder_anonymous": "回答为匿名。", "open_evaluations": "打开课程评价"
+  },
+  "settings": {
+    "title": "课程评价", "grades_require_evaluation": "完成课程评价前隐藏该学期成绩",
+    "grades_require_evaluation_help": "只在评价期间隐藏，评价结束后显示成绩。",
+    "reject_uniform_answers": "所有题目答案相同时拒绝",
+    "reject_uniform_answers_help": "旧系统拒绝全部 1 分或全部 5 分的回答。",
+    "minimum_help": "新学期课程评价的默认值。"
+  }
+}}}

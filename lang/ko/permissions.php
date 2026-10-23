@@ -40,6 +40,7 @@ return [
         'grades' => '성적',
         'grade_changes' => '성적 정정',
         'grading_policies' => '성적 처리 정책',
+        'evaluations' => '강의평가',
     ],
     'admin_panel' => ['access' => '관리 화면 사용'],
     'users' => [
@@ -87,4 +88,5 @@ return [
     'grades' => ['view' => '성적, 성적 처리 현황, 학기 기록 조회', 'manage' => '성적 확정과 반려, 교원 대신 성적 입력, 학기 마감'],
     'grade_changes' => ['request' => '확정된 성적의 정정 요청', 'approve' => '성적 정정 승인·반려(본인 요청 제외)'],
     'grading_policies' => ['manage' => '평점, 재수강, 학사경고, 성적우수 정책 관리'],
+    'evaluations' => ['view' => '강의평가 응답률과 결과 조회', 'manage' => '강의평가 양식, 학기 강의평가, 결과 공개 관리'],
 ];

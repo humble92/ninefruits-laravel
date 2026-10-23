@@ -22,11 +22,12 @@ class GradeReport
     public function __construct(private readonly GpaCalculator $gpa) {}
 
     /**
+     * @param  list<int>  $hiddenTermIds  e.g. terms whose course evaluation the student has not finished
      * @return Collection<int, array{term: Term, enrollments: Collection<int, Enrollment>, record: TermRecord|null}> oldest term first
      */
-    public function terms(StudentRecord $record): Collection
+    public function terms(StudentRecord $record, array $hiddenTermIds = []): Collection
     {
-        $enrollments = Enrollment::query()->where('student_record_id', $record->id)
+        $enrollments = Enrollment::query()->where('student_record_id', $record->id)->whereNotIn('term_id', $hiddenTermIds)
             ->where(fn ($query) => $query->where('grade_status', GradeStatus::Finalized)->orWhere('status', EnrollmentStatus::Withdrawn))
             ->with(['term.type', 'course', 'version', 'section'])
             ->get();

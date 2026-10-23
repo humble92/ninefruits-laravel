@@ -13,6 +13,7 @@ return [
         'teaching' => '담당 강좌',
         'registration' => '수강신청',
         'grades' => '성적',
+        'evaluations' => '강의평가',
     ],
     'dashboard' => [
         'title' => '홈',

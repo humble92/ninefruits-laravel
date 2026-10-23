@@ -22,6 +22,9 @@ use App\Models\Curriculum\CourseRequisite;
 use App\Models\Curriculum\CourseVersion;
 use App\Models\Curriculum\CurriculumRequirement;
 use App\Models\Curriculum\CurriculumRequirementSet;
+use App\Models\Evaluation\EvaluationForm;
+use App\Models\Evaluation\EvaluationQuestion;
+use App\Models\Evaluation\TermEvaluation;
 use App\Models\Facility\Building;
 use App\Models\Facility\Room;
 use App\Models\Grading\GradeScale;
@@ -54,6 +57,7 @@ use App\Models\Term\TimeSlot;
 use App\Models\User;
 use App\Policies\Curriculum\CoursePolicy;
 use App\Policies\Curriculum\CurriculumPolicy;
+use App\Policies\Evaluation\EvaluationSetupPolicy;
 use App\Policies\Offering\SectionPolicy;
 use App\Policies\Reference\CourseCategoryPolicy;
 use App\Policies\Reference\FacilityPolicy;
@@ -128,6 +132,9 @@ class AppServiceProvider extends ServiceProvider
         RegistrationRuleSet::class => RegistrationRulePolicy::class,
         RegistrationRule::class => RegistrationRulePolicy::class,
         CreditLimitPolicy::class => RegistrationRulePolicy::class,
+        EvaluationForm::class => EvaluationSetupPolicy::class,
+        EvaluationQuestion::class => EvaluationSetupPolicy::class,
+        TermEvaluation::class => EvaluationSetupPolicy::class,
         CourseCategory::class => CourseCategoryPolicy::class,
         GradeScale::class => GradeScalePolicy::class,
         GradeScaleItem::class => GradeScalePolicy::class,

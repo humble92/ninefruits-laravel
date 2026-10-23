@@ -12,6 +12,7 @@ return [
         'curriculum' => '培养方案与开课',
         'registration' => '选课',
         'grading' => '成绩',
+        'evaluation' => '课程评价',
     ],
     'users' => [
         'label' => '用户',

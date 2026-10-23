@@ -12,6 +12,7 @@ return [
         'curriculum' => '교육과정과 개설',
         'registration' => '수강신청',
         'grading' => '성적',
+        'evaluation' => '강의평가',
     ],
     'users' => [
         'label' => '사용자',

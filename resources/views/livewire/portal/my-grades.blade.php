@@ -12,6 +12,12 @@
     @if ($hold !== null)
         <p role="status" class="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm">{{ __('grading.grades.blocked', ['type' => $hold->hold_type->label()]) }}</p>
     @else
+        @foreach ($evaluationTerms as $evaluationTerm)
+            <p role="status" class="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm">
+                {{ __('evaluation.grades_hidden', ['term' => $evaluationTerm->name]) }}
+                <a href="{{ route('portal.evaluations') }}" class="font-medium underline">{{ __('evaluation.portal.title') }}</a>
+            </p>
+        @endforeach
         @if ($latest)
             <section class="grid gap-3 rounded-lg border border-zinc-200 bg-white p-4 text-sm sm:grid-cols-4">
                 <p><span class="text-zinc-500">{{ __('grading.fields.cumulative_gpa') }}</span><br><span class="text-lg font-semibold">{{ $latest->cumulative_gpa ?? '-' }}</span></p>

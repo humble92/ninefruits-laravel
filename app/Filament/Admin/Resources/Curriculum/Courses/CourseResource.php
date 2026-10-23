@@ -120,6 +120,8 @@ class CourseResource extends Resource
             Toggle::make('counts_toward_credit_limit')->label(__('curriculum.fields.counts_toward_credit_limit'))->default(true)
                 ->helperText(__('curriculum.help.counts_toward_credit_limit')),
             Toggle::make('is_repeatable')->label(__('curriculum.fields.is_repeatable'))->helperText(__('curriculum.help.is_repeatable')),
+            Toggle::make('requires_evaluation')->label(__('evaluation.fields.requires_evaluation'))->default(true)
+                ->helperText(__('evaluation.help.requires_evaluation')),
         ];
     }
 

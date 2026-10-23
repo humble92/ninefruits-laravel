@@ -24,6 +24,7 @@ use App\Models\Person\StudentRecord;
 use App\Models\Registration\Enrollment;
 use App\Models\Term\Term;
 use App\Models\User;
+use App\Support\Setup\DemoOptions;
 use Database\Seeders\Demo\DemoAccountSeeder;
 use Database\Seeders\Demo\DemoCurriculumSeeder;
 use Database\Seeders\Demo\DemoGradeHistorySeeder;
@@ -39,6 +40,8 @@ use Livewire\Livewire;
 beforeEach(function () {
     Notification::fake();
     setSecuritySettings(['mfa_enforcement' => MfaEnforcement::Disabled]);
+    // The smallest demo that still has every kind of data: the full one per test is slow.
+    app()->instance(DemoOptions::class, new DemoOptions('tiny'));
     $this->seed([EssentialSeeder::class, DemoAccountSeeder::class, DemoReferenceSeeder::class, DemoPeopleSeeder::class, DemoCurriculumSeeder::class,
         DemoGradeHistorySeeder::class, DemoRegistrationSeeder::class, DemoGradingSeeder::class]);
     app(SyncPermissionCatalog::class)->handle();
