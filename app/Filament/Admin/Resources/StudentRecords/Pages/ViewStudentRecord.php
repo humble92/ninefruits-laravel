@@ -49,24 +49,31 @@ class ViewStudentRecord extends ViewRecord
                     ShowsActionErrors::run(fn () => app(RunDegreeAudits::class)->forRecord($record, $user));
                     Notification::make()->success()->title(__('graduation.notifications.audit_saved'))->send();
                 }),
-            Action::make('waiveRequirement')->label(__('graduation.actions.waive'))->icon(Heroicon::OutlinedShieldCheck)->color('gray')
+            Action::make('waiveRequirement')->label(__('graduation.actions.waive'))->icon(Heroicon::OutlinedShieldCheck)->color('gray')->modalDescription(__('graduation.help.waiver'))
                 ->visible(fn () => (bool) auth()->user()?->can(Permission::GraduationProcess->value))
                 ->schema([
                     Select::make('curriculum_requirement_id')->label(__('curriculum.sections.requirements'))->required()
-                        ->options(function (StudentRecord $record) {
-                            $sets = CurriculumRequirementSet::query()->where('program_id', $record->program_id)->forCatalogYear($record->catalog_year)->with('requirements.assessmentType')->get();
+                        ->options(function (ViewStudentRecord $livewire) {
+                            /** @var StudentRecord $record */
+                            $record = $livewire->getRecord();
+                            $options = [];
 
-                            return $sets->flatMap(fn (CurriculumRequirementSet $set) => $set->requirements->mapWithKeys(fn (CurriculumRequirement $requirement) => [
-                                $requirement->id => $set->program_role->label().' · '.($requirement->name ?? ($requirement->assessmentType !== null ? $requirement->assessmentType->name : $requirement->kind->label())),
-                            ]))->all();
+                            // Built by hand: flatMap would renumber the integer keys.
+                            foreach (CurriculumRequirementSet::query()->where('program_id', $record->program_id)->forCatalogYear($record->catalog_year)->with('requirements.assessmentType')->get() as $set) {
+                                foreach ($set->requirements as $requirement) {
+                                    $options[$requirement->id] = $set->program_role->label().' · '.($requirement->name ?? ($requirement->assessmentType !== null ? $requirement->assessmentType->name : $requirement->kind->label()));
+                                }
+                            }
+
+                            return $options;
                         }),
                     Textarea::make('reason')->label(__('common.reason'))->required()->maxLength(1000),
                 ])
                 ->action(function (StudentRecord $record, array $data) {
                     /** @var User $user */
                     $user = auth()->user();
-                    ShowsActionErrors::run(fn () => app(WaiveRequirement::class)->grant($record, CurriculumRequirement::query()->findOrFail($data['curriculum_requirement_id']), (string) $data['reason'], $user));
-                    Notification::make()->success()->title(__('graduation.notifications.waived'))->send();
+                    ShowsActionErrors::run(fn () => app(WaiveRequirement::class)->request($record, CurriculumRequirement::query()->findOrFail($data['curriculum_requirement_id']), (string) $data['reason'], $user));
+                    Notification::make()->success()->title(__('graduation.notifications.waiver_requested'))->send();
                 }),
             IssueCertificateAction::make(),
             Action::make('transcript')->label(__('grading.transcript.title'))->icon(Heroicon::OutlinedDocumentText)->color('gray')

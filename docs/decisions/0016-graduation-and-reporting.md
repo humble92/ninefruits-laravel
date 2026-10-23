@@ -19,16 +19,16 @@
   - 필수 과목: 과목마다 이수 여부. 수강 당시(학기 시작일) 유효한 대체과목 관계를 인정한다(`CourseHistory::acceptedCourseIds`).
   - 지정 과목 중 선택: 목록(대체 포함) 중 이수한 과목의 학점·과목 수.
   - 시험 합격: `AssessmentPassCheck`(0014).
-  - 총 학점(요건 세트의 `total_credits`), 최저 누계 평점(설정 `minimum_cumulative_gpa`, 비우면 없음).
+  - 총 학점(요건 세트의 `total_credits`), 최저 누계 평점(설정 `minimum_cumulative_gpa`, 기본 2.0, 비우면 없음).
   - 다른 학적(재입학 전 학적)의 이수 과목은 같은 인물이면 인정한다(`CourseHistory`와 같은 원칙).
-- 요건별 **면제**(`degree_requirement_waivers`: 학적 × 요건, 사유, 승인자). 전과·편입처럼 개별 사정이 필요할 때 쓴다. 면제된 요건은 충족으로 친다.
+- 요건별 **면제**(`degree_requirement_waivers`: 학적 × 요건, 사유, 상태 대기/승인/반려/해제, 요청자, 결정자·의견, 해제자·사유). 전과·편입처럼 개별 사정이 필요할 때 쓴다. **요청자와 승인자가 달라야 하며**(2026-10-23 결정, 0011·0014와 같은 규칙) 승인된 면제만 충족으로 친다. 해제는 상태로 남겨 이력을 보존한다.
 - 결과는 `degree_audits`에 스냅샷으로 남는다(요건 세트, 이수 구분, 충족 여부, 취득·필요 학점, 누계 평점, 요건별 결과 jsonb, 시각, 실행자, 학기). 화면의 "지금 점검"은 즉시 평가하고 저장은 `degree-audit:run`(학기·학생 단위)과 관리 화면의 **점검 저장**이 한다. 졸업 처리는 **저장된 최신 점검**이 충족이어야 한다(화면에 본 것과 처리한 근거가 같도록).
 - 복수전공·부전공은 활성 `student_record_programs`마다 같은 방식으로 따로 판정한다. 졸업 처리 조건은 주전공 충족이며, 부가 프로그램의 미충족은 경고로만 보여 준다(부가 프로그램 이수 인정은 Phase 12 이후 학위 표기에서 다룬다).
 
 ### 졸업 처리는 학적 변동 + 학위번호
 
 - `GraduateStudents::handle(records, graduationDate, staff, reason)`: 학생마다 최신 점검 충족 확인 → 학적 변동 유형 `graduation`으로 `RecordStatusChange`(상태 `graduated`, 졸업일) → 학위번호 발급 → 감사 `graduation.processed`.
-- 학위번호는 설정 `degree_number_pattern`(기본 `{YYYY}-{SEQ:5}`)과 접두어별 원자적 시퀀스(`degree_number_sequences`, 증명서 발급번호와 같은 방식). 졸업일의 연도를 쓴다.
+- 학위번호는 설정 `degree_number_pattern`(기본 `{PROGRAM}-{YYYY}-{SEQ:5}`, 2026-10-23 결정)과 접두어별 원자적 시퀀스(`degree_number_sequences`, 증명서 발급번호와 같은 방식). 졸업일의 연도를 쓴다.
 - 졸업 뒤에도 학적 행은 그대로다(상태만 바뀜, 0007). 계정은 졸업생 persona가 자동 적용되고 성적·증명서 조회가 가능하다. 되돌리기는 학적 변동 취소가 아니라 새 변동(재입학 등)으로 한다.
 - 수료·졸업유예·조기졸업·우등졸업은 두지 않았다(하지 않은 것).
 

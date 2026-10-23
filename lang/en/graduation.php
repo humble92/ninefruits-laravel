@@ -2,18 +2,24 @@
 
 return [
     'resources' => [
+        'waivers' => ['label' => 'Requirement waiver', 'plural_label' => 'Requirement waivers'],
         'audits' => ['label' => 'Degree audit', 'plural_label' => 'Degree audits'],
     ],
     'fields' => [
+        'waived' => 'Waived',
+        'lift_reason' => 'Lift reason',
         'is_satisfied' => 'Satisfied',
         'earned_credits' => 'Earned credits',
         'audited_at' => 'Audited',
         'min_year_level' => 'From year level',
-        'waived' => 'Waived',
         'courses' => 'courses',
         'missing' => 'Not passed',
     ],
+    'help' => [
+        'waiver' => 'Another person with the graduation permission must approve the waiver before it counts.',
+    ],
     'satisfied' => ['yes' => 'Satisfied', 'no' => 'Not satisfied'],
+    'waiver_statuses' => ['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', 'lifted' => 'Lifted'],
     'issues' => [
         'no_requirement_set' => 'No graduation requirements are defined for catalog year :year.',
         'requirement' => 'Requirement not met: :name',
@@ -21,6 +27,9 @@ return [
         'gpa' => 'Cumulative GPA :gpa below the minimum :minimum.',
     ],
     'errors' => [
+        'waiver_exists' => 'A pending or approved waiver already exists for this requirement.',
+        'waiver_not_approved' => 'Only an approved waiver can be lifted.',
+        'own_waiver' => 'You cannot decide your own waiver request.',
         'not_enrolled' => 'Only an enrolled student can graduate.',
         'no_audit' => 'No stored degree audit: run the audit first.',
         'audit_not_satisfied' => 'The latest degree audit is not satisfied.',
@@ -32,17 +41,25 @@ return [
         'open' => 'Open',
         'rerun' => 'Audit again',
         'waive' => 'Waive a requirement',
+        'lift' => 'Lift the waiver',
         'graduate' => 'Graduate',
     ],
     'notifications' => [
         'audit_saved' => 'Degree audit saved.',
         'audits_run' => ':students student(s) audited, :satisfied satisfied.',
-        'waived' => 'Requirement waived.',
+        'waiver_requested' => 'Waiver requested; it counts once another person approves it.',
         'graduated' => ':count student(s) graduated, :errors not processed.',
     ],
     'portal' => [
         'title' => 'Graduation requirements',
         'intro' => 'Your progress against the requirements of catalog year :year, evaluated now. Ask your department about waivers.',
+    ],
+    'settings' => [
+        'title' => 'Graduation settings',
+        'degree_number_pattern' => 'Degree number pattern',
+        'degree_number_pattern_help' => 'Tokens: {PROGRAM} program code, {YYYY} or {YY} graduation year, {SEQ:5} sequence per distinct prefix (required). Default {PROGRAM}-{YYYY}-{SEQ:5} → CS-2026-00001.',
+        'minimum_cumulative_gpa' => 'Minimum cumulative GPA',
+        'minimum_cumulative_gpa_help' => 'Required to graduate (primary program). Leave empty for none.',
     ],
     'reports' => [
         'title' => 'Reports',

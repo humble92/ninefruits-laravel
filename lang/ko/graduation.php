@@ -2,18 +2,24 @@
 
 return [
     'resources' => [
+        'waivers' => ['label' => '요건 면제', 'plural_label' => '요건 면제'],
         'audits' => ['label' => '졸업 요건 점검', 'plural_label' => '졸업 요건 점검'],
     ],
     'fields' => [
+        'waived' => '면제',
+        'lift_reason' => '해제 사유',
         'is_satisfied' => '충족',
         'earned_credits' => '취득 학점',
         'audited_at' => '점검 시각',
         'min_year_level' => '학년 이상',
-        'waived' => '면제',
         'courses' => '과목',
         'missing' => '미이수',
     ],
+    'help' => [
+        'waiver' => '졸업 처리 권한이 있는 다른 담당자가 승인해야 면제가 적용됩니다.',
+    ],
     'satisfied' => ['yes' => '충족', 'no' => '미충족'],
+    'waiver_statuses' => ['pending' => '대기', 'approved' => '승인', 'rejected' => '반려', 'lifted' => '해제'],
     'issues' => [
         'no_requirement_set' => '교육과정 연도 :year의 졸업 요건이 정의되지 않았습니다.',
         'requirement' => '미충족 요건: :name',
@@ -21,6 +27,9 @@ return [
         'gpa' => '누계 평점 :gpa이 최저 기준 :minimum에 미달합니다.',
     ],
     'errors' => [
+        'waiver_exists' => '이 요건에 대기 중이거나 승인된 면제가 이미 있습니다.',
+        'waiver_not_approved' => '승인된 면제만 해제할 수 있습니다.',
+        'own_waiver' => '자신이 요청한 면제는 결정할 수 없습니다.',
         'not_enrolled' => '재학 중인 학생만 졸업 처리할 수 있습니다.',
         'no_audit' => '저장된 졸업 요건 점검이 없습니다. 먼저 점검을 실행하세요.',
         'audit_not_satisfied' => '최신 졸업 요건 점검이 미충족입니다.',
@@ -32,17 +41,25 @@ return [
         'open' => '열기',
         'rerun' => '다시 점검',
         'waive' => '요건 면제',
+        'lift' => '면제 해제',
         'graduate' => '졸업 처리',
     ],
     'notifications' => [
         'audit_saved' => '졸업 요건 점검을 저장했습니다.',
         'audits_run' => '학생 :students명 점검, 충족 :satisfied명.',
-        'waived' => '요건을 면제했습니다.',
+        'waiver_requested' => '면제를 요청했습니다. 다른 담당자가 승인하면 적용됩니다.',
         'graduated' => '졸업 처리 :count명, 미처리 :errors명.',
     ],
     'portal' => [
         'title' => '졸업 요건',
         'intro' => '교육과정 연도 :year 요건에 대한 현재 이수 상황입니다. 면제는 학과에 문의하세요.',
+    ],
+    'settings' => [
+        'title' => '졸업 설정',
+        'degree_number_pattern' => '학위번호 형식',
+        'degree_number_pattern_help' => '항목: {PROGRAM} 과정 코드, {YYYY} 또는 {YY} 졸업 연도, {SEQ:5} 접두어별 일련번호(필수). 기본 {PROGRAM}-{YYYY}-{SEQ:5} → CS-2026-00001.',
+        'minimum_cumulative_gpa' => '최저 누계 평점',
+        'minimum_cumulative_gpa_help' => '졸업에 필요한 누계 평점(주전공). 비우면 적용하지 않는다.',
     ],
     'reports' => [
         'title' => '보고서',

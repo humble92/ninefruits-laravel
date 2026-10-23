@@ -40,6 +40,7 @@ use App\Models\Facility\Room;
 use App\Models\Grading\GradeScale;
 use App\Models\Grading\GradeScaleItem;
 use App\Models\Graduation\DegreeAudit;
+use App\Models\Graduation\DegreeRequirementWaiver;
 use App\Models\Institution\Country;
 use App\Models\Institution\Language;
 use App\Models\Institution\LookupType;
@@ -159,6 +160,7 @@ class AppServiceProvider extends ServiceProvider
         AssessmentResult::class => AssessmentRecordPolicy::class,
         AssessmentResultCorrection::class => AssessmentRecordPolicy::class,
         DegreeAudit::class => DegreeAuditPolicy::class,
+        DegreeRequirementWaiver::class => DegreeAuditPolicy::class,
         LmsPlatform::class => LmsPolicy::class,
         LmsCourseLink::class => LmsPolicy::class,
         LmsSyncLog::class => LmsPolicy::class,

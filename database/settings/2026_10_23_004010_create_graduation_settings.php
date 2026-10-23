@@ -9,9 +9,9 @@ return new class extends SettingsMigration
 {
     private const array DEFAULTS = [
         // Tokens: {YYYY}/{YY} graduation year, {PROGRAM} program code, {SEQ:n} sequence per prefix.
-        'graduation.degree_number_pattern' => '{YYYY}-{SEQ:5}',
+        'graduation.degree_number_pattern' => '{PROGRAM}-{YYYY}-{SEQ:5}',
         // Cumulative GPA required to graduate; null for none.
-        'graduation.minimum_cumulative_gpa' => null,
+        'graduation.minimum_cumulative_gpa' => 2.0,
     ];
 
     public function up(): void

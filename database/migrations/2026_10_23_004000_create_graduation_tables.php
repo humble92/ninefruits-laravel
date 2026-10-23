@@ -41,11 +41,19 @@ return new class extends Migration
             $table->foreignId('student_record_id')->constrained()->cascadeOnDelete();
             $table->foreignId('curriculum_requirement_id')->constrained()->cascadeOnDelete();
             $table->text('reason');
-            $table->foreignId('granted_by_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->timestampTz('granted_at');
+            // pending -> approved | rejected; approved -> lifted. Only approved waivers count.
+            $table->string('status', 16)->default('pending');
+            $table->foreignId('requested_by_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestampTz('requested_at');
+            $table->foreignId('decided_by_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestampTz('decided_at')->nullable();
+            $table->text('decision_note')->nullable();
+            $table->foreignId('lifted_by_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestampTz('lifted_at')->nullable();
+            $table->text('lift_reason')->nullable();
             $table->timestampsTz();
 
-            $table->unique(['student_record_id', 'curriculum_requirement_id']);
+            $table->index(['student_record_id', 'status']);
         });
 
         Schema::create('degree_number_sequences', function (Blueprint $table) {
@@ -58,6 +66,13 @@ return new class extends Migration
             ALTER TABLE degree_audits
                 ADD CONSTRAINT degree_audits_role_check CHECK (program_role IN ('primary', 'second_major', 'minor'))
             SQL);
+        DB::statement(<<<'SQL'
+            ALTER TABLE degree_requirement_waivers
+                ADD CONSTRAINT degree_requirement_waivers_status_check CHECK (status IN ('pending', 'approved', 'rejected', 'lifted')),
+                ADD CONSTRAINT degree_requirement_waivers_decision_check CHECK ((status = 'pending') = (decided_at IS NULL)),
+                ADD CONSTRAINT degree_requirement_waivers_lift_check CHECK ((status = 'lifted') = (lifted_at IS NOT NULL))
+            SQL);
+        DB::statement("CREATE UNIQUE INDEX degree_requirement_waivers_open_unique ON degree_requirement_waivers (student_record_id, curriculum_requirement_id) WHERE status IN ('pending', 'approved')");
 
         Constraint::audit(['degree_requirement_waivers']);
         SqlFile::apply('policies/graduation.sql');

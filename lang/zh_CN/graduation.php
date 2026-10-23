@@ -2,18 +2,24 @@
 
 return [
     'resources' => [
+        'waivers' => ['label' => '要求豁免', 'plural_label' => '要求豁免'],
         'audits' => ['label' => '毕业资格审核', 'plural_label' => '毕业资格审核'],
     ],
     'fields' => [
+        'waived' => '豁免',
+        'lift_reason' => '撤销理由',
         'is_satisfied' => '满足',
         'earned_credits' => '已获学分',
         'audited_at' => '审核时间',
         'min_year_level' => '年级以上',
-        'waived' => '豁免',
         'courses' => '门课程',
         'missing' => '未通过',
     ],
+    'help' => [
+        'waiver' => '需由另一位具有毕业办理权限的人员批准后，豁免才生效。',
+    ],
     'satisfied' => ['yes' => '满足', 'no' => '不满足'],
+    'waiver_statuses' => ['pending' => '待处理', 'approved' => '已批准', 'rejected' => '已驳回', 'lifted' => '已撤销'],
     'issues' => [
         'no_requirement_set' => '未定义培养方案年份 :year 的毕业要求。',
         'requirement' => '未满足的要求：:name',
@@ -21,6 +27,9 @@ return [
         'gpa' => '累计平均绩点 :gpa 低于最低要求 :minimum。',
     ],
     'errors' => [
+        'waiver_exists' => '该要求已有待处理或已批准的豁免。',
+        'waiver_not_approved' => '只能撤销已批准的豁免。',
+        'own_waiver' => '不能审批自己提出的豁免申请。',
         'not_enrolled' => '只有在读学生可以办理毕业。',
         'no_audit' => '没有已保存的毕业资格审核，请先执行审核。',
         'audit_not_satisfied' => '最新的毕业资格审核不满足。',
@@ -32,17 +41,25 @@ return [
         'open' => '打开',
         'rerun' => '重新审核',
         'waive' => '豁免要求',
+        'lift' => '撤销豁免',
         'graduate' => '办理毕业',
     ],
     'notifications' => [
         'audit_saved' => '已保存毕业资格审核。',
         'audits_run' => '已审核 :students 名学生，满足 :satisfied 名。',
-        'waived' => '已豁免该要求。',
+        'waiver_requested' => '已提交豁免申请，经另一位人员批准后生效。',
         'graduated' => '已办理毕业 :count 名，未办理 :errors 名。',
     ],
     'portal' => [
         'title' => '毕业要求',
         'intro' => '按培养方案年份 :year 的要求评估的当前完成情况。豁免请咨询所在院系。',
+    ],
+    'settings' => [
+        'title' => '毕业设置',
+        'degree_number_pattern' => '学位编号格式',
+        'degree_number_pattern_help' => '可用项：{PROGRAM} 专业代码，{YYYY} 或 {YY} 毕业年份，{SEQ:5} 按前缀计数的流水号（必需）。默认 {PROGRAM}-{YYYY}-{SEQ:5} → CS-2026-00001。',
+        'minimum_cumulative_gpa' => '最低累计绩点',
+        'minimum_cumulative_gpa_help' => '毕业所需的累计绩点（主修）。留空则不适用。',
     ],
     'reports' => [
         'title' => '报表',

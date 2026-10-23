@@ -5,6 +5,7 @@ use App\Domain\Curriculum\Enums\RequirementKind;
 use App\Domain\Graduation\Actions\GraduateStudents;
 use App\Domain\Graduation\Actions\RunDegreeAudits;
 use App\Domain\Graduation\Actions\WaiveRequirement;
+use App\Domain\Graduation\Enums\WaiverStatus;
 use App\Domain\Graduation\Services\DegreeAudit;
 use App\Domain\Graduation\Settings\GraduationSettings;
 use App\Domain\Person\Enums\StudentStatus;
@@ -12,9 +13,11 @@ use App\Domain\Reporting\Services\ReportCatalog;
 use App\Domain\Security\Actions\SyncPermissionCatalog;
 use App\Domain\Security\Enums\MfaEnforcement;
 use App\Domain\Security\Enums\Permission;
+use App\Filament\Admin\Pages\ManageGraduationSettings;
 use App\Filament\Admin\Pages\Reports;
 use App\Filament\Admin\Resources\Graduation\Audits\DegreeAuditResource;
 use App\Filament\Admin\Resources\Graduation\Audits\Pages\ListDegreeAudits;
+use App\Filament\Admin\Resources\Graduation\Waivers\Pages\ListDegreeWaivers;
 use App\Filament\Admin\Resources\StudentRecords\Pages\ViewStudentRecord;
 use App\Livewire\Portal\MyGraduation;
 use App\Models\Curriculum\Course;
@@ -24,6 +27,7 @@ use App\Models\Curriculum\CurriculumRequirement;
 use App\Models\Curriculum\CurriculumRequirementSet;
 use App\Models\Grading\GradeScale;
 use App\Models\Graduation\DegreeAudit as StoredAudit;
+use App\Models\Graduation\DegreeRequirementWaiver;
 use App\Models\Offering\Section;
 use App\Models\Person\StudentRecord;
 use App\Models\Registration\Enrollment;
@@ -69,6 +73,10 @@ beforeEach(function () {
     $this->requiredLine = $line(RequirementKind::RequiredCourses, ['sort_order' => 2], [$this->courses['MAJ201']->id]);
     $this->groupLine = $line(RequirementKind::CourseGroup, ['min_courses' => 2, 'sort_order' => 3], [$this->courses['MAJ202']->id, $this->courses['MAJ203']->id]);
 
+    // Most cases have no term record (no GPA): the default 2.0 minimum is switched off unless a test sets it.
+    $settings = app(GraduationSettings::class);
+    $settings->minimum_cumulative_gpa = null;
+    $settings->save();
     $this->audit = app(DegreeAudit::class);
 });
 
@@ -97,15 +105,38 @@ it('judges categories with subcategories, required courses with equivalents, cou
         ->and($group->achievedCourses)->toBe(1)->and($group->isSatisfied)->toBeFalse()
         ->and($result->earnedCredits)->toBe(12.0)->and($result->isSatisfied())->toBeFalse();
 
-    // A waiver satisfies the group; the GPA minimum then blocks until grades are good enough.
-    app(WaiveRequirement::class)->grant($this->record, $this->groupLine, 'Transfer credit from abroad', $this->staff);
+    // A waiver satisfies the group once another person approves it; the GPA minimum then blocks until grades are good enough.
+    $waive = app(WaiveRequirement::class);
+    $waiver = $waive->request($this->record, $this->groupLine, 'Transfer credit from abroad', $this->staff);
+    expect(fn () => $waive->request($this->record, $this->groupLine, 'Again', $this->staff))->toThrow(ValidationException::class, __('graduation.errors.waiver_exists'));
+    expect(fn () => $waive->approve($waiver, $this->staff))->toThrow(ValidationException::class, __('graduation.errors.own_waiver'));
+    expect($this->audit->evaluate($this->record, $this->record->program, ProgramRole::Primary)->requirements[2]->isWaived)->toBeFalse();
+    $approver = User::factory()->withPermissions([Permission::AdminPanelAccess, Permission::GraduationProcess, Permission::StudentRecordsView])->create();
+    expect(fn () => $waive->lift($waiver, $approver, 'x'))->toThrow(ValidationException::class, __('graduation.errors.waiver_not_approved'));
+    $waive->approve($waiver, $approver, 'Checked');
+    expect($waiver->refresh()->status)->toBe(WaiverStatus::Approved);
+    $settings = app(GraduationSettings::class);
+    $settings->minimum_cumulative_gpa = null;
+    $settings->save();
     expect($this->audit->evaluate($this->record, $this->record->program, ProgramRole::Primary)->isSatisfied())->toBeTrue();
 
-    $settings = app(GraduationSettings::class);
     $settings->minimum_cumulative_gpa = 3.0;
     $settings->save();
     $result = $this->audit->evaluate($this->record, $this->record->program, ProgramRole::Primary);
     expect($result->issues)->toHaveCount(1)->and($result->issues[0])->toContain('3');
+
+    // Lifting takes the waiver out of the audit again; the admin screens decide and lift.
+    $waive->lift($waiver, $approver, 'Transcript turned out incomplete');
+    expect($waiver->refresh()->status)->toBe(WaiverStatus::Lifted)
+        ->and($this->audit->evaluate($this->record, $this->record->program, ProgramRole::Primary)->requirements[2]->isSatisfied)->toBeFalse();
+    $second = $waive->request($this->record, $this->groupLine, 'Second look', $this->staff);
+    Livewire::actingAs($approver)->test(ListDegreeWaivers::class)->assertCanSeeTableRecords([$second])->callTableAction('approve', $second, ['note' => 'OK'])->assertHasNoTableActionErrors();
+    expect($second->refresh()->status)->toBe(WaiverStatus::Approved)->and(Activity::query()->where('event', 'graduation.waiver_approved')->count())->toBe(2);
+    Livewire::actingAs($this->staff)->test(ListDegreeWaivers::class)->filterTable('status', WaiverStatus::Approved->value)->assertTableActionHidden('approve', $second)
+        ->callTableAction('lift', $second, ['reason' => 'Error'])->assertHasNoTableActionErrors();
+    Livewire::actingAs($this->staff)->test(ViewStudentRecord::class, ['record' => $this->record->getRouteKey()])
+        ->callAction('waiveRequirement', ['curriculum_requirement_id' => $this->groupLine->id, 'reason' => 'From the screen'])->assertHasNoActionErrors();
+    expect(DegreeRequirementWaiver::query()->where('status', WaiverStatus::Pending)->count())->toBe(1);
 
     $other = StudentRecord::factory()->create(['catalog_year' => 2010]);
     expect($this->audit->evaluate($other, $other->program, ProgramRole::Primary)->issues[0])->toBe(__('graduation.issues.no_requirement_set', ['year' => 2010]));
@@ -130,7 +161,7 @@ it('stores audits, graduates from the latest satisfied one and issues a degree n
     expect(fn () => $graduate->handle($this->record, CarbonImmutable::parse('2026-02-20'), $clerk, 'x'))->toThrow(AuthorizationException::class);
 
     $graduate->handle($this->record, CarbonImmutable::parse('2026-02-20'), $this->staff, 'Spring commencement');
-    expect($this->record->refresh())->status->toBe(StudentStatus::Graduated)->degree_number->toBe('2026-00001')
+    expect($this->record->refresh())->status->toBe(StudentStatus::Graduated)->degree_number->toBe($this->record->program->code.'-2026-00001')
         ->and($this->record->graduation_date->toDateString())->toBe('2026-02-20')
         ->and(Activity::query()->where('event', 'graduation.processed')->exists())->toBeTrue();
     expect(fn () => $graduate->handle($this->record, CarbonImmutable::parse('2026-02-20'), $this->staff, 'Again'))->toThrow(ValidationException::class, __('graduation.errors.not_enrolled'));
@@ -141,7 +172,7 @@ it('stores audits, graduates from the latest satisfied one and issues a degree n
     }
     app(RunDegreeAudits::class)->forRecord($second, $this->staff);
     $summary = $graduate->batch([$second, StudentRecord::factory()->create()], CarbonImmutable::parse('2026-02-20'), $this->staff, 'Batch');
-    expect($summary['graduated'])->toBe(1)->and($summary['errors'])->toHaveCount(1)->and($second->refresh()->degree_number)->toBe('2026-00002');
+    expect($summary['graduated'])->toBe(1)->and($summary['errors'])->toHaveCount(1)->and($second->refresh()->degree_number)->toBe($this->record->program->code.'-2026-00002');
 });
 
 it('shows audits to staff and the student at the database level and in the screens', function () {
@@ -158,6 +189,7 @@ it('shows audits to staff and the student at the database level and in the scree
     expect(StoredAudit::query()->count())->toBe(1);
 
     $this->actingAs($this->staff)->get(DegreeAuditResource::getUrl('index'))->assertOk()->assertSee($this->record->student_number);
+    $this->actingAs($this->staff)->get(ManageGraduationSettings::getUrl())->assertOk();
     Livewire::actingAs($this->staff)->test(ListDegreeAudits::class)->callTableAction('rerun', StoredAudit::query()->first())->assertHasNoTableActionErrors();
     expect(StoredAudit::query()->count())->toBe(2);
     Livewire::actingAs($this->staff)->test(ViewStudentRecord::class, ['record' => $this->record->getRouteKey()])->callAction('degreeAudit')->assertHasNoActionErrors();

@@ -68,7 +68,7 @@ class DegreeAudit
         if ($set === null) {
             $issues[] = __('graduation.issues.no_requirement_set', ['year' => $record->catalog_year]);
         } else {
-            $waived = DegreeRequirementWaiver::query()->where('student_record_id', $record->id)->pluck('curriculum_requirement_id')->flip();
+            $waived = DegreeRequirementWaiver::query()->where('student_record_id', $record->id)->approved()->pluck('curriculum_requirement_id')->flip();
 
             foreach ($set->requirements as $requirement) {
                 $result = $this->judge($record, $requirement, $passed, $waived->has($requirement->id));
