@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 /**
  * Fictional university for development, training and demonstrations. Built from factories
  * only. Each Phase appends its demo seeder in dependency order
- * (docs/porting-plan.md section 13.4).
+ * (porting/porting-plan.md section 13.4).
  */
 class DemoSeeder extends Seeder
 {

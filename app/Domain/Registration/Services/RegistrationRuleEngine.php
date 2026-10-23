@@ -13,7 +13,7 @@ use App\Models\Registration\RegistrationRuleSet;
 use Illuminate\Support\Collection;
 
 /**
- * Runs every applicable rule and collects all results (docs/porting-plan.md section 10.6).
+ * Runs every applicable rule and collects all results (porting/porting-plan.md section 10.6).
  * Per rule the term's rule set decides: enabled, block or warn, override allowed,
  * parameters. Without a rule set the catalog defaults apply. A failed rule is overridden
  * when overrides are allowed and staff waived it for this action or the student has an

@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * One admission of a person: a new student number each time (docs/porting-plan.md 10.1).
+ * One admission of a person: a new student number each time (porting/porting-plan.md 10.1).
  * Graduation changes the status instead of moving the row (legacy SRREGISTRY → SGREGISTRY).
  *
  * @property int $id

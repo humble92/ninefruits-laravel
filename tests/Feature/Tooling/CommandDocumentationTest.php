@@ -4,11 +4,11 @@ use Illuminate\Contracts\Console\Kernel;
 
 /*
 | Every application command must be described in the operations manual
-| (docs/porting-plan.md section 13.3).
+| (porting/porting-plan.md section 13.3).
 */
 
 it('documents every application command in the operations manual', function () {
-    $manual = (string) file_get_contents(base_path('docs/manual/operations/commands.md'));
+    $manual = (string) file_get_contents(base_path('docs/manual/ko/operations/commands.md'));
 
     $commands = collect(app(Kernel::class)->all())
         ->filter(fn ($command) => str_starts_with($command::class, 'App\\'))

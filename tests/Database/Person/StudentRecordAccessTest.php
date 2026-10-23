@@ -2,7 +2,7 @@
 
 /*
 | Phase 2 completion criterion: who sees which student records and people, checked in
-| both layers independently (docs/porting-plan.md section 7.4):
+| both layers independently (porting/porting-plan.md section 7.4):
 | - application: StudentRecord::visibleTo() run as the system actor (row level security off)
 | - database: plain queries as the user (no application scope)
 */

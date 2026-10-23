@@ -33,7 +33,7 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * Registers a student for a section: all rules first (every reason is reported), then a
- * seat taken under the section's row lock (docs/porting-plan.md section 10.7). With no
+ * seat taken under the section's row lock (porting/porting-plan.md section 10.7). With no
  * seat the student can join the waitlist. Every attempt is logged with its rule results.
  *
  * The student registers themselves; staff with registration.manage for the section may

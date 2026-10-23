@@ -2,7 +2,7 @@
 
 - 작성일: 2026-10-23
 - 대상: 개발팀, 프로젝트 관리자
-- 관련: [이식 계획 12절, 14절 Phase 12](porting-plan.md#phase-12-lms-연동-기반-sm), [설계 결정 0017](decisions/0017-lms-integration.md), [LMS 연동 가이드](lms-integration-guide.md), [관리자 매뉴얼 28장](manual/admin/28-lms-integration.md)
+- 관련: [이식 계획 12절, 14절 Phase 12](porting-plan.md#phase-12-lms-연동-기반-sm), [설계 결정 0017](decisions/0017-lms-integration.md), [LMS 연동 가이드](../docs/lms-integration-guide.md), [관리자 매뉴얼 28장](../docs/manual/ko/admin/28-lms-integration.md)
 
 ## 1. 요약
 

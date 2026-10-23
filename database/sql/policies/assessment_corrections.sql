@@ -1,5 +1,5 @@
 -- Row level security for examination result corrections
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Whoever sees the result sees its corrections (staff, the student). Staff who record
 -- results request them; the decision is authorized by the application (assessments.manage,

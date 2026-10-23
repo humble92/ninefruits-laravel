@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Org units with validity periods and reorganization history, and programs
- * (legacy SFCOLLEGE, SFDEPARTMENT). docs/porting-plan.md section 10.4.
+ * (legacy SFCOLLEGE, SFDEPARTMENT). porting/porting-plan.md section 10.4.
  */
 return new class extends Migration
 {

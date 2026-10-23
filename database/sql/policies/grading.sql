@@ -1,5 +1,5 @@
 -- Row level security for grades
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Instructors enter and submit grades of their own sections until they are submitted.
 -- grades.manage (globally or for the offering org unit) finalizes and returns grades.

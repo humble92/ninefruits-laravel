@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Student records (one per admission, new student number each time), additional programs,
  * status changes and advisors (legacy SRREGISTRY/SGREGISTRY, SRALTER, SRALTERDEF,
- * SR_ADVISER). docs/porting-plan.md section 10.1.
+ * SR_ADVISER). porting/porting-plan.md section 10.1.
  */
 return new class extends Migration
 {

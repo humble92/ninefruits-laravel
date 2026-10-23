@@ -15,7 +15,7 @@ use App\Models\Registration\WaitlistEntry;
 use Carbon\CarbonImmutable;
 
 /**
- * Gives free seats to waiting students in request order (docs/porting-plan.md section
+ * Gives free seats to waiting students in request order (porting/porting-plan.md section
  * 10.7). Each promotion is a full registration: every rule is checked again, so a student
  * who no longer qualifies (credit limit reached meanwhile, time conflict, hold) is taken
  * off the list with the reason, and the next one is tried. A student who only lacks a

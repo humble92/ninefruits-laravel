@@ -2,7 +2,7 @@
 
 - 작성일: 2026-10-23
 - 대상: 개발팀, 프로젝트 관리자
-- 관련: [이식 계획 10.9절, 14절 Phase 10](porting-plan.md#phase-10-교수-강의실-최소-기능과-출석-sm), [설계 결정 0015](decisions/0015-attendance.md), [관리자 매뉴얼 25장](manual/admin/25-classroom-and-attendance.md)
+- 관련: [이식 계획 10.9절, 14절 Phase 10](porting-plan.md#phase-10-교수-강의실-최소-기능과-출석-sm), [설계 결정 0015](decisions/0015-attendance.md), [관리자 매뉴얼 25장](../docs/manual/ko/admin/25-classroom-and-attendance.md)
 
 ## 1. 요약
 

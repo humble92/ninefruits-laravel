@@ -1,5 +1,5 @@
 -- Row level security for registration
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Students see and change their own registration (status only: grades are not theirs to
 -- write). Staff see what belongs to student records they can see, and the enrollments of

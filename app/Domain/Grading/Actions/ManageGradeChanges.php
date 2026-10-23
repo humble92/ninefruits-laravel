@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Changing a finalized grade (docs/porting-plan.md section 8, 17.2): the section's
+ * Changing a finalized grade (porting/porting-plan.md section 8, 17.2): the section's
  * instructor or staff with grade_changes.request ask with a reason; someone else with
  * grade_changes.approve for the section decides. Approval applies the change in the same
  * transaction, the only way the database lets a finalized grade change.

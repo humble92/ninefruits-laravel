@@ -86,7 +86,7 @@ Route::middleware(['auth', 'mfa'])->prefix('portal')->name('portal.')->group(fun
     Route::livewire('/sections/{section}/evaluation', SectionEvaluation::class)->name('evaluations.results');
     Route::get('/grades/transcript', [TranscriptController::class, 'own'])->name('grades.transcript');
 
-    // Applying needs a verified personal email (docs/porting-plan.md section 7.1).
+    // Applying needs a verified personal email (porting/porting-plan.md section 7.1).
     Route::middleware('verified')->group(function () {
         Route::livewire('/applications', Applications::class)->name('applications');
         Route::livewire('/applications/{application}', ApplicationDetail::class)->name('applications.show');

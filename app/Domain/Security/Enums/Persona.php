@@ -4,7 +4,7 @@ namespace App\Domain\Security\Enums;
 
 /**
  * Identity based roles granted from data, never assigned by hand
- * (docs/porting-plan.md section 7.2).
+ * (porting/porting-plan.md section 7.2).
  */
 enum Persona: string
 {

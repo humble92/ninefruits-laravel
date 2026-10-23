@@ -14,7 +14,7 @@ use Illuminate\Validation\ValidationException;
 /**
  * Records a reorganization: the unit ends the day before the effective date and its
  * successors are linked. History is never rewritten; past records keep pointing at the
- * old unit, and the succession tells which unit took over (docs/porting-plan.md 10.4).
+ * old unit, and the succession tells which unit took over (porting/porting-plan.md 10.4).
  */
 class ReorganizeOrgUnit
 {

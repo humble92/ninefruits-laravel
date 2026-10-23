@@ -1,7 +1,7 @@
 # 0016. 졸업 사정, 졸업 처리, 보고서와 reporting 뷰
 
 - 상태: 채택 (2026-10-23, Phase 11)
-- 관련: [이식 계획 10.4절(교육과정), 13절, Phase 11](../porting-plan.md), [0002 DB 역할·스키마](0002-database-roles-schemas-audit.md), [0006 기준정보](0006-reference-data-model.md), [0011 성적](0011-grades-and-term-records.md), [0014 시험](0014-assessments.md), [관리자 매뉴얼 26·27장](../manual/admin/README.md)
+- 관련: [이식 계획 10.4절(교육과정), 13절, Phase 11](../porting-plan.md), [0002 DB 역할·스키마](0002-database-roles-schemas-audit.md), [0006 기준정보](0006-reference-data-model.md), [0011 성적](0011-grades-and-term-records.md), [0014 시험](0014-assessments.md), [관리자 매뉴얼 26·27장](../../docs/manual/ko/admin/README.md)
 
 ## 레거시 분석 요약
 

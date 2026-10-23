@@ -18,7 +18,7 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * Turns a confirmed applicant into a student: a new student record with a new student
- * number in the admission term (docs/porting-plan.md section 10.1). The person and the
+ * number in the admission term (porting/porting-plan.md section 10.1). The person and the
  * account stay the same, so the applicant signs in as a student with the same login. A
  * graduate applying again keeps the earlier record.
  *

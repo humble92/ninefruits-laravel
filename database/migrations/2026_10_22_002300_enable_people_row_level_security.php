@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Row level security on people, guardians, student records and status changes
- * (docs/porting-plan.md section 7.4, policies in database/sql/policies).
+ * (porting/porting-plan.md section 7.4, policies in database/sql/policies).
  */
 return new class extends Migration
 {

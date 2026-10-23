@@ -2,7 +2,7 @@
 
 - 작성일: 2026-10-23
 - 대상: 개발팀, 프로젝트 관리자
-- 관련: [이식 계획 14절 Phase 11](porting-plan.md#phase-11-졸업-사정과-보고서-m), [설계 결정 0016](decisions/0016-graduation-and-reporting.md), [관리자 매뉴얼 26·27장](manual/admin/README.md)
+- 관련: [이식 계획 14절 Phase 11](porting-plan.md#phase-11-졸업-사정과-보고서-m), [설계 결정 0016](decisions/0016-graduation-and-reporting.md), [관리자 매뉴얼 26·27장](../docs/manual/ko/admin/README.md)
 
 ## 1. 요약
 

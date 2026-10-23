@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
 /**
- * Who something applies to (docs/porting-plan.md section 10.6): programs, org units,
+ * Who something applies to (porting/porting-plan.md section 10.6): programs, org units,
  * admission year range, year levels, student statuses, academic standings and tags. An
  * empty criterion does not restrict; all non-empty criteria must match. Used by term
  * windows now and by registration rules and section eligibility later.

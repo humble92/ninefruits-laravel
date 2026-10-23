@@ -2,7 +2,7 @@
 
 - 작성일: 2026-10-22
 - 대상: 개발팀, 프로젝트 관리자
-- 관련: [이식 계획 14절 Phase 6](porting-plan.md#phase-6-성적-l), [설계 결정 0011](decisions/0011-grades-and-term-records.md), [관리자 매뉴얼 21장](manual/admin/21-grades.md)
+- 관련: [이식 계획 14절 Phase 6](porting-plan.md#phase-6-성적-l), [설계 결정 0011](decisions/0011-grades-and-term-records.md), [관리자 매뉴얼 21장](../docs/manual/ko/admin/21-grades.md)
 
 ## 1. 요약
 

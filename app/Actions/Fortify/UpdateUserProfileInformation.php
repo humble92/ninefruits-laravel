@@ -31,7 +31,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             ],
         ])->validateWithBag('updateProfileInformation');
 
-        // Accounts must verify a new email address (docs/porting-plan.md section 7.1).
+        // Accounts must verify a new email address (porting/porting-plan.md section 7.1).
         if ($input['email'] !== $user->email) {
             $this->updateVerifiedUser($user, $input);
         } else {

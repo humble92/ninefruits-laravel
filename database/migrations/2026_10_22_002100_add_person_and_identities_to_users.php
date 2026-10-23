@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Accounts linked to people (one each), external sign-in identities (school SSO),
  * invitations for people without an account, and account lockout
- * (docs/porting-plan.md section 7.1).
+ * (porting/porting-plan.md section 7.1).
  */
 return new class extends Migration
 {

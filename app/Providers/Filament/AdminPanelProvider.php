@@ -35,7 +35,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 /**
  * Staff administration panel. There is no panel login: unauthenticated users are sent to
  * the shared Fortify login, and two-factor enrollment happens in the portal
- * (docs/decisions/0001-shared-authentication.md).
+ * (porting/decisions/0001-shared-authentication.md).
  */
 class AdminPanelProvider extends PanelProvider
 {

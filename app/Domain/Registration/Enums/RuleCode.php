@@ -3,7 +3,7 @@
 namespace App\Domain\Registration\Enums;
 
 /**
- * Registration rules (docs/porting-plan.md section 10.6). The catalog is code; each term's
+ * Registration rules (porting/porting-plan.md section 10.6). The catalog is code; each term's
  * rule set says per rule: enabled, block or warn, override allowed, parameters.
  */
 enum RuleCode: string

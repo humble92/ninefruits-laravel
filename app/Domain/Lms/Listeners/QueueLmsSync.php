@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Turns domain events into synchronization jobs for every active platform
- * (docs/porting-plan.md section 12). Finalized grades are not pushed: the academic system
+ * (porting/porting-plan.md section 12). Finalized grades are not pushed: the academic system
  * is their source and the LMS keeps its own raw scores.
  */
 class QueueLmsSync

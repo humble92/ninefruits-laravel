@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Crypt;
 use Spatie\LaravelSettings\Settings;
 
 /**
- * Sign-in methods (docs/porting-plan.md section 7.1). Client secrets are stored encrypted
+ * Sign-in methods (porting/porting-plan.md section 7.1). Client secrets are stored encrypted
  * and never sent back to the browser; leaving the field empty keeps the stored secret.
  */
 class ManageAuthenticationSettings extends SettingsPage

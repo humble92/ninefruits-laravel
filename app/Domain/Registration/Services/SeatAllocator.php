@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use LogicException;
 
 /**
- * Seats of a section (docs/porting-plan.md section 10.7). Callers hold the section row
+ * Seats of a section (porting/porting-plan.md section 10.7). Callers hold the section row
  * lock (lock()), so seat decisions of one section happen one at a time and briefly; the
  * counters also have CHECK constraints (enrolled_count <= capacity).
  *

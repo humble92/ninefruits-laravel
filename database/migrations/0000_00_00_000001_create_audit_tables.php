@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Three audit layers (docs/porting-plan.md section 8):
+ * Three audit layers (porting/porting-plan.md section 8):
  * - audit.activity_log: business audit written by spatie/laravel-activitylog
  * - audit.record_changes: data audit written only by database triggers
  * - audit.security_events: authentication and security events

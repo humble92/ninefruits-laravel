@@ -25,7 +25,7 @@ use Laravel\Fortify\Events\ValidTwoFactorAuthenticationCodeProvided;
 use Laravel\Fortify\Fortify;
 
 /**
- * Security log for authentication and two-factor events (docs/porting-plan.md section 8).
+ * Security log for authentication and two-factor events (porting/porting-plan.md section 8).
  */
 class RecordAuthenticationEvents
 {

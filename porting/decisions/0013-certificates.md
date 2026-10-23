@@ -1,7 +1,7 @@
 # 0013. 증명서: 서식, 발급 대장, 진위 확인
 
 - 상태: 채택 (2026-10-23, Phase 8)
-- 관련: [이식 계획 Phase 8, 17.5](../porting-plan.md), [0004 PDF](0004-pdf-rendering.md), [0010 수강신청(제한)](0010-registration.md), [관리자 매뉴얼 23장](../manual/admin/23-certificates.md)
+- 관련: [이식 계획 Phase 8, 17.5](../porting-plan.md), [0004 PDF](0004-pdf-rendering.md), [0010 수강신청(제한)](0010-registration.md), [관리자 매뉴얼 23장](../../docs/manual/ko/admin/23-certificates.md)
 
 ## 레거시 분석 요약
 

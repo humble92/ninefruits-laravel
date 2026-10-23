@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * People (one row per person for life), their guardians and instructor records
  * (legacy SRREGISTRY/SGREGISTRY personal columns, SRFAMILY, FACULTY).
- * docs/porting-plan.md section 10.1. Row level security: 2026_10_22_002300.
+ * porting/porting-plan.md section 10.1. Row level security: 2026_10_22_002300.
  */
 return new class extends Migration
 {

@@ -15,7 +15,7 @@ use Illuminate\Validation\ValidationException;
 /**
  * Creates a student record (one admission) for a person, with a new student number unless
  * one is given. A person who studied before keeps their person row and account; only the
- * record is new (docs/porting-plan.md section 10.1). Phase 3 matriculation uses this.
+ * record is new (porting/porting-plan.md section 10.1). Phase 3 matriculation uses this.
  */
 class RegisterStudent
 {

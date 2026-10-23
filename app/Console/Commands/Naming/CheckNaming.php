@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
 /**
- * Checks table and column names in migrations against docs/conventions/naming.md.
+ * Checks table and column names in migrations against docs/development/naming.md.
  */
 #[Signature('naming:check {--path=* : Migration directories (default: database/migrations)}')]
 #[Description('Check migration table and column names against the naming conventions')]
@@ -66,7 +66,7 @@ class CheckNaming extends Command
             return self::SUCCESS;
         }
 
-        $this->components->error(count($problems).' naming problem(s). See docs/conventions/naming.md.');
+        $this->components->error(count($problems).' naming problem(s). See docs/development/naming.md.');
 
         return AuditedCommand::PROBLEMS_FOUND;
     }

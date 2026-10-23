@@ -1,5 +1,5 @@
 -- Row level security for examinations
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Kinds, areas and sessions are configuration (no RLS). Registrations and results belong to
 -- a student record: staff see those of the records they can see and write them with

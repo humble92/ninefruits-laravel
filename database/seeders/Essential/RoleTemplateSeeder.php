@@ -9,7 +9,7 @@ use App\Models\Security\Role;
 use Illuminate\Database\Seeder;
 
 /**
- * Default roles based on the legacy Oracle roles (docs/porting-plan.md section 7.2).
+ * Default roles based on the legacy Oracle roles (porting/porting-plan.md section 7.2).
  * Safe to run repeatedly: existing roles keep the display names and permissions
  * administrators gave them. System roles always get every permission.
  */

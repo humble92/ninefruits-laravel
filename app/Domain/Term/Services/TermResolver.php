@@ -15,7 +15,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Answers "which term?" per business question instead of a global current-term flag
- * (docs/porting-plan.md section 10.2). Past term grading, current instruction and next
+ * (porting/porting-plan.md section 10.2). Past term grading, current instruction and next
  * term registration can all be active at the same time.
  *
  * Dates are judged in the institution time zone; window times are absolute (timestamptz).

@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
 /**
- * Base class for commands that change data (docs/porting-plan.md section 13.2).
+ * Base class for commands that change data (porting/porting-plan.md section 13.2).
  *
  * - Records the run in the business audit (log "command"): command, options, operating
  *   system user, optional --actor account, exit code and the result set with recordResult().
@@ -84,7 +84,12 @@ abstract class AuditedCommand extends Command
         try {
             $status = (int) parent::execute($input, $output);
         } catch (Throwable $exception) {
-            $this->audit(self::FAILURE, ['exception' => $exception::class, 'message' => $exception->getMessage()]);
+            // The audit write itself may fail (e.g. an aborted transaction): the original error must surface.
+            try {
+                $this->audit(self::FAILURE, ['exception' => $exception::class, 'message' => $exception->getMessage()]);
+            } catch (Throwable) {
+                // Reported through the rethrown exception below.
+            }
 
             throw $exception;
         }

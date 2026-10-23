@@ -3,7 +3,7 @@
 use Spatie\LaravelSettings\Migrations\SettingsMigration;
 
 /**
- * Certificate options (docs/decisions/0013-certificates.md).
+ * Certificate options (porting/decisions/0013-certificates.md).
  */
 return new class extends SettingsMigration
 {

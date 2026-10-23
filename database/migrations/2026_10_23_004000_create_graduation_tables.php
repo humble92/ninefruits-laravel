@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Degree audits (legacy report_chkgrad printed credits without judging them), requirement
- * waivers, and degree number sequences (docs/decisions/0016-graduation-and-reporting.md).
+ * waivers, and degree number sequences (porting/decisions/0016-graduation-and-reporting.md).
  */
 return new class extends Migration
 {

@@ -2,7 +2,7 @@
 
 - 작성일: 2026-10-23
 - 대상: 개발팀, 프로젝트 관리자
-- 관련: [이식 계획 14절 Phase 8](porting-plan.md#phase-8-증명서-m), [설계 결정 0013](decisions/0013-certificates.md), [관리자 매뉴얼 23장](manual/admin/23-certificates.md)
+- 관련: [이식 계획 14절 Phase 8](porting-plan.md#phase-8-증명서-m), [설계 결정 0013](decisions/0013-certificates.md), [관리자 매뉴얼 23장](../docs/manual/ko/admin/23-certificates.md)
 
 ## 1. 요약
 

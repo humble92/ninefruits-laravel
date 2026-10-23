@@ -1,4 +1,4 @@
--- Finalized grades (docs/porting-plan.md section 8): once a grade is finalized, the grade
+-- Finalized grades (porting/porting-plan.md section 8): once a grade is finalized, the grade
 -- and the facts it rests on change only through an approved grade change request. The
 -- application applies an approved request with
 --   SELECT set_config('app.grade_change_request_id', '<id>', true)

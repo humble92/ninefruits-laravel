@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Graduation requirements per program, program role (primary, second major, minor) and
- * range of catalog years (docs/porting-plan.md section 10.4). Phase 8 evaluates them.
+ * range of catalog years (porting/porting-plan.md section 10.4). Phase 8 evaluates them.
  */
 return new class extends Migration
 {

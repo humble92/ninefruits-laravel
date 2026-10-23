@@ -1,5 +1,5 @@
 -- Row level security for course evaluation
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Answers are written only by the application in the system context, after it checked the
 -- student's enrollment: they carry no student to check here. Students see their own

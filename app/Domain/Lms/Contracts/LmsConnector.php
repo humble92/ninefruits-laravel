@@ -7,7 +7,7 @@ use App\Models\Offering\Section;
 use App\Models\User;
 
 /**
- * What a platform connector does (docs/porting-plan.md section 12). The academic system
+ * What a platform connector does (porting/porting-plan.md section 12). The academic system
  * owns users, sections, rosters and final grades; the LMS owns content and raw scores.
  * Implementations talk to one platform; they get the platform (credentials, options) with
  * every call and must not keep state.

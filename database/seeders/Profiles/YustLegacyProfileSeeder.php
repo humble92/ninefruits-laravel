@@ -14,7 +14,7 @@ use Illuminate\Database\Seeder;
 /**
  * The legacy YUST rules as settings.
  *
- * Registration (docs/porting-plan.md section 10.6):
+ * Registration (porting/porting-plan.md section 10.6):
  *
  * | Students            | Spring, fall | Summer, winter |
  * |---------------------|--------------|----------------|
@@ -29,7 +29,7 @@ use Illuminate\Database\Seeder;
  *
  * Holds (legacy SRDENY), overrides (SRALLOW), section eligibility (TARGET_ST*),
  * prerequisites, time conflicts, duplicates and retakes are the default rule set.
- * Grading (legacy SSCOREDEF and the GPA views, docs/decisions/0011-grades-and-term-records.md):
+ * Grading (legacy SSCOREDEF and the GPA views, porting/decisions/0011-grades-and-term-records.md):
  * the 4.3 scale with minus grades (A+ 4.3, confirmed 2026-10-22), P/N and I is the
  * institution's scale and absolute evaluation base; score ranges are in steps of three
  * points (the legacy entered letters only). GPA rounded to 3 decimals; the latest attempt

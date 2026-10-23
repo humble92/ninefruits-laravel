@@ -2,7 +2,7 @@
 
 - 작성일: 2026-10-23 (Phase 12)
 - 대상: LMS 연동을 구현할 개발자, 연동을 운영할 시스템 관리자
-- 관련: [이식 계획 12절](porting-plan.md), [설계 결정 0017](decisions/0017-lms-integration.md), [관리자 매뉴얼 28장](manual/admin/28-lms-integration.md)
+- 관련: [이식 계획 12절](../porting/porting-plan.md), [설계 결정 0017](../porting/decisions/0017-lms-integration.md), [관리자 매뉴얼 28장](manual/ko/admin/28-lms-integration.md)
 
 ## 1. 원칙
 

@@ -1,7 +1,7 @@
 # 0017. LMS 연동 기반
 
 - 상태: 채택 (2026-10-23, Phase 12)
-- 관련: [이식 계획 12절](../porting-plan.md), [LMS 연동 가이드](../lms-integration-guide.md), [0011 성적](0011-grades-and-term-records.md), [관리자 매뉴얼 28장](../manual/admin/28-lms-integration.md)
+- 관련: [이식 계획 12절](../porting-plan.md), [LMS 연동 가이드](../../docs/lms-integration-guide.md), [0011 성적](0011-grades-and-term-records.md), [관리자 매뉴얼 28장](../../docs/manual/ko/admin/28-lms-integration.md)
 
 ## 배경
 

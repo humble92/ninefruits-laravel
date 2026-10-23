@@ -21,7 +21,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Issues a certificate (staff only, docs/porting-plan.md 17.5): a ledger row with a serial
+ * Issues a certificate (staff only, porting/porting-plan.md 17.5): a ledger row with a serial
  * number and verification code, the PDF rendered and stored, the checksum kept. Holds that
  * block certificates refuse. Revocation keeps the row and the file.
  */

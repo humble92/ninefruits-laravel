@@ -11,7 +11,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 /**
- * The certificates issued to the student (staff issue them; docs/porting-plan.md 17.5).
+ * The certificates issued to the student (staff issue them; porting/porting-plan.md 17.5).
  */
 #[Layout('components.layouts.portal')]
 class MyCertificates extends Component

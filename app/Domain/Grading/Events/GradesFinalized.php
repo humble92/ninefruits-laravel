@@ -6,7 +6,7 @@ use App\Models\Offering\Section;
 use Illuminate\Foundation\Events\Dispatchable;
 
 /**
- * A section's grades were finalized (docs/porting-plan.md section 12: LMS and other
+ * A section's grades were finalized (porting/porting-plan.md section 12: LMS and other
  * integrations listen to it).
  */
 final class GradesFinalized

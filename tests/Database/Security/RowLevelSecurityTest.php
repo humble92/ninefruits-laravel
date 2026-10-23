@@ -1,7 +1,7 @@
 <?php
 
 /*
-| Row level security proof of concept (docs/decisions/0003-row-level-security.md).
+| Row level security proof of concept (porting/decisions/0003-row-level-security.md).
 | Two tables shaped like student_records and enrollments, with the policy pattern
 | planned for Phase 2: owner, global permission holder, system context.
 */

@@ -7,7 +7,7 @@ use App\Domain\Security\Enums\StudentNumberLogin;
 use Spatie\LaravelSettings\Settings;
 
 /**
- * Sign-in methods (settings group `authentication`, docs/porting-plan.md section 7.1).
+ * Sign-in methods (settings group `authentication`, porting/porting-plan.md section 7.1).
  * The personal email and password always work; the rest is chosen per institution.
  */
 class AuthenticationSettings extends Settings

@@ -1,7 +1,7 @@
 # 0014. 어학/종합시험: 종류별 영역과 판정, 회차, 외부 성적
 
 - 상태: 채택 (2026-10-23, Phase 9)
-- 관련: [이식 계획 10.8절, Phase 9](../porting-plan.md), [0006 기준정보](0006-reference-data-model.md), [관리자 매뉴얼 24장](../manual/admin/24-assessments.md)
+- 관련: [이식 계획 10.8절, Phase 9](../porting-plan.md), [0006 기준정보](0006-reference-data-model.md), [관리자 매뉴얼 24장](../../docs/manual/ko/admin/24-assessments.md)
 
 ## 레거시 분석 요약
 

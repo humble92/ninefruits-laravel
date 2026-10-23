@@ -23,7 +23,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 /**
- * Login account. One per person for life (docs/porting-plan.md section 10.1).
+ * Login account. One per person for life (porting/porting-plan.md section 10.1).
  *
  * @property int $id
  * @property string|null $name Display name for accounts without a person

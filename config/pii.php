@@ -1,7 +1,7 @@
 <?php
 
 /*
-| Personal data encryption (docs/porting-plan.md section 11.2). Uses keys separate from
+| Personal data encryption (porting/porting-plan.md section 11.2). Uses keys separate from
 | APP_KEY so that application key rotation and personal data key rotation are independent.
 */
 

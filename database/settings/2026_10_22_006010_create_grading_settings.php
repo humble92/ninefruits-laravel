@@ -3,7 +3,7 @@
 use Spatie\LaravelSettings\Migrations\SettingsMigration;
 
 /**
- * Grading policy (docs/decisions/0011-grades-and-term-records.md). Defaults suit a Korean
+ * Grading policy (porting/decisions/0011-grades-and-term-records.md). Defaults suit a Korean
  * university; the legacy YUST profile sets its own values.
  */
 return new class extends SettingsMigration

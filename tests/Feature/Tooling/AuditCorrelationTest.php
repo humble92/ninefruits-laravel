@@ -2,7 +2,7 @@
 
 /*
 | Row changes made by queued imports and commands must be traceable to who started them
-| (docs/decisions/0002-database-roles-schemas-audit.md).
+| (porting/decisions/0002-database-roles-schemas-audit.md).
 */
 
 use App\Filament\Admin\Imports\OrgUnitImporter;

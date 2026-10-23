@@ -27,7 +27,7 @@ use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
 use Laravel\Fortify\Fortify;
 
 /**
- * Shared login for the portal and the admin panel (docs/decisions/0001-shared-authentication.md).
+ * Shared login for the portal and the admin panel (porting/decisions/0001-shared-authentication.md).
  */
 class FortifyServiceProvider extends ServiceProvider
 {

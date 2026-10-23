@@ -15,7 +15,7 @@ use App\Models\Registration\Enrollment;
 /**
  * Final scores from the platform, mapped to enrollments. They are only a draft: the
  * instructor loads them into the grade entry screen, checks and submits
- * (docs/porting-plan.md section 12).
+ * (porting/porting-plan.md section 12).
  */
 class PullGrades
 {

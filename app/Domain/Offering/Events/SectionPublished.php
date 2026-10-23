@@ -6,7 +6,7 @@ use App\Models\Offering\Section;
 use Illuminate\Foundation\Events\Dispatchable;
 
 /**
- * A section became published (docs/porting-plan.md section 12: the LMS course is created).
+ * A section became published (porting/porting-plan.md section 12: the LMS course is created).
  */
 final class SectionPublished
 {

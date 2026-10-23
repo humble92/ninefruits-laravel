@@ -1,7 +1,7 @@
 # 0015. 수업 회차와 출석, 교원의 수강생 조회
 
 - 상태: 채택 (2026-10-23, Phase 10)
-- 관련: [이식 계획 10.9절, Phase 10](../porting-plan.md), [0003 RLS](0003-row-level-security.md), [0009 개설강좌](0009-courses-sections-and-sessions.md), [관리자 매뉴얼 25장](../manual/admin/25-classroom-and-attendance.md)
+- 관련: [이식 계획 10.9절, Phase 10](../porting-plan.md), [0003 RLS](0003-row-level-security.md), [0009 개설강좌](0009-courses-sections-and-sessions.md), [관리자 매뉴얼 25장](../../docs/manual/ko/admin/25-classroom-and-attendance.md)
 
 ## 레거시 분석 요약
 

@@ -24,7 +24,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
- * A person, one row for life (docs/porting-plan.md section 10.1). Student records,
+ * A person, one row for life (porting/porting-plan.md section 10.1). Student records,
  * instructor records, guardians and the login account all point here.
  *
  * The legal name is romanized (family_name, given_name); name_variants holds the name as

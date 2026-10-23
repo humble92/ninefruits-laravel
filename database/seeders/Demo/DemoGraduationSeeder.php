@@ -175,7 +175,7 @@ class DemoGraduationSeeder extends Seeder
     private function pass(StudentRecord $record, Course $course, Term $term): float
     {
         // A section of its own per course: a student may already sit (and have failed) in the term's regular section.
-        $section = $this->sections[$course->id] ??= Section::factory()->published()->inTerm($term)->forCourse($course)->create(['capacity' => 200]);
+        $section = $this->sections[$course->id] ??= Section::factory()->published()->inTerm($term)->forCourse($course)->create(['capacity' => 200, 'section_code' => 'GR']);
         $enrollment = Enrollment::factory()->inSection($section)->completed('A0')->create(['student_record_id' => $record->id, 'enrolled_at' => CarbonImmutable::instance($term->start_date)]);
 
         return (float) $enrollment->credits;

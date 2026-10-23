@@ -1,5 +1,5 @@
 -- Row level security for student records and their status changes
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Staff scope for a permission P on a record:
 --   (SELECT util.has_permission(P))                                         global

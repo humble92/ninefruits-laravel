@@ -1,7 +1,7 @@
 # 0012. 강의평가: 익명 응답, 공개 기준, 성적 조회 제한
 
 - 상태: 채택 (2026-10-22, Phase 7)
-- 관련: [이식 계획 Phase 7](../porting-plan.md), [0011 성적](0011-grades-and-term-records.md), [관리자 매뉴얼 22장](../manual/admin/22-course-evaluation.md)
+- 관련: [이식 계획 Phase 7](../porting-plan.md), [0011 성적](0011-grades-and-term-records.md), [관리자 매뉴얼 22장](../../docs/manual/ko/admin/22-course-evaluation.md)
 
 ## 레거시 분석 요약
 

@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Sign-in and account linking with a school OIDC provider (docs/porting-plan.md 7.1).
+ * Sign-in and account linking with a school OIDC provider (porting/porting-plan.md 7.1).
  *
  * The two-factor policy applies to SSO sign-ins too: unless the provider is trusted for
  * two-factor, enrolled users get the usual challenge (Fortify's pending login).

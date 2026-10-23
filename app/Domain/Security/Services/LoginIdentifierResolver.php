@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 /**
  * Finds the account for what was typed in the sign-in field: the personal email, or a
- * student number when the institution allows it (docs/porting-plan.md section 7.1).
+ * student number when the institution allows it (porting/porting-plan.md section 7.1).
  */
 class LoginIdentifierResolver
 {

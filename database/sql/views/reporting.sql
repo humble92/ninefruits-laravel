@@ -1,4 +1,4 @@
--- Reporting views (docs/decisions/0016-graduation-and-reporting.md).
+-- Reporting views (porting/decisions/0016-graduation-and-reporting.md).
 --
 -- security_invoker: the row level security of whoever queries applies. Translated columns
 -- follow the session locale (SET app.locale = 'ko'); the jsonb originals are kept alongside.

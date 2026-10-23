@@ -1,5 +1,5 @@
 -- Row level security for certificate issues
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Students see their own issued certificates. Staff see the issues of student records they
 -- can see, and certificates.issue writes them. Types and templates are configuration.

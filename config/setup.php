@@ -5,7 +5,7 @@ use Database\Seeders\Profiles\YustLegacyProfileSeeder;
 
 /*
 | Installation (setup:install) and demo data (setup:demo).
-| docs/porting-plan.md section 13.4.
+| porting/porting-plan.md section 13.4.
 */
 
 return [

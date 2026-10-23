@@ -3,7 +3,7 @@
 use Spatie\LaravelSettings\Migrations\SettingsMigration;
 
 /**
- * Course evaluation options (docs/decisions/0012-course-evaluation.md).
+ * Course evaluation options (porting/decisions/0012-course-evaluation.md).
  */
 return new class extends SettingsMigration
 {

@@ -19,7 +19,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
 /**
- * Checks a term before registration opens (docs/porting-plan.md section 13.1).
+ * Checks a term before registration opens (porting/porting-plan.md section 13.1).
  */
 #[Signature('registration:preflight {term : Term code, e.g. 2027-SP}')]
 #[Description('Check a term before registration opens: windows, rule set, sections, seats, credit limits, holds')]

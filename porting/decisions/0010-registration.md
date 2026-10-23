@@ -1,7 +1,7 @@
 # 0010. 수강신청: 규칙 엔진, 좌석, 대기자
 
 - 상태: 채택 (2026-10-22, Phase 5)
-- 관련: [이식 계획 10.6절, 10.7절, 17.6](../porting-plan.md), [0009 교과목, 학기 세션, 개설강좌](0009-courses-sections-and-sessions.md), [관리자 매뉴얼 20장](../manual/admin/20-registration.md)
+- 관련: [이식 계획 10.6절, 10.7절, 17.6](../porting-plan.md), [0009 교과목, 학기 세션, 개설강좌](0009-courses-sections-and-sessions.md), [관리자 매뉴얼 20장](../../docs/manual/ko/admin/20-registration.md)
 
 ## 데이터
 

@@ -328,7 +328,7 @@
 
 ### `naming:check`
 
-- 용도: 마이그레이션의 테이블/컬럼 이름을 [명명 규칙](../../conventions/naming.md)으로 검사한다.
+- 용도: 마이그레이션의 테이블/컬럼 이름을 [명명 규칙](../../development/naming.md)으로 검사한다.
 - 옵션: `--path=*`(검사할 디렉토리, 기본 `database/migrations`).
 - 감사: 기록 안 함
 - 종료 코드: 문제가 있으면 2.

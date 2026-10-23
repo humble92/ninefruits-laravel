@@ -1,5 +1,5 @@
 -- Row level security for attendance
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Class meetings are schedule information: anyone signed in reads them; the section's
 -- instructors and sections.manage staff in scope write them. Attendance records: the

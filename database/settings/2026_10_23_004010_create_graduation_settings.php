@@ -3,7 +3,7 @@
 use Spatie\LaravelSettings\Migrations\SettingsMigration;
 
 /**
- * Graduation options (docs/decisions/0016-graduation-and-reporting.md).
+ * Graduation options (porting/decisions/0016-graduation-and-reporting.md).
  */
 return new class extends SettingsMigration
 {

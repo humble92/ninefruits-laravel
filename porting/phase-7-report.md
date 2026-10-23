@@ -2,7 +2,7 @@
 
 - 작성일: 2026-10-22
 - 대상: 개발팀, 프로젝트 관리자
-- 관련: [이식 계획 14절 Phase 7](porting-plan.md#phase-7-강의평가-m), [설계 결정 0012](decisions/0012-course-evaluation.md), [관리자 매뉴얼 22장](manual/admin/22-course-evaluation.md)
+- 관련: [이식 계획 14절 Phase 7](porting-plan.md#phase-7-강의평가-m), [설계 결정 0012](decisions/0012-course-evaluation.md), [관리자 매뉴얼 22장](../docs/manual/ko/admin/22-course-evaluation.md)
 
 ## 1. 요약
 

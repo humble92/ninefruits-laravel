@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
  * Courses (legacy SFOBJECT): an unchanging identity with dated versions (title, credits,
  * hours, category), so records keep pointing at the version that was taught. Requisites
  * belong to a version; equivalencies (substitutions) have their own periods.
- * docs/porting-plan.md section 10.4.
+ * porting/porting-plan.md section 10.4.
  */
 return new class extends Migration
 {

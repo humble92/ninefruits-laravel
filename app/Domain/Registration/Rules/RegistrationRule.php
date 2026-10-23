@@ -9,7 +9,7 @@ use App\Domain\Registration\Enums\RuleCode;
 use App\Domain\Registration\Enums\RuleSeverity;
 
 /**
- * A registration rule (docs/porting-plan.md section 10.6). Rules only answer; the engine
+ * A registration rule (porting/porting-plan.md section 10.6). Rules only answer; the engine
  * applies the term's configuration.
  */
 interface RegistrationRule

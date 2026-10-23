@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
  * Sessions within a term (full term, first/second half, intensive courses). Every term has
  * a full-term session; every section belongs to one session; windows about courses
  * (add/drop, withdrawal, grade entry and appeal, course evaluation) belong to a session.
- * docs/decisions/0009-courses-sections-and-sessions.md.
+ * porting/decisions/0009-courses-sections-and-sessions.md.
  */
 return new class extends Migration
 {

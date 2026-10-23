@@ -6,7 +6,7 @@ namespace App\Domain\Security\Enums;
  * Permission catalog. Permissions are defined in code and synchronized to the database
  * with `php artisan security:sync-permissions`. Roles are composed of these in the admin panel.
  *
- * Naming: {resource}.{action}, resource in snake_case plural (docs/conventions/naming.md).
+ * Naming: {resource}.{action}, resource in snake_case plural (docs/development/naming.md).
  */
 enum Permission: string
 {

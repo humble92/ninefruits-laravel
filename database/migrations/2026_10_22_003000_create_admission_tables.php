@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Admissions (new, no legacy equivalent): cycles that may stay open without a deadline,
- * offered programs, required documents and applications. docs/porting-plan.md sections
+ * offered programs, required documents and applications. porting/porting-plan.md sections
  * 10.1 and 10.2. The admission term is chosen at matriculation, not on the cycle.
  */
 return new class extends Migration

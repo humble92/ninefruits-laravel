@@ -4,7 +4,7 @@
 --
 -- Policy pattern: wrap function calls in scalar subqueries, e.g. (SELECT util.current_user_id()),
 -- so they run once per query (InitPlan) instead of once per row. Results are in
--- docs/decisions/0003-row-level-security.md.
+-- porting/decisions/0003-row-level-security.md.
 DROP TABLE IF EXISTS rls_bench_enrollments, rls_bench_student_records;
 
 CREATE TABLE rls_bench_student_records (

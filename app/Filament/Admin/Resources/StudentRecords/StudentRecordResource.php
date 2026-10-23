@@ -38,7 +38,7 @@ use UnitEnum;
 
 /**
  * Student records (one per admission). Status changes only through status changes,
- * never by editing (docs/porting-plan.md section 8).
+ * never by editing (porting/porting-plan.md section 8).
  */
 class StudentRecordResource extends Resource
 {

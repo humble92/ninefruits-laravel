@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * LMS integration base (docs/porting-plan.md section 12, docs/decisions/0017-lms-integration.md):
+ * LMS integration base (porting/porting-plan.md section 12, porting/decisions/0017-lms-integration.md):
  * platforms with a driver and credentials, course and user links, and the sync log.
  */
 return new class extends Migration

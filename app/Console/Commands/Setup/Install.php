@@ -19,7 +19,7 @@ use function Laravel\Prompts\text;
 
 /**
  * New installation, safe to run again. Each Phase adds its steps here
- * (docs/porting-plan.md section 13.2).
+ * (porting/porting-plan.md section 13.2).
  */
 #[Signature('setup:install
     {--institution-name= : Institution name in the default language}

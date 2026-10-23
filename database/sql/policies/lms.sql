@@ -1,5 +1,5 @@
 -- Row level security for LMS links and logs
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Platforms are configuration (no RLS; credentials are encrypted and never selected by
 -- screens). Course links are read by anyone signed in (the portal shows the LMS course

@@ -1,5 +1,5 @@
 -- Row level security for second major and minor requests
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Students see and file requests for their own records. Staff see requests of students
 -- whose records they can see (home department) and those for programs in their

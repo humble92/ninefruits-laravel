@@ -2,7 +2,7 @@
 
 - 작성일: 2026-10-23
 - 대상: 개발팀, 프로젝트 관리자
-- 관련: [이식 계획 10.8절, 14절 Phase 9](porting-plan.md#phase-9-어학종합시험-sm), [설계 결정 0014](decisions/0014-assessments.md), [관리자 매뉴얼 24장](manual/admin/24-assessments.md)
+- 관련: [이식 계획 10.8절, 14절 Phase 9](porting-plan.md#phase-9-어학종합시험-sm), [설계 결정 0014](decisions/0014-assessments.md), [관리자 매뉴얼 24장](../docs/manual/ko/admin/24-assessments.md)
 
 ## 1. 요약
 

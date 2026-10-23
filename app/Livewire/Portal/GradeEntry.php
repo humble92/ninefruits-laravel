@@ -224,7 +224,7 @@ class GradeEntry extends Component
 
     /**
      * Loads the platform's final scores into the score fields as a draft; nothing is saved
-     * until the instructor does (docs/porting-plan.md section 12).
+     * until the instructor does (porting/porting-plan.md section 12).
      */
     public function importLmsScores(PullGrades $pull): void
     {

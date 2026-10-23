@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 /**
- * What a student has taken, with equivalent courses counted (docs/porting-plan.md section
+ * What a student has taken, with equivalent courses counted (porting/porting-plan.md section
  * 10.4: substitutions valid at the time).
  */
 class CourseHistory

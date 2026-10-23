@@ -1,5 +1,5 @@
 -- Row level security for applications
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Applicants see and edit their own applications. They can only leave an application in
 -- a state an applicant may set (draft, submitted, confirmed, withdrawn); staff decisions

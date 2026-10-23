@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Academic years, terms, term windows and time slots (legacy SFSEMESTER, SSOBJDATE, TTTIME).
  * No global "current term" flag: TermResolver answers per business question
- * (docs/porting-plan.md section 10.2).
+ * (porting/porting-plan.md section 10.2).
  */
 return new class extends Migration
 {

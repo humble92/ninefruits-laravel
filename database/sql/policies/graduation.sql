@@ -1,5 +1,5 @@
 -- Row level security for degree audits and waivers
--- (docs/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
+-- (porting/decisions/0003-row-level-security.md: function calls wrapped in SELECT).
 --
 -- Audits and waivers belong to a student record: whoever sees the record (staff in scope,
 -- the student) reads them. graduation.audit writes audits, graduation.process writes waivers.

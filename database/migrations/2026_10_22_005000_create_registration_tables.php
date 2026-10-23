@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Registration (legacy SSCORE application rows, SRDENY, SRALLOW, SV_SUBAPP): enrollments
- * with explicit status (docs/porting-plan.md section 10.3), seat counters for atomic seat
+ * with explicit status (porting/porting-plan.md section 10.3), seat counters for atomic seat
  * taking (10.7), waitlists, holds and overrides, rule sets per term and credit limit
  * policies (10.6), carts and the attempt log.
  */

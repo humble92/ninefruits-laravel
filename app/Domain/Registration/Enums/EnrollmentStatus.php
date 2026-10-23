@@ -3,7 +3,7 @@
 namespace App\Domain\Registration\Enums;
 
 /**
- * Explicit status instead of the legacy "grade is NULL" convention (docs/porting-plan.md
+ * Explicit status instead of the legacy "grade is NULL" convention (porting/porting-plan.md
  * section 10.3). Rows are never deleted: a drop keeps the row as dropped.
  */
 enum EnrollmentStatus: string

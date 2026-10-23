@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Grading corrections decided 2026-10-23 (docs/decisions/0011-grades-and-term-records.md):
+ * Grading corrections decided 2026-10-23 (porting/decisions/0011-grades-and-term-records.md):
  * the grade scale is fixed at installation, so the comparison grade goes; sections are
  * evaluated absolutely unless the instructor asks for relative evaluation (requests with
  * approval); relative grades must follow the institution's grade caps, and staff who

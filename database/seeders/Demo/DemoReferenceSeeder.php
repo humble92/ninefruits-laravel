@@ -26,7 +26,7 @@ use Illuminate\Database\Seeder;
 /**
  * Org units, programs, buildings, rooms, academic years and terms around today: the last
  * term has closed grades, the current one is in session, the next one has registration
- * opening by year level (docs/porting-plan.md section 13.4). Runs once per database.
+ * opening by year level (porting/porting-plan.md section 13.4). Runs once per database.
  */
 class DemoReferenceSeeder extends Seeder
 {

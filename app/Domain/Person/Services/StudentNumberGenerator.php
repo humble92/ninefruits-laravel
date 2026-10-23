@@ -11,7 +11,7 @@ use InvalidArgumentException;
  *
  * The sequence is per prefix (the text before {SEQ}) and advanced with one atomic upsert,
  * so concurrent registrations never get the same number. The number is an identifier only:
- * no rule reads meaning from its digits (docs/porting-plan.md section 3.4).
+ * no rule reads meaning from its digits (porting/porting-plan.md section 3.4).
  */
 class StudentNumberGenerator
 {

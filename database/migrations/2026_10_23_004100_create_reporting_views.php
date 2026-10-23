@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
 /**
- * The reporting views (docs/decisions/0016-graduation-and-reporting.md). Re-run this file
+ * The reporting views (porting/decisions/0016-graduation-and-reporting.md). Re-run this file
  * when a view changes: CREATE OR REPLACE keeps the grants.
  */
 return new class extends Migration
