@@ -44,7 +44,7 @@ it('sets up a term, renders the evaluation pages and publishes', function () {
         ->assertHasNoActionErrors();
 
     $evaluation = TermEvaluation::query()->sole();
-    expect($evaluation)->minimum_responses->toBe(4)->minimum_response_percent->toBe(0);
+    expect($evaluation)->minimum_responses->toBe(4)->minimum_response_percent->toBe(25);
 
     foreach ([TermEvaluationResource::getUrl('index'), EvaluationFormResource::getUrl('index'), EvaluationFormResource::getUrl('create'),
         EvaluationFormResource::getUrl('edit', ['record' => $this->form]), SectionEvaluationResource::getUrl('index'), ManageEvaluationSettings::getUrl()] as $url) {

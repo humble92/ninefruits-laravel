@@ -26,7 +26,7 @@ class TermEvaluation extends Model
 {
     protected $fillable = ['term_id', 'evaluation_form_id', 'minimum_responses', 'minimum_response_percent'];
 
-    protected $attributes = ['minimum_responses' => 5, 'minimum_response_percent' => 0, 'results_published_at' => null, 'published_by_id' => null];
+    protected $attributes = ['minimum_responses' => 5, 'minimum_response_percent' => 25, 'results_published_at' => null, 'published_by_id' => null];
 
     protected function casts(): array
     {
