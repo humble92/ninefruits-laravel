@@ -11,6 +11,7 @@ use App\Models\Lms\LmsPlatform;
 use App\Models\Lms\LmsUserLink;
 use App\Models\Offering\Section;
 use App\Models\Registration\Enrollment;
+use App\Support\Database\DatabaseSessionContext;
 
 /**
  * Final scores from the platform, mapped to enrollments. They are only a draft: the
@@ -19,7 +20,7 @@ use App\Models\Registration\Enrollment;
  */
 class PullGrades
 {
-    public function __construct(private readonly ConnectorRegistry $connectors, private readonly SyncLogger $log) {}
+    public function __construct(private readonly ConnectorRegistry $connectors, private readonly SyncLogger $log, private readonly DatabaseSessionContext $context) {}
 
     /**
      * @return array<int, float> enrollment id => score
@@ -35,21 +36,24 @@ class PullGrades
         $connector = $this->connectors->for($platform);
         $scores = [];
 
-        $this->log->run($platform, SyncOperation::GradesPull, ['section_id' => $section->id], function () use ($connector, $platform, $link, $section, &$scores) {
-            $byExternal = $connector->finalScores($platform, (string) $link->external_course_id);
-            $users = LmsUserLink::query()->where('lms_platform_id', $platform->id)->whereIn('external_user_id', array_keys($byExternal))->pluck('user_id', 'external_user_id');
-            $enrollments = Enrollment::query()->where('section_id', $section->id)->where('status', EnrollmentStatus::Enrolled)->with('studentRecord.person.user')->get();
+        // The instructor is authorized by the section; the log and the user links are platform data (system context).
+        $this->context->asSystem('lms:pull-grades', function () use ($connector, $platform, $link, $section, &$scores) {
+            return $this->log->run($platform, SyncOperation::GradesPull, ['section_id' => $section->id], function () use ($connector, $platform, $link, $section, &$scores) {
+                $byExternal = $connector->finalScores($platform, (string) $link->external_course_id);
+                $users = LmsUserLink::query()->where('lms_platform_id', $platform->id)->whereIn('external_user_id', array_keys($byExternal))->pluck('user_id', 'external_user_id');
+                $enrollments = Enrollment::query()->where('section_id', $section->id)->where('status', EnrollmentStatus::Enrolled)->with('studentRecord.person.user')->get();
 
-            foreach ($enrollments as $enrollment) {
-                $userId = $enrollment->studentRecord->person->user?->id;
-                $external = $userId === null ? null : $users->search($userId);
+                foreach ($enrollments as $enrollment) {
+                    $userId = $enrollment->studentRecord->person->user?->id;
+                    $external = $userId === null ? null : $users->search($userId);
 
-                if ($external !== false && $external !== null && isset($byExternal[$external])) {
-                    $scores[$enrollment->id] = (float) $byExternal[$external];
+                    if ($external !== false && $external !== null && isset($byExternal[$external])) {
+                        $scores[$enrollment->id] = (float) $byExternal[$external];
+                    }
                 }
-            }
 
-            return ['scores' => count($scores), 'reported' => count($byExternal)];
+                return ['scores' => count($scores), 'reported' => count($byExternal)];
+            });
         });
 
         return $scores;

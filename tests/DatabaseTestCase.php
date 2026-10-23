@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Support\Database\DatabaseSessionContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Support\LivewireDatabaseContextHook;
 
 abstract class DatabaseTestCase extends TestCase
 {
@@ -19,6 +20,9 @@ abstract class DatabaseTestCase extends TestCase
         // factories. Requests still run as the signed-in user and return to this baseline.
         // Tests of the database policies clear it with useBaseline([]).
         app(DatabaseSessionContext::class)->useBaseline(['app.actor' => 'system:test']);
+
+        // Livewire component tests run as the signed-in user, like real requests.
+        app('livewire')->componentHook(LivewireDatabaseContextHook::class);
     }
 
     /**
