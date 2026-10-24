@@ -1,14 +1,17 @@
 # Ninefruits — 대학 학사 행정 시스템
 
-**언어 / Languages / 语言**
+**언어 / Languages / 语言 / ພາສາ**
 
 | 언어 | README | 매뉴얼 |
 |---|---|---|
 | 한국어 | [README.md](README.md) (이 문서) | [docs/manual/ko/](docs/manual/ko/README.md) |
 | English | [README.en.md](README.en.md) | [docs/manual/en/](docs/manual/en/README.md) |
 | 简体中文 | [README.zh_CN.md](README.zh_CN.md) | [docs/manual/zh_CN/](docs/manual/zh_CN/README.md) |
+| ລາວ | [README.lo.md](README.lo.md) | [docs/manual/lo/](docs/manual/lo/README.md) |
 
-Ninefruits는 여러 대학에 설치해 쓸 수 있는 학사 행정 시스템(Student Information System)입니다. 입학 지원부터 학적, 교육과정과 개설강좌, 수강신청, 성적, 강의평가, 증명서, 어학·종합시험, 출석, 졸업 사정, 보고서, LMS 연동 기반까지 학사 업무의 핵심을 다루며, 화면과 문서는 한국어·영어·중국어를 지원합니다.
+다른 언어를 추가하려면 [언어 추가 가이드](docs/development/adding-a-language.ko.md)([English](docs/development/adding-a-language.md))를 보세요.
+
+Ninefruits는 여러 대학에 설치해 쓸 수 있는 학사 행정 시스템(Student Information System)입니다. 입학 지원부터 학적, 교육과정과 개설강좌, 수강신청, 성적, 강의평가, 증명서, 어학·종합시험, 출석, 졸업 사정, 보고서, LMS 연동 기반까지 학사 업무의 핵심을 다루며, 화면과 문서는 한국어·영어·중국어·라오스어를 지원합니다.
 
 ## 한눈에 보기
 
@@ -133,7 +136,7 @@ psql -d <database> -f database/sql/roles/prepare_database.sql
 
 ## 라이선스
 
-(라이선스를 정해 여기에 적습니다.)
+[MIT 라이선스](LICENSE). 누구나 자유롭게 사용·수정·배포할 수 있으며, 저작권 표시와 라이선스 문구를 함께 유지하면 됩니다.
 
 ---
 

@@ -1,14 +1,17 @@
 # Ninefruits — 高校教务管理系统
 
-**언어 / Languages / 语言**
+**언어 / Languages / 语言 / ພາສາ**
 
 | 语言 | README | 手册 |
 |---|---|---|
 | 한국어 | [README.md](README.md) | [docs/manual/ko/](docs/manual/ko/README.md) |
 | English | [README.en.md](README.en.md) | [docs/manual/en/](docs/manual/en/README.md) |
 | 简体中文 | [README.zh_CN.md](README.zh_CN.md)（本文） | [docs/manual/zh_CN/](docs/manual/zh_CN/README.md) |
+| ລາວ | [README.lo.md](README.lo.md) | [docs/manual/lo/](docs/manual/lo/README.md) |
 
-Ninefruits 是一套可在多所高校部署的教务管理系统（Student Information System）。它覆盖教务工作的核心——招生、学籍、培养方案与开课、选课、成绩、课程评价、证明、语言/综合考试、考勤、毕业资格审核、报表以及 LMS 对接基础——界面和文档支持韩语、英语和简体中文。
+要添加其他语言，请参阅[添加语言指南](docs/development/adding-a-language.md)（英文）。
+
+Ninefruits 是一套可在多所高校部署的教务管理系统（Student Information System）。它覆盖教务工作的核心——招生、学籍、培养方案与开课、选课、成绩、课程评价、证明、语言/综合考试、考勤、毕业资格审核、报表以及 LMS 对接基础——界面和文档支持韩语、英语、简体中文和老挝语。
 
 ## 一览
 
@@ -133,7 +136,7 @@ psql -d <database> -f database/sql/roles/prepare_database.sql
 
 ## 许可证
 
-（待定。）
+[MIT 许可证](LICENSE)。可自由使用、修改和分发，保留版权声明和许可证文本即可。
 
 ---
 

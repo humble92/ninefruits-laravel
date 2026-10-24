@@ -21,7 +21,7 @@ use function Laravel\Prompts\confirm;
     {--size=small : tiny (about 20 students), small (about 100), medium (about 2,000) or large (about 20,000)}
     {--seed= : Faker seed for reproducible data}
     {--force : Do not ask for confirmation (still refused in production)}
-    {--student-accounts : Give every enrolled student an account (load tests) and write storage/app/load-accounts.csv}')]
+    {--student-accounts : Give every enrolled student an account (load tests) and write storage/app/private/load-accounts.csv}')]
 #[Description('Create a fictional demo university from factories. Never runs in production.')]
 class Demo extends AuditedCommand
 {
@@ -51,7 +51,7 @@ class Demo extends AuditedCommand
         $this->call('db:seed', ['--class' => DemoSeeder::class, '--force' => true]);
 
         if ($this->option('student-accounts')) {
-            $this->components->info($this->studentAccounts().' student account(s) written to storage/app/load-accounts.csv.');
+            $this->components->info($this->studentAccounts().' student account(s) written to storage/app/private/load-accounts.csv.');
         }
 
         $this->recordResult(['size' => $size, 'seed' => $seed, 'student_accounts' => (bool) $this->option('student-accounts')]);

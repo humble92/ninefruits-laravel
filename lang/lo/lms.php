@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'ແພລດຟອມ LMS', 'plural_label' => 'ແພລດຟອມ LMS'],
+        'course_links' => ['label' => 'ການເຊື່ອມຕໍ່ວິຊາ', 'plural_label' => 'ການເຊື່ອມຕໍ່ວິຊາ'],
+        'sync_logs' => ['label' => 'ບັນທຶກການຊິງຄ໌', 'plural_label' => 'ບັນທຶກການຊິງຄ໌'],
+    ],
+    'fields' => [
+        'driver' => 'ໄດຣເວີ',
+        'not_implemented' => 'ຍັງບໍ່ໄດ້ພັດທະນາ',
+        'base_url' => 'URL ຫຼັກ',
+        'credentials' => 'ຂໍ້ມູນການເຂົ້າເຖິງ',
+        'credential_key' => 'ຄີ',
+        'credential_value' => 'ຄ່າ',
+        'course_links' => 'ການເຊື່ອມຕໍ່ວິຊາ',
+        'should_sync_enrollments' => 'ຊິງຄ໌ລາຍຊື່ຜູ້ຮຽນ',
+        'should_pull_grades' => 'ດຶງຄະແນນສຸດທ້າຍ',
+        'external_course_id' => 'ID ວິຊາໃນແພລດຟອມ',
+        'external_url' => 'URL ຂອງວິຊາ',
+        'last_synced_at' => 'ຊິງຄ໌ຫຼ້າສຸດ',
+        'last_error' => 'ຂໍ້ຜິດພາດຫຼ້າສຸດ',
+        'started_at' => 'ເລີ່ມເມື່ອ',
+        'operation' => 'ການດຳເນີນງານ',
+        'message' => 'ຂໍ້ຄວາມ',
+    ],
+    'help' => [
+        'driver' => 'ຕົວເຊື່ອມຕໍ່ທີ່ສື່ສານກັບແພລດຟອມ. "null" ບັນທຶກສິ່ງທີ່ຈະຖືກສົ່ງໂດຍບໍ່ເອີ້ນໃຊ້ຫຍັງເລີຍ; ໃຊ້ເພື່ອກຽມ ແລະ ທົດສອບ.',
+        'credentials' => 'ໂທເຄັນ ແລະ ລະຫັດລັບທີ່ໄດຣເວີຕ້ອງການ (ເບິ່ງ docs/lms-integration-guide.md). ເກັບແບບເຂົ້າລະຫັດ; ປ່ອຍຫວ່າງເມື່ອແກ້ໄຂເພື່ອຮັກສາຄ່າທີ່ເກັບໄວ້.',
+        'is_active' => 'ແພລດຟອມທີ່ເປີດໃຊ້ຈະໄດ້ຮັບກຸ່ມຮຽນທີ່ເຜີຍແຜ່ ແລະ ການປ່ຽນແປງລາຍຊື່ຜູ້ຮຽນທັນທີ, ພ້ອມທັງການກວດທຽບປະຈຳຄືນ.',
+        'should_pull_grades' => 'ອະນຸຍາດໃຫ້ອາຈານໂຫຼດຄະແນນສຸດທ້າຍຈາກແພລດຟອມເຂົ້າໜ້າປ້ອນເກຣດເປັນສະບັບຮ່າງ.',
+    ],
+    'actions' => ['resync' => 'ຊິງຄ໌ອີກຄັ້ງ'],
+    'notifications' => ['synced' => 'ຊິງຄ໌ແລ້ວ: ສະມາຊິກ :members ຄົນ.'],
+    'drivers' => ['null' => 'ບໍ່ມີ (ບັນທຶກເທົ່ານັ້ນ)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'ລໍຖ້າ', 'linked' => 'ເຊື່ອມຕໍ່ແລ້ວ', 'failed' => 'ລົ້ມເຫຼວ'],
+    'operations' => ['course.sync' => 'ວິຊາ', 'enrollment.add' => 'ເພີ່ມສະມາຊິກ', 'enrollment.remove' => 'ລຶບສະມາຊິກ', 'grades.pull' => 'ດຶງຄະແນນ', 'reconcile' => 'ກວດທຽບ'],
+    'sync_statuses' => ['queued' => 'ຢູ່ໃນຄິວ', 'succeeded' => 'ສຳເລັດ', 'failed' => 'ລົ້ມເຫຼວ', 'skipped' => 'ຂ້າມ'],
+    'portal' => ['open_course' => 'ເປີດວິຊາໃນ :platform'],
+];

@@ -943,6 +943,8 @@ Phase 0의 명령 9개와 보안 관련 화면은 매뉴얼이 아직 없으므�
 
 ### Phase 13. 안정화와 배포 (M)
 
+상태: 완료 (2026-10-23). 결과와 남은 일은 [Phase 13 결과 보고](phase-13-report.md). 영문·중문 매뉴얼 번역과 라오어(첫 고객) 추가, [언어 추가 가이드](../docs/development/adding-a-language.md)를 포함한다.
+
 - 수강신청 부하 테스트(k6 등, `setup:demo --size=large` 데이터 사용)와 Octane 도입 판단, 쿼리/인덱스 튜닝
 - 보안 점검(권한 우회, RLS, 개인정보 노출), 감사 무결성 점검
 - 운영 명령 마무리: `system:health-check`, `audit:verify-chain`, `audit:prune`, `media:prune-orphans`

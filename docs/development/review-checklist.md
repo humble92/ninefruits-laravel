@@ -1,7 +1,7 @@
 # 코드 리뷰 체크리스트
 
 - 작성일: 2026-10-22
-- 관련: [명명 규칙과 용어집](naming.md), [이식 계획 2절](../porting-plan.md#2-기본-원칙)
+- 관련: [명명 규칙과 용어집](naming.md), [이식 계획 2절](../../porting/porting-plan.md#2-기본-원칙)
 
 PR 설명에 해당 없는 항목은 "해당 없음"으로 표시한다. 자동 검사로 확인되는 항목은 (CI)로 표시했다.
 
@@ -22,7 +22,7 @@ PR 설명에 해당 없는 항목은 "해당 없음"으로 표시한다. 자동 
 - [ ] 시각은 `timestampTz`, 날짜는 `date`, 기간은 `daterange`/`tstzrange`다. 문자열 날짜가 없다
 - [ ] 다국어 값은 `jsonb` 한 컬럼 + `CHECK (jsonb_typeof(col) = 'object')`, 모델은 `HasTranslatableAttributes`
 - [ ] 학적/성적 등 이력이 중요한 테이블은 `util.enable_audit()`를 적용했고, 비밀 컬럼은 마스킹 목록에 넣었다
-- [ ] RLS 대상 테이블은 정책을 추가했고 [정책 작성 규칙](../decisions/0003-row-level-security.md#정책-작성-규칙)(함수는 `(SELECT ...)`로 감싸기)을 따랐다
+- [ ] RLS 대상 테이블은 정책을 추가했고 [정책 작성 규칙](../../porting/decisions/0003-row-level-security.md#정책-작성-규칙)(함수는 `(SELECT ...)`로 감싸기)을 따랐다
 - [ ] 백업용 테이블이나 `_old`, 날짜 접미사 테이블을 만들지 않았다
 
 ## 4. 보안

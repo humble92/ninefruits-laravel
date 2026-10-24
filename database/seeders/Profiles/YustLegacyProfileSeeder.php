@@ -116,7 +116,7 @@ class YustLegacyProfileSeeder extends Seeder implements SetupProfile
      */
     private function gradeScale(): void
     {
-        KoreanUniversityProfileSeeder::seedScale('YUST43', ['en' => '4.3 scale (YUST)', 'ko' => '4.3 만점(YUST)', 'zh_CN' => '4.3 分制（YUST）'], 4.3, true,
+        KoreanUniversityProfileSeeder::seedScale('YUST43', ['en' => '4.3 scale (YUST)', 'ko' => '4.3 만점(YUST)', 'zh_CN' => '4.3 分制（YUST）', 'lo' => 'ລະບົບ 4.3 ຄະແນນ (YUST)'], 4.3, true,
             KoreanUniversityProfileSeeder::scale43(['P' => [true], 'N' => [false], 'I' => [false, 'both']]));
     }
 

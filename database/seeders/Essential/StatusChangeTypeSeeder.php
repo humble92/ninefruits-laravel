@@ -22,12 +22,12 @@ class StatusChangeTypeSeeder extends Seeder
 
         // code => [to, from, students may request, order, name]
         $types = [
-            'leave_of_absence' => [StudentStatus::OnLeave, [$enrolled], true, 10, ['en' => 'Leave of absence', 'ko' => '휴학', 'zh_CN' => '休学']],
-            'return_from_leave' => [StudentStatus::Enrolled, [$onLeave], true, 20, ['en' => 'Return from leave', 'ko' => '복학', 'zh_CN' => '复学']],
-            'withdrawal' => [StudentStatus::Withdrawn, [$enrolled, $onLeave], true, 30, ['en' => 'Withdrawal', 'ko' => '자퇴', 'zh_CN' => '退学']],
-            'dismissal' => [StudentStatus::Dismissed, [$enrolled, $onLeave], false, 40, ['en' => 'Dismissal', 'ko' => '제적', 'zh_CN' => '开除学籍']],
-            'readmission' => [StudentStatus::Enrolled, [StudentStatus::Withdrawn->value, StudentStatus::Dismissed->value], false, 50, ['en' => 'Readmission', 'ko' => '재입학', 'zh_CN' => '重新入学']],
-            'graduation' => [StudentStatus::Graduated, [$enrolled], false, 60, ['en' => 'Graduation', 'ko' => '졸업', 'zh_CN' => '毕业']],
+            'leave_of_absence' => [StudentStatus::OnLeave, [$enrolled], true, 10, ['en' => 'Leave of absence', 'ko' => '휴학', 'zh_CN' => '休学', 'lo' => 'ການພັກການຮຽນ']],
+            'return_from_leave' => [StudentStatus::Enrolled, [$onLeave], true, 20, ['en' => 'Return from leave', 'ko' => '복학', 'zh_CN' => '复学', 'lo' => 'ການກັບຄືນມາຮຽນ']],
+            'withdrawal' => [StudentStatus::Withdrawn, [$enrolled, $onLeave], true, 30, ['en' => 'Withdrawal', 'ko' => '자퇴', 'zh_CN' => '退学', 'lo' => 'ການອອກຈາກການຮຽນ']],
+            'dismissal' => [StudentStatus::Dismissed, [$enrolled, $onLeave], false, 40, ['en' => 'Dismissal', 'ko' => '제적', 'zh_CN' => '开除学籍', 'lo' => 'ການໄລ່ອອກຈາກການຮຽນ']],
+            'readmission' => [StudentStatus::Enrolled, [StudentStatus::Withdrawn->value, StudentStatus::Dismissed->value], false, 50, ['en' => 'Readmission', 'ko' => '재입학', 'zh_CN' => '重新入学', 'lo' => 'ການຮັບເຂົ້າຮຽນຄືນ']],
+            'graduation' => [StudentStatus::Graduated, [$enrolled], false, 60, ['en' => 'Graduation', 'ko' => '졸업', 'zh_CN' => '毕业', 'lo' => 'ການຈົບການສຶກສາ']],
         ];
 
         foreach ($types as $code => [$to, $from, $canRequest, $order, $name]) {

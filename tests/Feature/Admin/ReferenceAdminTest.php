@@ -87,7 +87,7 @@ it('fills every translation when editing in a modal', function () {
     Livewire::actingAs($this->manager)->test(ManageCountries::class)
         ->mountAction(TestAction::make('edit')->table($country))
         ->assertSchemaStateSet(['name' => $country->getTranslations('name')])
-        ->setActionData(['name' => ['en' => 'Korea, Republic of', 'ko' => '대한민국', 'zh_CN' => '']])
+        ->setActionData(['name' => ['en' => 'Korea, Republic of', 'ko' => '대한민국', 'zh_CN' => '', 'lo' => '']])
         ->callMountedAction()
         ->assertHasNoActionErrors();
 

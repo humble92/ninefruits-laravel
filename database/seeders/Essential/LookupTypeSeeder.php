@@ -18,10 +18,10 @@ class LookupTypeSeeder extends Seeder
 
     /** @var array<string, array<string, string>> */
     public const array SYSTEM_TYPES = [
-        'ethnicity' => ['en' => 'Ethnicity', 'ko' => '민족', 'zh_CN' => '民族'],
-        Application::ADMISSION_TYPE_LOOKUP => ['en' => 'Admission type', 'ko' => '입학 구분', 'zh_CN' => '入学类别'],
-        Application::DOCUMENT_TYPE_LOOKUP => ['en' => 'Application document type', 'ko' => '지원 제출 서류', 'zh_CN' => '申请材料类型'],
-        Room::ROOM_TYPE_LOOKUP => ['en' => 'Room type', 'ko' => '강의실 용도', 'zh_CN' => '教室用途'],
+        'ethnicity' => ['en' => 'Ethnicity', 'ko' => '민족', 'zh_CN' => '民族', 'lo' => 'ຊົນເຜົ່າ'],
+        Application::ADMISSION_TYPE_LOOKUP => ['en' => 'Admission type', 'ko' => '입학 구분', 'zh_CN' => '入学类别', 'lo' => 'ປະເພດການຮັບເຂົ້າຮຽນ'],
+        Application::DOCUMENT_TYPE_LOOKUP => ['en' => 'Application document type', 'ko' => '지원 제출 서류', 'zh_CN' => '申请材料类型', 'lo' => 'ປະເພດເອກະສານສະໝັກ'],
+        Room::ROOM_TYPE_LOOKUP => ['en' => 'Room type', 'ko' => '강의실 용도', 'zh_CN' => '教室用途', 'lo' => 'ການນຳໃຊ້ຫ້ອງຮຽນ'],
     ];
 
     public function run(): void

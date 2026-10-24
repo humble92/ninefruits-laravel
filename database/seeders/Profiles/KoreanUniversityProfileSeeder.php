@@ -59,26 +59,26 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         $this->timeSlots();
         $this->roomTypes();
         $this->lookupValues(Application::ADMISSION_TYPE_LOOKUP, [
-            'freshman' => ['en' => 'Freshman admission', 'ko' => '신입학', 'zh_CN' => '新生入学'],
-            'transfer' => ['en' => 'Transfer admission', 'ko' => '편입학', 'zh_CN' => '插班入学'],
-            'readmission' => ['en' => 'Readmission', 'ko' => '재입학', 'zh_CN' => '重新入学'],
-            'international' => ['en' => 'International student admission', 'ko' => '외국인 특별전형', 'zh_CN' => '外国留学生入学'],
+            'freshman' => ['en' => 'Freshman admission', 'ko' => '신입학', 'zh_CN' => '新生入学', 'lo' => 'ການຮັບເຂົ້າຮຽນໃໝ່'],
+            'transfer' => ['en' => 'Transfer admission', 'ko' => '편입학', 'zh_CN' => '插班入学', 'lo' => 'ການຮັບຍ້າຍເຂົ້າຮຽນ'],
+            'readmission' => ['en' => 'Readmission', 'ko' => '재입학', 'zh_CN' => '重新入学', 'lo' => 'ການຮັບເຂົ້າຮຽນຄືນ'],
+            'international' => ['en' => 'International student admission', 'ko' => '외국인 특별전형', 'zh_CN' => '外国留学生入学', 'lo' => 'ການຮັບນັກສຶກສາຕ່າງປະເທດ'],
         ]);
         $this->lookupValues(Application::DOCUMENT_TYPE_LOOKUP, [
-            'diploma' => ['en' => 'Diploma or certificate of expected graduation', 'ko' => '졸업(예정)증명서', 'zh_CN' => '毕业（预计毕业）证明'],
-            'transcript' => ['en' => 'Transcript', 'ko' => '성적증명서', 'zh_CN' => '成绩证明'],
-            'identity' => ['en' => 'Copy of ID or passport', 'ko' => '신분증 또는 여권 사본', 'zh_CN' => '身份证或护照复印件'],
-            'language_test' => ['en' => 'Language test score', 'ko' => '어학 성적', 'zh_CN' => '语言成绩'],
+            'diploma' => ['en' => 'Diploma or certificate of expected graduation', 'ko' => '졸업(예정)증명서', 'zh_CN' => '毕业（预计毕业）证明', 'lo' => 'ໃບຢັ້ງຢືນການຈົບການສຶກສາ (ຫຼື ຄາດວ່າຈະຈົບ)'],
+            'transcript' => ['en' => 'Transcript', 'ko' => '성적증명서', 'zh_CN' => '成绩证明', 'lo' => 'ໃບຄະແນນ'],
+            'identity' => ['en' => 'Copy of ID or passport', 'ko' => '신분증 또는 여권 사본', 'zh_CN' => '身份证或护照复印件', 'lo' => 'ສຳເນົາບັດປະຈຳຕົວ ຫຼື ໜັງສືຜ່ານແດນ'],
+            'language_test' => ['en' => 'Language test score', 'ko' => '어학 성적', 'zh_CN' => '语言成绩', 'lo' => 'ຄະແນນສອບພາສາ'],
         ]);
     }
 
     private function termTypes(): void
     {
         $types = [
-            'spring' => [10, true, ['en' => 'Spring term', 'ko' => '1학기', 'zh_CN' => '春季学期']],
-            'summer' => [20, false, ['en' => 'Summer session', 'ko' => '여름 계절학기', 'zh_CN' => '夏季学期']],
-            'fall' => [30, true, ['en' => 'Fall term', 'ko' => '2학기', 'zh_CN' => '秋季学期']],
-            'winter' => [40, false, ['en' => 'Winter session', 'ko' => '겨울 계절학기', 'zh_CN' => '冬季学期']],
+            'spring' => [10, true, ['en' => 'Spring term', 'ko' => '1학기', 'zh_CN' => '春季学期', 'lo' => 'ພາກຮຽນທີ 1']],
+            'summer' => [20, false, ['en' => 'Summer session', 'ko' => '여름 계절학기', 'zh_CN' => '夏季学期', 'lo' => 'ພາກຮຽນລະດູຮ້ອນ']],
+            'fall' => [30, true, ['en' => 'Fall term', 'ko' => '2학기', 'zh_CN' => '秋季学期', 'lo' => 'ພາກຮຽນທີ 2']],
+            'winter' => [40, false, ['en' => 'Winter session', 'ko' => '겨울 계절학기', 'zh_CN' => '冬季学期', 'lo' => 'ພາກຮຽນລະດູໜາວ']],
         ];
 
         foreach ($types as $code => [$sortOrder, $isRegular, $name]) {
@@ -89,16 +89,16 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
     private function courseCategories(): void
     {
         $groups = [
-            'GE' => [10, ['en' => 'General education', 'ko' => '교양', 'zh_CN' => '通识教育'], [
-                'GE_REQ' => ['en' => 'General education required', 'ko' => '교양필수', 'zh_CN' => '通识必修'],
-                'GE_ELEC' => ['en' => 'General education elective', 'ko' => '교양선택', 'zh_CN' => '通识选修'],
+            'GE' => [10, ['en' => 'General education', 'ko' => '교양', 'zh_CN' => '通识教育', 'lo' => 'ວິຊາສຶກສາທົ່ວໄປ'], [
+                'GE_REQ' => ['en' => 'General education required', 'ko' => '교양필수', 'zh_CN' => '通识必修', 'lo' => 'ວິຊາສຶກສາທົ່ວໄປບັງຄັບ'],
+                'GE_ELEC' => ['en' => 'General education elective', 'ko' => '교양선택', 'zh_CN' => '通识选修', 'lo' => 'ວິຊາສຶກສາທົ່ວໄປເລືອກ'],
             ]],
-            'MAJ' => [20, ['en' => 'Major', 'ko' => '전공', 'zh_CN' => '专业'], [
-                'MAJ_FND' => ['en' => 'Major foundation', 'ko' => '전공기초', 'zh_CN' => '专业基础'],
-                'MAJ_REQ' => ['en' => 'Major required', 'ko' => '전공필수', 'zh_CN' => '专业必修'],
-                'MAJ_ELEC' => ['en' => 'Major elective', 'ko' => '전공선택', 'zh_CN' => '专业选修'],
+            'MAJ' => [20, ['en' => 'Major', 'ko' => '전공', 'zh_CN' => '专业', 'lo' => 'ວິຊາສາຂາ'], [
+                'MAJ_FND' => ['en' => 'Major foundation', 'ko' => '전공기초', 'zh_CN' => '专业基础', 'lo' => 'ວິຊາສາຂາພື້ນຖານ'],
+                'MAJ_REQ' => ['en' => 'Major required', 'ko' => '전공필수', 'zh_CN' => '专业必修', 'lo' => 'ວິຊາສາຂາບັງຄັບ'],
+                'MAJ_ELEC' => ['en' => 'Major elective', 'ko' => '전공선택', 'zh_CN' => '专业选修', 'lo' => 'ວິຊາສາຂາເລືອກ'],
             ]],
-            'FREE' => [30, ['en' => 'Free elective', 'ko' => '일반선택', 'zh_CN' => '任意选修'], []],
+            'FREE' => [30, ['en' => 'Free elective', 'ko' => '일반선택', 'zh_CN' => '任意选修', 'lo' => 'ວິຊາເລືອກເສລີ'], []],
         ];
 
         foreach ($groups as $code => [$sortOrder, $name, $children]) {
@@ -123,42 +123,43 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
 
         $form = EvaluationForm::query()->create([
             'code' => 'STANDARD',
-            'name' => ['en' => 'Standard course evaluation', 'ko' => '표준 강의평가', 'zh_CN' => '标准课程评价'],
+            'name' => ['en' => 'Standard course evaluation', 'ko' => '표준 강의평가', 'zh_CN' => '标准课程评价', 'lo' => 'ການປະເມີນລາຍວິຊາມາດຕະຖານ'],
             'description' => [
                 'en' => 'Your answers are anonymous: instructors see only totals, after the results are published, and only when enough students answered.',
                 'ko' => '응답은 익명입니다. 교원은 결과 공개 후, 충분한 학생이 응답한 강좌의 집계만 봅니다.',
                 'zh_CN' => '回答为匿名。教师只能在结果公布后、回答人数足够时看到汇总结果。',
+                'lo' => 'ຄຳຕອບຂອງທ່ານເປັນຄວາມລັບ: ອາຈານຈະເຫັນພຽງຜົນລວມຫຼັງຈາກປະກາດຜົນແລ້ວ ແລະ ສະເພາະເມື່ອມີນັກສຶກສາຕອບພຽງພໍເທົ່ານັ້ນ.',
             ],
             'scale_points' => 5,
-            'scale_low_label' => ['en' => 'Strongly disagree', 'ko' => '전혀 그렇지 않다', 'zh_CN' => '完全不同意'],
-            'scale_high_label' => ['en' => 'Strongly agree', 'ko' => '매우 그렇다', 'zh_CN' => '非常同意'],
+            'scale_low_label' => ['en' => 'Strongly disagree', 'ko' => '전혀 그렇지 않다', 'zh_CN' => '完全不同意', 'lo' => 'ບໍ່ເຫັນດີຢ່າງຍິ່ງ'],
+            'scale_high_label' => ['en' => 'Strongly agree', 'ko' => '매우 그렇다', 'zh_CN' => '非常同意', 'lo' => 'ເຫັນດີຢ່າງຍິ່ງ'],
         ]);
 
         $areas = [
-            [['en' => 'Preparation', 'ko' => '강의 준비', 'zh_CN' => '课程准备'], [
-                ['en' => 'The syllabus explained the goals, content and grading of the course.', 'ko' => '강의계획서에 수업 목표, 내용, 평가 방법이 잘 안내되었다.', 'zh_CN' => '教学大纲清楚说明了课程目标、内容和评分方法。'],
-                ['en' => 'Classes were well prepared.', 'ko' => '수업이 충실히 준비되었다.', 'zh_CN' => '课程准备充分。'],
-                ['en' => 'Classes started and ended on time.', 'ko' => '수업이 정해진 시간에 시작하고 끝났다.', 'zh_CN' => '课程按时开始和结束。'],
+            [['en' => 'Preparation', 'ko' => '강의 준비', 'zh_CN' => '课程准备', 'lo' => 'ການກະກຽມການສອນ'], [
+                ['en' => 'The syllabus explained the goals, content and grading of the course.', 'ko' => '강의계획서에 수업 목표, 내용, 평가 방법이 잘 안내되었다.', 'zh_CN' => '教学大纲清楚说明了课程目标、内容和评分方法。', 'lo' => 'ຫຼັກສູດການສອນໄດ້ອະທິບາຍເປົ້າໝາຍ, ເນື້ອໃນ ແລະ ວິທີການໃຫ້ຄະແນນຂອງລາຍວິຊາຢ່າງຈະແຈ້ງ.'],
+                ['en' => 'Classes were well prepared.', 'ko' => '수업이 충실히 준비되었다.', 'zh_CN' => '课程准备充分。', 'lo' => 'ການສອນໄດ້ກະກຽມມາເປັນຢ່າງດີ.'],
+                ['en' => 'Classes started and ended on time.', 'ko' => '수업이 정해진 시간에 시작하고 끝났다.', 'zh_CN' => '课程按时开始和结束。', 'lo' => 'ການສອນເລີ່ມ ແລະ ສິ້ນສຸດຕາມເວລາທີ່ກຳນົດ.'],
             ]],
-            [['en' => 'Teaching', 'ko' => '강의 방법', 'zh_CN' => '教学方法'], [
-                ['en' => 'Explanations were clear and easy to follow.', 'ko' => '설명이 명확하고 이해하기 쉬웠다.', 'zh_CN' => '讲解清楚易懂。'],
-                ['en' => 'Students could ask questions and take part.', 'ko' => '질문과 참여의 기회가 충분했다.', 'zh_CN' => '学生有充分的提问和参与机会。'],
-                ['en' => 'The pace of the course was hard to follow.', 'ko' => '수업 진도를 따라가기 어려웠다.', 'zh_CN' => '课程进度很难跟上。', 'reversed' => true],
+            [['en' => 'Teaching', 'ko' => '강의 방법', 'zh_CN' => '教学方法', 'lo' => 'ວິທີການສອນ'], [
+                ['en' => 'Explanations were clear and easy to follow.', 'ko' => '설명이 명확하고 이해하기 쉬웠다.', 'zh_CN' => '讲解清楚易懂。', 'lo' => 'ການອະທິບາຍຈະແຈ້ງ ແລະ ເຂົ້າໃຈງ່າຍ.'],
+                ['en' => 'Students could ask questions and take part.', 'ko' => '질문과 참여의 기회가 충분했다.', 'zh_CN' => '学生有充分的提问和参与机会。', 'lo' => 'ນັກສຶກສາມີໂອກາດຖາມ ແລະ ມີສ່ວນຮ່ວມຢ່າງພຽງພໍ.'],
+                ['en' => 'The pace of the course was hard to follow.', 'ko' => '수업 진도를 따라가기 어려웠다.', 'zh_CN' => '课程进度很难跟上。', 'lo' => 'ຈັງຫວະການສອນຕິດຕາມໄດ້ຍາກ.', 'reversed' => true],
             ]],
-            [['en' => 'Content', 'ko' => '강의 내용', 'zh_CN' => '教学内容'], [
-                ['en' => 'The content followed the syllabus.', 'ko' => '수업 내용이 강의계획서에 맞게 진행되었다.', 'zh_CN' => '教学内容与教学大纲一致。'],
-                ['en' => 'The course increased my knowledge of the subject.', 'ko' => '이 과목에 대한 지식이 늘었다.', 'zh_CN' => '这门课增加了我对该学科的了解。'],
-                ['en' => 'Materials and assignments helped me learn.', 'ko' => '교재와 과제가 학습에 도움이 되었다.', 'zh_CN' => '教材和作业对学习有帮助。'],
+            [['en' => 'Content', 'ko' => '강의 내용', 'zh_CN' => '教学内容', 'lo' => 'ເນື້ອໃນການສອນ'], [
+                ['en' => 'The content followed the syllabus.', 'ko' => '수업 내용이 강의계획서에 맞게 진행되었다.', 'zh_CN' => '教学内容与教学大纲一致。', 'lo' => 'ເນື້ອໃນການສອນສອດຄ່ອງກັບຫຼັກສູດການສອນ.'],
+                ['en' => 'The course increased my knowledge of the subject.', 'ko' => '이 과목에 대한 지식이 늘었다.', 'zh_CN' => '这门课增加了我对该学科的了解。', 'lo' => 'ລາຍວິຊານີ້ເຮັດໃຫ້ຂ້ອຍມີຄວາມຮູ້ໃນວິຊານີ້ເພີ່ມຂຶ້ນ.'],
+                ['en' => 'Materials and assignments helped me learn.', 'ko' => '교재와 과제가 학습에 도움이 되었다.', 'zh_CN' => '教材和作业对学习有帮助。', 'lo' => 'ເອກະສານການສອນ ແລະ ວຽກບ້ານຊ່ວຍໃນການຮຽນຮູ້.'],
             ]],
-            [['en' => 'Assessment', 'ko' => '평가 방법', 'zh_CN' => '考核方法'], [
-                ['en' => 'Assessment followed the announced criteria.', 'ko' => '평가가 안내된 기준에 따라 이루어졌다.', 'zh_CN' => '考核按照公布的标准进行。'],
-                ['en' => 'Exams and assignments matched what was taught.', 'ko' => '시험과 과제가 수업 내용과 맞았다.', 'zh_CN' => '考试和作业与教学内容相符。'],
-                ['en' => 'I received useful feedback on my work.', 'ko' => '과제와 시험에 대해 도움이 되는 피드백을 받았다.', 'zh_CN' => '我得到了对学习有帮助的反馈。'],
+            [['en' => 'Assessment', 'ko' => '평가 방법', 'zh_CN' => '考核方法', 'lo' => 'ວິທີການປະເມີນຜົນ'], [
+                ['en' => 'Assessment followed the announced criteria.', 'ko' => '평가가 안내된 기준에 따라 이루어졌다.', 'zh_CN' => '考核按照公布的标准进行。', 'lo' => 'ການປະເມີນຜົນເປັນໄປຕາມເກນທີ່ປະກາດໄວ້.'],
+                ['en' => 'Exams and assignments matched what was taught.', 'ko' => '시험과 과제가 수업 내용과 맞았다.', 'zh_CN' => '考试和作业与教学内容相符。', 'lo' => 'ການສອບເສັງ ແລະ ວຽກບ້ານສອດຄ່ອງກັບເນື້ອໃນທີ່ສອນ.'],
+                ['en' => 'I received useful feedback on my work.', 'ko' => '과제와 시험에 대해 도움이 되는 피드백을 받았다.', 'zh_CN' => '我得到了对学习有帮助的反馈。', 'lo' => 'ຂ້ອຍໄດ້ຮັບຄຳຕິຊົມທີ່ເປັນປະໂຫຍດຕໍ່ວຽກຂອງຂ້ອຍ.'],
             ]],
-            [['en' => 'Facilities', 'ko' => '교학 시설 및 장비', 'zh_CN' => '教学设施和设备'], [
-                ['en' => 'The classroom was suitable for the course.', 'ko' => '강의실이 수업에 적합했다.', 'zh_CN' => '教室适合本课程。'],
-                ['en' => 'Equipment needed for the course worked well.', 'ko' => '수업에 필요한 장비가 잘 작동했다.', 'zh_CN' => '课程所需设备运行良好。'],
-                ['en' => 'Overall, I am satisfied with this course.', 'ko' => '전반적으로 이 수업에 만족한다.', 'zh_CN' => '总体上我对这门课感到满意。'],
+            [['en' => 'Facilities', 'ko' => '교학 시설 및 장비', 'zh_CN' => '教学设施和设备', 'lo' => 'ສິ່ງອຳນວຍຄວາມສະດວກ ແລະ ອຸປະກອນການສອນ'], [
+                ['en' => 'The classroom was suitable for the course.', 'ko' => '강의실이 수업에 적합했다.', 'zh_CN' => '教室适合本课程。', 'lo' => 'ຫ້ອງຮຽນເໝາະສົມກັບລາຍວິຊາ.'],
+                ['en' => 'Equipment needed for the course worked well.', 'ko' => '수업에 필요한 장비가 잘 작동했다.', 'zh_CN' => '课程所需设备运行良好。', 'lo' => 'ອຸປະກອນທີ່ຈຳເປັນສຳລັບລາຍວິຊາໃຊ້ງານໄດ້ດີ.'],
+                ['en' => 'Overall, I am satisfied with this course.', 'ko' => '전반적으로 이 수업에 만족한다.', 'zh_CN' => '总体上我对这门课感到满意。', 'lo' => 'ໂດຍລວມແລ້ວ ຂ້ອຍພໍໃຈກັບລາຍວິຊານີ້.'],
             ]],
         ];
         $order = 0;
@@ -178,8 +179,8 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         EvaluationQuestion::query()->create([
             'evaluation_form_id' => $form->id,
             'sort_order' => $order + 10,
-            'category' => ['en' => 'Comments', 'ko' => '의견', 'zh_CN' => '意见'],
-            'text' => ['en' => 'What should the instructor keep or change?', 'ko' => '이 수업에서 좋았던 점이나 바뀌었으면 하는 점을 적어 주세요.', 'zh_CN' => '请写下这门课的优点或需要改进的地方。'],
+            'category' => ['en' => 'Comments', 'ko' => '의견', 'zh_CN' => '意见', 'lo' => 'ຄຳຄິດເຫັນ'],
+            'text' => ['en' => 'What should the instructor keep or change?', 'ko' => '이 수업에서 좋았던 점이나 바뀌었으면 하는 점을 적어 주세요.', 'zh_CN' => '请写下这门课的优点或需要改进的地方。', 'lo' => 'ກະລຸນາຂຽນສິ່ງທີ່ດີຂອງລາຍວິຊານີ້ ຫຼື ສິ່ງທີ່ຢາກໃຫ້ປ່ຽນແປງ.'],
             'question_type' => 'text',
             'is_required' => false,
         ]);
@@ -196,20 +197,23 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         }
 
         $kinds = [
-            ['ENR', ['en' => 'Certificate of Enrollment', 'ko' => '재학증명서', 'zh_CN' => '在学证明书'], 'enrolled', false, [
+            ['ENR', ['en' => 'Certificate of Enrollment', 'ko' => '재학증명서', 'zh_CN' => '在学证明书', 'lo' => 'ໃບຢັ້ງຢືນການເປັນນັກສຶກສາ'], 'enrolled', false, [
                 'ko' => ['재학증명서', "위의 사람이 본교에 재학 중임을 증명합니다.\n\n용도: {purpose}", '교무처장'],
                 'en' => ['Certificate of Enrollment', "This is to certify that the above mentioned is presently enrolled at {institution}.\n\nPurpose: {purpose}", 'Dean of Academic Affairs'],
                 'zh_CN' => ['在学证明书', "兹证明上述学生现在本校在读。\n\n用途：{purpose}", '教务处长'],
+                'lo' => ['ໃບຢັ້ງຢືນການເປັນນັກສຶກສາ', "ຂໍຢັ້ງຢືນວ່າ ບຸກຄົນທີ່ມີຊື່ຂ້າງເທິງນີ້ ກຳລັງສຶກສາຢູ່ {institution}.\n\nຈຸດປະສົງ: {purpose}", 'ຫົວໜ້າຫ້ອງການວິຊາການ'],
             ]],
-            ['GRD', ['en' => 'Certificate of Graduation', 'ko' => '졸업증명서', 'zh_CN' => '毕业证明书'], 'graduated', false, [
+            ['GRD', ['en' => 'Certificate of Graduation', 'ko' => '졸업증명서', 'zh_CN' => '毕业证明书', 'lo' => 'ໃບຢັ້ງຢືນການຈົບການສຶກສາ'], 'graduated', false, [
                 'ko' => ['졸업증명서', "위의 사람이 {graduation_date} 본교 {program}을(를) 졸업하였음을 증명합니다.\n\n학위번호: {degree_number}", '교무처장'],
                 'en' => ['Certificate of Graduation', "This is to certify that the above mentioned graduated from {institution}, {program}, on {graduation_date}.\n\nDiploma no.: {degree_number}", 'Dean of Academic Affairs'],
                 'zh_CN' => ['毕业证明书', "兹证明上述学生于{graduation_date}在本校{program}毕业。\n\n学位证书编号：{degree_number}", '教务处长'],
+                'lo' => ['ໃບຢັ້ງຢືນການຈົບການສຶກສາ', "ຂໍຢັ້ງຢືນວ່າ ບຸກຄົນທີ່ມີຊື່ຂ້າງເທິງນີ້ ໄດ້ຈົບການສຶກສາຈາກ {institution} ຫຼັກສູດ {program} ໃນວັນທີ {graduation_date}.\n\nເລກທີໃບປະກາດ: {degree_number}", 'ຫົວໜ້າຫ້ອງການວິຊາການ'],
             ]],
-            ['TRN', ['en' => 'Academic Transcript', 'ko' => '성적증명서', 'zh_CN' => '成绩证明书'], 'any', true, [
+            ['TRN', ['en' => 'Academic Transcript', 'ko' => '성적증명서', 'zh_CN' => '成绩证明书', 'lo' => 'ໃບຢັ້ງຢືນຜົນການຮຽນ'], 'any', true, [
                 'ko' => ['성적증명서', '위의 사람의 성적이 아래와 같음을 증명합니다.', '교무처장'],
                 'en' => ['Academic Transcript', 'I certify that the transcript below is a complete and authentic copy of the academic record of the above mentioned.', 'Dean of Academic Affairs'],
                 'zh_CN' => ['成绩证明书', '兹证明上述学生的成绩如下。', '教务处长'],
+                'lo' => ['ໃບຢັ້ງຢືນຜົນການຮຽນ', 'ຂໍຢັ້ງຢືນວ່າ ຜົນການຮຽນຂ້າງລຸ່ມນີ້ ແມ່ນສຳເນົາທີ່ຄົບຖ້ວນ ແລະ ຖືກຕ້ອງຂອງບັນທຶກການສຶກສາຂອງບຸກຄົນທີ່ມີຊື່ຂ້າງເທິງ.', 'ຫົວໜ້າຫ້ອງການວິຊາການ'],
             ]],
         ];
         $order = 0;
@@ -220,7 +224,7 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
             foreach ($templates as $locale => [$title, $body, $signer]) {
                 CertificateTemplate::query()->create([
                     'certificate_type_id' => $type->id, 'locale' => $locale, 'title' => $title, 'body' => $body, 'signer' => $signer,
-                    'footer' => ['ko' => '이 증명서의 진위는 아래 QR 코드 또는 확인 주소에서 확인할 수 있습니다.', 'en' => 'Verify this certificate with the QR code or at the address below.', 'zh_CN' => '可通过下方二维码或网址核验本证明。'][$locale],
+                    'footer' => ['ko' => '이 증명서의 진위는 아래 QR 코드 또는 확인 주소에서 확인할 수 있습니다.', 'en' => 'Verify this certificate with the QR code or at the address below.', 'zh_CN' => '可通过下方二维码或网址核验本证明。', 'lo' => 'ສາມາດກວດສອບຄວາມຖືກຕ້ອງຂອງໃບຢັ້ງຢືນນີ້ ດ້ວຍລະຫັດ QR ຫຼື ທີ່ຢູ່ຂ້າງລຸ່ມນີ້.'][$locale],
                 ]);
             }
         }
@@ -241,7 +245,7 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
     public static function seedScale45(bool $isDefault): GradeScale
     {
         // code => [points, min %, max %, counts in GPA, passing]
-        return self::seedScale('KR45', ['en' => '4.5 scale', 'ko' => '4.5 만점', 'zh_CN' => '4.5 分制'], 4.5, $isDefault, [
+        return self::seedScale('KR45', ['en' => '4.5 scale', 'ko' => '4.5 만점', 'zh_CN' => '4.5 分制', 'lo' => 'ລະບົບ 4.5 ຄະແນນ'], 4.5, $isDefault, [
             'A+' => [4.5, 95, 100, true, true],
             'A0' => [4.0, 90, 94.99, true, true],
             'B+' => [3.5, 85, 89.99, true, true],
@@ -261,7 +265,7 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
      */
     public static function seedScale43(bool $isDefault): GradeScale
     {
-        return self::seedScale('KR43', ['en' => '4.3 scale', 'ko' => '4.3 만점', 'zh_CN' => '4.3 分制'], 4.3, $isDefault, self::scale43(['P' => [true], 'NP' => [false]]));
+        return self::seedScale('KR43', ['en' => '4.3 scale', 'ko' => '4.3 만점', 'zh_CN' => '4.3 分制', 'lo' => 'ລະບົບ 4.3 ຄະແນນ'], 4.3, $isDefault, self::scale43(['P' => [true], 'NP' => [false]]));
     }
 
     /**
@@ -329,7 +333,7 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
             $start = sprintf('%02d:00', 8 + $period);
 
             $this->seedRow(TimeSlot::class, ['code' => (string) $period], [
-                'name' => ['en' => "Period {$period}", 'ko' => "{$period}교시", 'zh_CN' => "第{$period}节"],
+                'name' => ['en' => "Period {$period}", 'ko' => "{$period}교시", 'zh_CN' => "第{$period}节", 'lo' => "ຊົ່ວໂມງທີ {$period}"],
             ], [
                 'start_time' => $start,
                 'end_time' => sprintf('%02d:50', 8 + $period),
@@ -356,11 +360,11 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
     {
         $type = LookupType::query()->where('code', Room::ROOM_TYPE_LOOKUP)->sole();
         $values = [
-            'lecture' => ['en' => 'Lecture room', 'ko' => '강의실', 'zh_CN' => '教室'],
-            'laboratory' => ['en' => 'Laboratory', 'ko' => '실험실', 'zh_CN' => '实验室'],
-            'practice' => ['en' => 'Practice room', 'ko' => '실습실', 'zh_CN' => '实训室'],
-            'seminar' => ['en' => 'Seminar room', 'ko' => '세미나실', 'zh_CN' => '研讨室'],
-            'auditorium' => ['en' => 'Auditorium', 'ko' => '강당', 'zh_CN' => '礼堂'],
+            'lecture' => ['en' => 'Lecture room', 'ko' => '강의실', 'zh_CN' => '教室', 'lo' => 'ຫ້ອງບັນຍາຍ'],
+            'laboratory' => ['en' => 'Laboratory', 'ko' => '실험실', 'zh_CN' => '实验室', 'lo' => 'ຫ້ອງທົດລອງ'],
+            'practice' => ['en' => 'Practice room', 'ko' => '실습실', 'zh_CN' => '实训室', 'lo' => 'ຫ້ອງຝຶກປະຕິບັດ'],
+            'seminar' => ['en' => 'Seminar room', 'ko' => '세미나실', 'zh_CN' => '研讨室', 'lo' => 'ຫ້ອງສຳມະນາ'],
+            'auditorium' => ['en' => 'Auditorium', 'ko' => '강당', 'zh_CN' => '礼堂', 'lo' => 'ຫໍປະຊຸມ'],
         ];
         $order = 0;
 
@@ -381,29 +385,29 @@ class KoreanUniversityProfileSeeder extends Seeder implements SetupProfile
         }
 
         $english = AssessmentType::query()->create([
-            'code' => 'ENG_COMP', 'name' => ['en' => 'English comprehensive examination', 'ko' => '영어종합시험', 'zh_CN' => '英语综合考试'],
+            'code' => 'ENG_COMP', 'name' => ['en' => 'English comprehensive examination', 'ko' => '영어종합시험', 'zh_CN' => '英语综合考试', 'lo' => 'ການສອບເສັງພາສາອັງກິດລວມ'],
             'category' => 'language', 'scoring' => 'score', 'pass_score' => 60, 'sort_order' => 10,
         ]);
 
         foreach ([
-            ['LISTENING', ['en' => 'Listening', 'ko' => '듣기', 'zh_CN' => '听力']],
-            ['READING', ['en' => 'Reading', 'ko' => '읽기', 'zh_CN' => '阅读']],
-            ['WRITING', ['en' => 'Writing', 'ko' => '쓰기', 'zh_CN' => '写作']],
-            ['GRAMMAR', ['en' => 'Grammar', 'ko' => '문법', 'zh_CN' => '语法']],
+            ['LISTENING', ['en' => 'Listening', 'ko' => '듣기', 'zh_CN' => '听力', 'lo' => 'ການຟັງ']],
+            ['READING', ['en' => 'Reading', 'ko' => '읽기', 'zh_CN' => '阅读', 'lo' => 'ການອ່ານ']],
+            ['WRITING', ['en' => 'Writing', 'ko' => '쓰기', 'zh_CN' => '写作', 'lo' => 'ການຂຽນ']],
+            ['GRAMMAR', ['en' => 'Grammar', 'ko' => '문법', 'zh_CN' => '语法', 'lo' => 'ໄວຍາກອນ']],
         ] as $index => [$code, $name]) {
             AssessmentComponent::query()->create(['assessment_type_id' => $english->id, 'code' => $code, 'name' => $name, 'max_score' => 25, 'sort_order' => ($index + 1) * 10]);
         }
 
         AssessmentType::query()->create([
-            'code' => 'COMP_EXAM', 'name' => ['en' => 'Computer comprehensive examination', 'ko' => '전산종합시험', 'zh_CN' => '计算机综合考试'],
+            'code' => 'COMP_EXAM', 'name' => ['en' => 'Computer comprehensive examination', 'ko' => '전산종합시험', 'zh_CN' => '计算机综合考试', 'lo' => 'ການສອບເສັງຄອມພິວເຕີລວມ'],
             'category' => 'comprehensive', 'scoring' => 'pass_fail', 'sort_order' => 20,
         ]);
         AssessmentType::query()->create([
-            'code' => 'THESIS', 'name' => ['en' => 'Graduation thesis', 'ko' => '졸업논문', 'zh_CN' => '毕业论文'],
+            'code' => 'THESIS', 'name' => ['en' => 'Graduation thesis', 'ko' => '졸업논문', 'zh_CN' => '毕业论文', 'lo' => 'ບົດວິທະຍານິພົນຈົບການສຶກສາ'],
             'category' => 'thesis', 'scoring' => 'pass_fail', 'sort_order' => 30,
         ]);
         AssessmentType::query()->create([
-            'code' => 'TOPIK', 'name' => ['en' => 'TOPIK (Test of Proficiency in Korean)', 'ko' => '한국어능력시험(TOPIK)', 'zh_CN' => '韩国语能力考试（TOPIK）'],
+            'code' => 'TOPIK', 'name' => ['en' => 'TOPIK (Test of Proficiency in Korean)', 'ko' => '한국어능력시험(TOPIK)', 'zh_CN' => '韩国语能力考试（TOPIK）', 'lo' => 'ການສອບເສັງຄວາມສາມາດພາສາເກົາຫຼີ (TOPIK)'],
             'category' => 'external', 'scoring' => 'pass_fail', 'allows_external' => true, 'sort_order' => 40,
         ]);
     }

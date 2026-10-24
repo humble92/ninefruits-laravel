@@ -21,12 +21,12 @@ class RoleTemplateSeeder extends Seeder
 
         $templates = [
             'system_administrator' => [
-                'display_name' => ['en' => 'System Administrator', 'ko' => '시스템 관리자', 'zh_CN' => '系统管理员'],
+                'display_name' => ['en' => 'System Administrator', 'ko' => '시스템 관리자', 'zh_CN' => '系统管理员', 'lo' => 'ຜູ້ບໍລິຫານລະບົບ'],
                 'is_system' => true,
                 'permissions' => Permission::cases(),
             ],
             'registrar' => [
-                'display_name' => ['en' => 'Registrar', 'ko' => '학적 담당', 'zh_CN' => '学籍管理员'],
+                'display_name' => ['en' => 'Registrar', 'ko' => '학적 담당', 'zh_CN' => '学籍管理员', 'lo' => 'ຜູ້ຮັບຜິດຊອບທະບຽນນັກສຶກສາ'],
                 'permissions' => [
                     ...$staff,
                     Permission::PeopleView,
@@ -61,7 +61,7 @@ class RoleTemplateSeeder extends Seeder
                 ],
             ],
             'academic_affairs' => [
-                'display_name' => ['en' => 'Academic Affairs', 'ko' => '교무 담당', 'zh_CN' => '教务管理员'],
+                'display_name' => ['en' => 'Academic Affairs', 'ko' => '교무 담당', 'zh_CN' => '教务管理员', 'lo' => 'ຜູ້ຮັບຜິດຊອບວິຊາການ'],
                 'permissions' => [
                     ...$staff,
                     Permission::ReferenceDataImport,
@@ -95,12 +95,12 @@ class RoleTemplateSeeder extends Seeder
                 ],
             ],
             'certificate_officer' => [
-                'display_name' => ['en' => 'Certificate Officer', 'ko' => '증명서 담당', 'zh_CN' => '证明书管理员'],
+                'display_name' => ['en' => 'Certificate Officer', 'ko' => '증명서 담당', 'zh_CN' => '证明书管理员', 'lo' => 'ຜູ້ຮັບຜິດຊອບໃບຢັ້ງຢືນ'],
                 'permissions' => [...$staff, Permission::StudentRecordsView, Permission::GradesView, Permission::CertificatesIssue],
             ],
             // Assign with an org unit scope: the assistant sees that unit's students.
             'department_assistant' => [
-                'display_name' => ['en' => 'Department Assistant', 'ko' => '학과 조교', 'zh_CN' => '院系助理'],
+                'display_name' => ['en' => 'Department Assistant', 'ko' => '학과 조교', 'zh_CN' => '院系助理', 'lo' => 'ຜູ້ຊ່ວຍພາກວິຊາ'],
                 'permissions' => [
                     ...$staff,
                     Permission::StudentRecordsView,
@@ -117,7 +117,7 @@ class RoleTemplateSeeder extends Seeder
                 ],
             ],
             'admissions_officer' => [
-                'display_name' => ['en' => 'Admissions Officer', 'ko' => '입학 담당', 'zh_CN' => '招生管理员'],
+                'display_name' => ['en' => 'Admissions Officer', 'ko' => '입학 담당', 'zh_CN' => '招生管理员', 'lo' => 'ຜູ້ຮັບຜິດຊອບການຮັບເຂົ້າຮຽນ'],
                 'permissions' => [
                     ...$staff,
                     Permission::AdmissionCyclesManage,
@@ -129,11 +129,11 @@ class RoleTemplateSeeder extends Seeder
         ];
 
         $personas = [
-            Persona::Applicant->value => ['en' => 'Applicant', 'ko' => '지원자', 'zh_CN' => '申请人'],
-            Persona::Student->value => ['en' => 'Student', 'ko' => '학생', 'zh_CN' => '学生'],
-            Persona::Alumni->value => ['en' => 'Alumni', 'ko' => '졸업생', 'zh_CN' => '校友'],
-            Persona::Instructor->value => ['en' => 'Instructor', 'ko' => '교원', 'zh_CN' => '教师'],
-            Persona::Advisor->value => ['en' => 'Advisor', 'ko' => '지도교수', 'zh_CN' => '指导教师'],
+            Persona::Applicant->value => ['en' => 'Applicant', 'ko' => '지원자', 'zh_CN' => '申请人', 'lo' => 'ຜູ້ສະໝັກ'],
+            Persona::Student->value => ['en' => 'Student', 'ko' => '학생', 'zh_CN' => '学生', 'lo' => 'ນັກສຶກສາ'],
+            Persona::Alumni->value => ['en' => 'Alumni', 'ko' => '졸업생', 'zh_CN' => '校友', 'lo' => 'ສິດເກົ່າ'],
+            Persona::Instructor->value => ['en' => 'Instructor', 'ko' => '교원', 'zh_CN' => '教师', 'lo' => 'ອາຈານ'],
+            Persona::Advisor->value => ['en' => 'Advisor', 'ko' => '지도교수', 'zh_CN' => '指导教师', 'lo' => 'ອາຈານທີ່ປຶກສາ'],
         ];
 
         $syncPermissionCatalog->handle();

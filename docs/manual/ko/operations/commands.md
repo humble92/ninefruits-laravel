@@ -42,12 +42,12 @@
 - 용도: 팩토리로 가상 대학 데이터를 만든다. 역할별 고정 데모 계정(`registrar@demo.test` 등)을 출력한다.
 - 실행 시점: 개발, 교육, 시연 환경. **운영 환경(`APP_ENV=production`)에서는 `--force`를 줘도 실행되지 않는다.**
 - 옵션: `--size=tiny|small|medium|large`(학생 약 20/100/2,000/20,000명. `tiny`는 테스트와 빠른 확인용), `--seed=`(같은 값이면 같은 데이터), `--force`.
+- `--student-accounts`: 재학생 전원에게 계정을 만들고(`student{학번}@demo.test`, 데모 비밀번호) `storage/app/private/load-accounts.csv`에 적는다. 부하 테스트용([부하 테스트](load-testing.md)).
 - 감사: 기록
 - 예시: `php artisan setup:demo --size=small --seed=42`
 - 실패 시: 필수 데이터가 없으면 데모 계정의 역할이 없어 건너뛴다. 먼저 `setup:install`을 실행한다.
 
 ## 기준정보와 학기
-- `--student-accounts`: 재학생 전원에게 계정을 만들고(`student{학번}@demo.test`, 데모 비밀번호) `storage/app/load-accounts.csv`에 적는다. 부하 테스트용([부하 테스트](load-testing.md)).
 
 ### `reference:import`
 
@@ -368,14 +368,14 @@
 
 ### `naming:check`
 
-- 용도: 마이그레이션의 테이블/컬럼 이름을 [명명 규칙](../../development/naming.md)으로 검사한다.
+- 용도: 마이그레이션의 테이블/컬럼 이름을 [명명 규칙](../../../development/naming.md)으로 검사한다.
 - 옵션: `--path=*`(검사할 디렉토리, 기본 `database/migrations`).
 - 감사: 기록 안 함
 - 종료 코드: 문제가 있으면 2.
 
 ### `pdf:sample`
 
-- 용도: 한국어, 중국어, 영어가 섞인 표를 PDF로 렌더링해 글꼴과 PDF 서비스(Gotenberg) 연결을 점검한다.
+- 용도: 한국어, 중국어, 라오어, 영어가 섞인 표를 PDF로 렌더링해 글꼴과 PDF 서비스(Gotenberg) 연결을 점검한다.
 - 인수: `{path=pdf-sample.pdf}` (로컬 디스크 `storage/app/private` 기준).
 - 감사: 기록 안 함
 - 실패 시: 연결 오류면 `GOTENBERG_URL`과 Gotenberg 컨테이너 상태를 확인한다.

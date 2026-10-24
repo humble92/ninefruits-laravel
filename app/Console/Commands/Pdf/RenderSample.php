@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
 #[Signature('pdf:sample {path=pdf-sample.pdf : Path on the local disk}')]
-#[Description('Render a mixed Korean, Chinese and English sample to check PDF fonts')]
+#[Description('Render a mixed Korean, Chinese, Lao and English sample to check PDF fonts')]
 class RenderSample extends Command
 {
     public function handle(PdfRenderer $renderer): int

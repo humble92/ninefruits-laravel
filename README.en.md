@@ -1,14 +1,17 @@
 # Ninefruits — Student Information System
 
-**언어 / Languages / 语言**
+**언어 / Languages / 语言 / ພາສາ**
 
 | Language | README | Manual |
 |---|---|---|
 | 한국어 | [README.md](README.md) | [docs/manual/ko/](docs/manual/ko/README.md) |
 | English | [README.en.md](README.en.md) (this file) | [docs/manual/en/](docs/manual/en/README.md) |
 | 简体中文 | [README.zh_CN.md](README.zh_CN.md) | [docs/manual/zh_CN/](docs/manual/zh_CN/README.md) |
+| ລາວ | [README.lo.md](README.lo.md) | [docs/manual/lo/](docs/manual/lo/README.md) |
 
-Ninefruits is a student information system that any university can install. It covers the core of academic administration — admissions, student records, curriculum and sections, registration, grades, course evaluation, certificates, language and comprehensive examinations, attendance, degree audits, reports and an LMS integration base — with screens and documents in Korean, English and Simplified Chinese.
+To add another language, see [Adding a language](docs/development/adding-a-language.md).
+
+Ninefruits is a student information system that any university can install. It covers the core of academic administration — admissions, student records, curriculum and sections, registration, grades, course evaluation, certificates, language and comprehensive examinations, attendance, degree audits, reports and an LMS integration base — with screens and documents in Korean, English, Simplified Chinese and Lao.
 
 ## At a glance
 
@@ -133,7 +136,7 @@ The full list is in the [command reference](docs/manual/ko/operations/commands.m
 
 ## License
 
-(To be decided.)
+[MIT License](LICENSE). Use, modify and distribute freely; keep the copyright notice and the license text.
 
 ---
 
