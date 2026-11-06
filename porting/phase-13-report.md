@@ -192,7 +192,8 @@ k6 재측정(2026-11-06, 같은 스크립트·같은 환경, 별도 DB에 새 la
 ## 8. PHP 보안 패치 (php2shell)
 
 - php.net 공지와 대조: 2026-10-21 릴리스 8.5.12 / 8.4.27 / 8.3.36이 CVE-2026-109618(OOM 상태 손상), CVE-2026-109619(요청 간 상태 잔존)를 고쳤다.
-- `composer.json` `"php": "^8.5.12"`. Sail 이미지를 캐시 없이 재빌드했지만 packages.sury.org가 2026-10-23 기준 `php8.5-cli 8.5.11-1+0~20260924`까지만 제공해 로컬은 8.5.11에 머문다. 패키지가 나오면 `sail build --no-cache` 후 `php -v`로 확인한다. 그때까지 로컬 `composer install`은 `--ignore-platform-req=php`가 필요하다(기존 vendor는 그대로 동작).
+- `composer.json` `"php": "^8.5.12"`. 2026-10-23에는 packages.sury.org가 `php8.5-cli 8.5.11`까지만 제공해 로컬이 8.5.11에 머물렀다. 2026-11-06 `8.5.12-1+0~20261021` 패키지로 Sail 이미지를 캐시 없이 재빌드했고 `php -v`가 8.5.12, `composer check-platform-reqs`와 `composer check`(테스트 469개)가 통과한다. 이제 `--ignore-platform-req=php`는 필요 없다.
+- 같은 날 CI의 `composer audit --locked`가 15건(phpunit 13.4.3, symfony html-sanitizer·http-foundation·http-kernel·mime·routing·serializer·yaml)으로 실패해 `composer update phpunit/phpunit 'pestphp/*' 'symfony/*' -W`로 패치 버전을 올렸다(phpunit 13.4.5, pest 5.3.5, symfony 8.1.10~8.1.11, 의존 관계로 laravel/framework 13.40.0). 감사 0건.
 - 운영 `php.ini`: `session.upload_progress.enabled = Off`, `fatal_error_backtraces = Off`, 업로드 크기 제한. 배포 체크리스트에 기록.
 
 ## 9. CI 결과
