@@ -41,6 +41,7 @@ it('finds a section, registers and drops it', function () {
         ->assertSee(__('registration.portal.registration_open'))
         ->set('search', $this->section->course->code)
         ->assertSee($this->section->label())
+        ->assertSeeHtml('data-section="'.$this->section->id.'" data-open-seats="1"')
         ->call('enroll', $this->section->id)
         ->assertSet('messageTone', 'success');
 
@@ -68,6 +69,7 @@ it('joins and leaves the waitlist of a full section', function () {
 
     $page = Livewire::actingAs($this->student)->test(Registration::class)
         ->set('search', $this->section->course->code)
+        ->assertSeeHtml('data-section="'.$this->section->id.'" data-open-seats="0"')
         ->assertSee(__('registration.portal.join_waitlist'))
         ->call('enroll', $this->section->id)
         ->assertSet('messageTone', 'error')

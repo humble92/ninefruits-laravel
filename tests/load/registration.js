@@ -77,10 +77,11 @@ export default function () {
     // Type in the search box: the component returns the matching sections.
     const search = livewire(uri, token, snap, { search: searchText }, [], 'search');
     snap = search.next || snap;
-    // Prefer a section with open seats (the seats line precedes the buttons in each result block);
-    // fall back to the first result, whose refusal is still a realistic peak-time outcome.
-    const withSeats = [...search.html.matchAll(/(\d+) open[\s\S]*?wire:click="enroll\((\d+)\)"/g)].find((m) => Number(m[1]) > 0);
-    const section = withSeats ? withSeats[2] : (search.html.match(/wire:click="enroll\((\d+)\)"/) || [])[1];
+    // Prefer a section with open general seats (data attributes of each result, the same in every
+    // language); fall back to the first result, whose refusal is still a realistic peak-time outcome.
+    const results = [...search.html.matchAll(/data-section="(\d+)" data-open-seats="(\d+)"/g)];
+    const withSeats = results.find((m) => Number(m[2]) > 0);
+    const section = withSeats ? withSeats[1] : (results[0] || [])[1];
     const before = dropIds(search.html);
 
     if (section) {

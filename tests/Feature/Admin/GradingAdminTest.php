@@ -112,8 +112,10 @@ it('previews a term close and refuses an unfinished term', function () {
 
 it('lets the instructor enter grades in the portal and the student see final ones', function () {
     $instructor = User::query()->where('email', 'instructor@demo.test')->sole();
+    // The demo opens grade entry now only in the full-term session (DemoGradingSeeder).
     $section = Section::query()->taughtBy($instructor->person_id)->where('enrolled_count', '>', 0)
-        ->whereHas('term', fn ($query) => $query->where('status', 'published'))->first();
+        ->whereHas('term', fn ($query) => $query->where('status', 'published'))
+        ->whereHas('session', fn ($query) => $query->where('is_full_term', true))->orderBy('id')->first();
     $enrollment = $section->enrollments()->where('status', 'enrolled')->first();
     $section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
 

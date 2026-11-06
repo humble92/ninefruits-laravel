@@ -26,7 +26,7 @@ docker run --rm -i --network ninefruits-laravel_sail -v "$PWD":/work -w /work gr
 
 ## 설계상 보장되는 것
 
-- 정원은 DB 행 잠금(`SeatAllocator::lock`)으로 지켜지므로 동시 요청이 몰려도 초과 등록은 나지 않는다(`RegistrationConcurrencyTest`).
+- 정원은 DB 행 잠금(`SeatAllocator::lock`)으로 지켜지므로 동시 요청이 몰려도 초과 등록은 나지 않는다(`ConcurrentRegistrationTest`).
 - 좌석 예약은 Redis·큐 없이도 DB에서 맞지만, 대기자 승격과 알림은 큐가 처리한다.
 
 ## Octane 판단

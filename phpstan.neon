@@ -3,6 +3,8 @@ includes:
 
 rules:
     - Tools\PHPStan\Rules\NoDynamicRawSqlRule
+    - Tools\PHPStan\Rules\RuleEngineAnswersOnlyInSeedersRule
+    - Tools\PHPStan\Rules\RuleEngineAnswersCallableOnlyInSeedersRule
 
 parameters:
     level: 6

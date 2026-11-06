@@ -7,12 +7,15 @@ use App\Domain\Person\Enums\StudentStatus;
 use App\Models\Person\StudentRecord;
 use App\Models\User;
 use App\Support\Setup\DemoOptions;
+use Carbon\CarbonImmutable;
 use Database\Seeders\Demo\DemoAccountSeeder;
 use Database\Seeders\Demo\DemoAdmissionSeeder;
 use Database\Seeders\Demo\DemoPeopleSeeder;
 use Database\Seeders\Demo\DemoSeeder;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 use function Laravel\Prompts\confirm;
@@ -72,17 +75,35 @@ class Demo extends AuditedCommand
     private function studentAccounts(): int
     {
         $domain = config('setup.demo.email_domain');
+        $password = (string) config('setup.demo.password');
+        // Hashing is deliberately slow; the hashed cast keeps an existing hash, so all accounts share one.
+        $hash = Hash::make($password);
         $rows = ['email,password'];
 
-        foreach (StudentRecord::query()->where('status', StudentStatus::Enrolled)->with('person.user')->cursor() as $record) {
-            $email = $record->person->user === null ? "student{$record->student_number}@{$domain}" : $record->person->user->email;
+        StudentRecord::query()->where('status', StudentStatus::Enrolled)->with('person.user')
+            ->chunkById(1000, function (Collection $records) use ($domain, $password, $hash, &$rows): void {
+                $now = CarbonImmutable::now();
+                $users = [];
 
-            if ($record->person->user === null) {
-                User::factory()->create(['person_id' => $record->person_id, 'name' => null, 'email' => $email, 'password' => config('setup.demo.password')]);
-            }
+                foreach ($records as $record) {
+                    $user = $record->person->user;
+                    $email = $user === null ? "student{$record->student_number}@{$domain}" : $user->email;
 
-            $rows[] = $email.','.config('setup.demo.password');
-        }
+                    if ($user === null) {
+                        $users[] = [
+                            ...User::factory()->make(['person_id' => $record->person_id, 'name' => null, 'email' => $email, 'password' => $hash])->getAttributes(),
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ];
+                    }
+
+                    $rows[] = $email.','.$password;
+                }
+
+                if ($users !== []) {
+                    User::query()->insert($users);
+                }
+            });
 
         Storage::disk('local')->put('load-accounts.csv', implode("\n", $rows)."\n");
 

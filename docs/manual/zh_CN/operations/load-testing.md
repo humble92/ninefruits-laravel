@@ -26,7 +26,7 @@ docker run --rm -i --network ninefruits-laravel_sail -v "$PWD":/work -w /work gr
 
 ## 设计上的保证
 
-- 名额由数据库行锁（`SeatAllocator::lock`）保护，即使并发请求涌入也不会超额选课（`RegistrationConcurrencyTest`）。
+- 名额由数据库行锁（`SeatAllocator::lock`）保护，即使并发请求涌入也不会超额选课（`ConcurrentRegistrationTest`）。
 - 名额预留在没有 Redis 和队列的情况下也能在数据库中保持正确，但候补递补和通知由队列处理。
 
 ## 关于 Octane 的判断

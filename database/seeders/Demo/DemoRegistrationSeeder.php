@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Demo;
 
+use App\Domain\Grading\Enums\AcademicStanding;
 use App\Domain\Offering\Enums\SectionStatus;
 use App\Domain\Person\Enums\StudentStatus;
 use App\Domain\Registration\Actions\EnrollStudent;
@@ -19,20 +20,22 @@ use App\Models\Term\TermType;
 use App\Models\User;
 use App\Support\Setup\DemoOptions;
 use App\Support\Targeting\TargetCriteria;
-use Illuminate\Database\Eloquent\Collection;
+use Database\Seeders\Demo\Support\BulkRegistrar;
 use Illuminate\Database\Seeder;
 
 /**
- * Registration demo: rule sets for the current and next term, credit limits, current-term
+ * Registration demo: rule sets for the current and next term, credit limits (12 credits
+ * in regular terms for students on academic warning, otherwise 18 and 6), current-term
  * registrations entered by the registrar (the registration period is over), a full
- * next-term section with a waitlist, and two holds. Everything goes through the
- * registration actions, so seat counters, attempts and audit records are consistent.
+ * next-term section with a waitlist, and two holds. The current-term registrations are
+ * decided by the same rules and written in bulk (BulkRegistrar); the rest goes through the
+ * registration actions.
  */
 class DemoRegistrationSeeder extends Seeder
 {
     private const string REASON = 'Demo data';
 
-    public function run(DemoOptions $options, PrepareRuleSet $prepare, EnrollStudent $enroll, ManageHolds $holds): void
+    public function run(DemoOptions $options, PrepareRuleSet $prepare, EnrollStudent $enroll, ManageHolds $holds, BulkRegistrar $bulk): void
     {
         $registrar = User::query()->where('email', 'registrar@'.config('setup.demo.email_domain'))->first();
         $current = Term::query()->where('status', 'published')->where('start_date', '<=', now()->toDateString())->orderByDesc('start_date')->first();
@@ -50,9 +53,12 @@ class DemoRegistrationSeeder extends Seeder
 
         $this->creditLimits();
 
-        $students = StudentRecord::query()->where('status', StudentStatus::Enrolled)->with('person')->inRandomOrder()
-            ->limit($options->scale(60))->get();
-        $this->registrations($current, $students, $enroll, $registrar);
+        // Students on academic warning are among them, so the lower credit limit refuses some registrations.
+        $warned = StudentRecord::query()->where('status', StudentStatus::Enrolled)->where('academic_standing', AcademicStanding::Warning)
+            ->with('person')->inRandomOrder()->limit($options->scale(5))->get();
+        $students = StudentRecord::query()->where('status', StudentStatus::Enrolled)->whereNotIn('id', $warned->modelKeys())->with('person')
+            ->inRandomOrder()->limit(max(0, $options->scale(60) - $warned->count()))->get()->concat($warned);
+        $bulk->register($current, $students, $registrar, self::REASON);
 
         if ($next !== null) {
             $this->waitlist($next, $enroll, $registrar);
@@ -79,30 +85,15 @@ class DemoRegistrationSeeder extends Seeder
                 'max_credits' => $type->is_regular ? 18 : 6,
                 'priority' => 0,
             ]);
-        }
-    }
 
-    /**
-     * Up to five sections per student, chosen from the sections that admit them.
-     *
-     * @param  Collection<int, StudentRecord>  $students
-     */
-    private function registrations(Term $term, Collection $students, EnrollStudent $enroll, User $registrar): void
-    {
-        $sections = Section::query()->where('term_id', $term->id)->where('status', SectionStatus::Published)
-            ->with(['course', 'version', 'session'])->get();
-
-        foreach ($students as $record) {
-            $candidates = $sections->filter(fn (Section $section) => $section->admits($record))->shuffle()->take(10);
-            $registered = 0;
-
-            foreach ($candidates as $section) {
-                $outcome = $enroll->handle($record, $section, $registrar, new EnrollOptions(waive: [RuleCode::Window], reason: self::REASON));
-                $registered += $outcome->succeeded() ? 1 : 0;
-
-                if ($registered >= 5) {
-                    break;
-                }
+            if ($type->is_regular) {
+                CreditLimitPolicy::query()->create([
+                    'name' => ['en' => 'Academic warning', 'ko' => '학사경고', 'zh_CN' => '学业警告', 'lo' => 'ເຕືອນທາງວິຊາການ'],
+                    'term_type_id' => $type->id,
+                    'eligibility' => new TargetCriteria(academicStandings: [AcademicStanding::Warning->value]),
+                    'max_credits' => 12,
+                    'priority' => 10,
+                ]);
             }
         }
     }

@@ -53,7 +53,7 @@ Retakes are detected automatically and the registration is marked **Retake**. Gr
 
 ## Credit limits
 
-Set the term type (empty: every term type), the students (year level, admission year, program, org unit), the maximum credits and the priority. When several limits match a student, only **the one with the highest priority** applies. When none matches there is no limit (`registration:preflight` reports this).
+Set the term type (empty: every term type), the students (year level, admission year, program, org unit, academic standing), the maximum credits and the priority. The academic standing is set when the term's grades are closed ([chapter 21](21-grades.md)). For example, to hold students on academic warning to 12 credits, choose Academic warning under academic standing and give the limit a higher priority than the general one (the demo data is set up this way). When several limits match a student, only **the one with the highest priority** applies. When none matches there is no limit (`registration:preflight` reports this).
 
 Example: the legacy YUST rules (`yust-legacy` profile)
 

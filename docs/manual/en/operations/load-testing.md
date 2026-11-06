@@ -26,7 +26,7 @@ docker run --rm -i --network ninefruits-laravel_sail -v "$PWD":/work -w /work gr
 
 ## What the design guarantees
 
-- Capacity is protected by DB row locks (`SeatAllocator::lock`), so even a burst of concurrent requests cannot over-enroll a section (`RegistrationConcurrencyTest`).
+- Capacity is protected by DB row locks (`SeatAllocator::lock`), so even a burst of concurrent requests cannot over-enroll a section (`ConcurrentRegistrationTest`).
 - Seat reservation is correct in the DB alone, without Redis or the queue, but waitlist promotion and notifications are handled by the queue.
 
 ## Deciding on Octane

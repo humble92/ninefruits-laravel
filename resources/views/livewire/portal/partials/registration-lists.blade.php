@@ -56,7 +56,8 @@
     <div class="mt-3 space-y-2">
         @foreach ($results as $section)
             @php($free = $seats($section))
-            <div class="flex flex-wrap items-center justify-between gap-2 rounded border border-zinc-200 p-3 text-sm">
+            {{-- data-section and data-open-seats are read by the load test (tests/load/registration.js). --}}
+            <div data-section="{{ $section->id }}" data-open-seats="{{ $free['general'] }}" class="flex flex-wrap items-center justify-between gap-2 rounded border border-zinc-200 p-3 text-sm">
                 <span>
                     <span class="font-medium">{{ $section->label() }} {{ $section->version->title }}</span> · {{ (float) $section->version->credits }}
                     <span class="block text-xs text-zinc-500">
