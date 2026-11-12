@@ -375,7 +375,7 @@
 
 ### `pdf:sample`
 
-- 용도: 한국어, 중국어, 라오어, 영어가 섞인 표를 PDF로 렌더링해 글꼴과 PDF 서비스(Gotenberg) 연결을 점검한다.
+- 용도: 한글, 한자·가나, 라오 문자, 태국 문자, 데바나가리, 키릴 문자, 라틴 문자가 섞인 표를 PDF로 렌더링해 글꼴과 PDF 서비스(Gotenberg) 연결을 점검한다.
 - 인수: `{path=pdf-sample.pdf}` (로컬 디스크 `storage/app/private` 기준).
 - 감사: 기록 안 함
 - 실패 시: 연결 오류면 `GOTENBERG_URL`과 Gotenberg 컨테이너 상태를 확인한다.

@@ -90,7 +90,7 @@ it('enforces the audience, active kinds, holds and permissions', function () {
     $clerk = User::factory()->withPermissions([Permission::StudentRecordsView])->create();
     expect(fn () => $this->issue->handle($this->record, $this->enrollment, 'ko', $clerk))->toThrow(AuthorizationException::class);
 
-    expect(fn () => $this->issue->handle($this->record, $this->enrollment, 'fr', $this->officer))->toThrow(ValidationException::class);
+    expect(fn () => $this->issue->handle($this->record, $this->enrollment, 'es', $this->officer))->toThrow(ValidationException::class);
 });
 
 it('verifies on the public page with masked holder details, and reports revoked and expired', function () {

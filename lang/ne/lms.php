@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS प्लेटफर्म', 'plural_label' => 'LMS प्लेटफर्महरू'],
+        'course_links' => ['label' => 'विषय लिङ्क', 'plural_label' => 'विषय लिङ्कहरू'],
+        'sync_logs' => ['label' => 'सिङ्क लग', 'plural_label' => 'सिङ्क लगहरू'],
+    ],
+    'fields' => [
+        'driver' => 'ड्राइभर',
+        'not_implemented' => 'अहिलेसम्म लागू गरिएको छैन',
+        'base_url' => 'आधार URL',
+        'credentials' => 'पहुँच विवरण',
+        'credential_key' => 'कुञ्जी',
+        'credential_value' => 'मान',
+        'course_links' => 'विषय लिङ्कहरू',
+        'should_sync_enrollments' => 'विद्यार्थी सूची सिङ्क गर्नुहोस्',
+        'should_pull_grades' => 'अन्तिम अङ्क ल्याउनुहोस्',
+        'external_course_id' => 'प्लेटफर्ममा विषयको id',
+        'external_url' => 'विषयको URL',
+        'last_synced_at' => 'अन्तिम सिङ्क',
+        'last_error' => 'अन्तिम त्रुटि',
+        'started_at' => 'सुरु',
+        'operation' => 'कार्य',
+        'message' => 'सन्देश',
+    ],
+    'help' => [
+        'driver' => 'प्लेटफर्मसँग कुरा गर्ने कनेक्टर। "null" ले केही नबोलाई पठाइने कुरा मात्र अभिलेख गर्छ; तयारी र परीक्षणका लागि प्रयोग गर्नुहोस्।',
+        'credentials' => 'ड्राइभरलाई चाहिने टोकन र सिक्रेट (docs/lms-integration-guide.md हेर्नुहोस्)। इन्क्रिप्ट गरेर राखिन्छ; सम्पादन गर्दा राखिएका मान कायम राख्न खाली छोड्नुहोस्।',
+        'is_active' => 'सक्रिय प्लेटफर्मले प्रकाशित सेक्सन र विद्यार्थी सूचीका परिवर्तनहरू भइरहँदा, र रातिको मिलान पाउँछन्।',
+        'should_pull_grades' => 'प्राध्यापकलाई प्लेटफर्मका अन्तिम अङ्क ग्रेड प्रविष्टि स्क्रिनमा मस्यौदाका रूपमा ल्याउन दिन्छ।',
+    ],
+    'actions' => ['resync' => 'फेरि सिङ्क गर्नुहोस्'],
+    'notifications' => ['synced' => 'सिङ्क भयो: :members सदस्य।'],
+    'drivers' => ['null' => 'छैन (अभिलेख मात्र)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'विचाराधीन', 'linked' => 'जोडिएको', 'failed' => 'असफल'],
+    'operations' => ['course.sync' => 'विषय', 'enrollment.add' => 'सदस्य थप्नुहोस्', 'enrollment.remove' => 'सदस्य हटाउनुहोस्', 'grades.pull' => 'अङ्क ल्याउनुहोस्', 'reconcile' => 'मिलान'],
+    'sync_statuses' => ['queued' => 'लाइनमा', 'succeeded' => 'सफल', 'failed' => 'असफल', 'skipped' => 'छोडिएको'],
+    'portal' => ['open_course' => ':platform मा विषय खोल्नुहोस्'],
+];

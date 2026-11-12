@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS platformasi', 'plural_label' => 'LMS platformalari'],
+        'course_links' => ['label' => 'Kurs bogʻlanishi', 'plural_label' => 'Kurs bogʻlanishlari'],
+        'sync_logs' => ['label' => 'Sinxronlash jurnali', 'plural_label' => 'Sinxronlash jurnallari'],
+    ],
+    'fields' => [
+        'driver' => 'Drayver',
+        'not_implemented' => 'hali amalga oshirilmagan',
+        'base_url' => 'Asosiy URL',
+        'credentials' => 'Kirish maʼlumotlari',
+        'credential_key' => 'Kalit',
+        'credential_value' => 'Qiymat',
+        'course_links' => 'Kurs bogʻlanishlari',
+        'should_sync_enrollments' => 'Talabalar roʻyxatini sinxronlash',
+        'should_pull_grades' => 'Yakuniy ballarni olish',
+        'external_course_id' => 'Platformadagi kurs ID',
+        'external_url' => 'Kurs URL',
+        'last_synced_at' => 'Oxirgi sinxronlash',
+        'last_error' => 'Oxirgi xato',
+        'started_at' => 'Boshlangan',
+        'operation' => 'Amal',
+        'message' => 'Xabar',
+    ],
+    'help' => [
+        'driver' => 'Platforma bilan bogʻlanadigan konnektor. "null" hech narsani chaqirmasdan nima yuborilishini qayd etadi; tayyorlash va sinash uchun ishlating.',
+        'credentials' => 'Drayverga kerak boʻlgan tokenlar va maxfiy kalitlar (docs/lms-integration-guide.md ga qarang). Shifrlangan holda saqlanadi; tahrirlashda saqlanganlarini qoldirish uchun boʻsh qoldiring.',
+        'is_active' => 'Faol platformalar eʼlon qilingan fan guruhlari va roʻyxat oʻzgarishlarini darhol, shuningdek tungi solishtirishni oladi.',
+        'should_pull_grades' => 'Oʻqituvchilarga platformadagi yakuniy ballarni baho kiritish ekraniga qoralama sifatida yuklash imkonini beradi.',
+    ],
+    'actions' => ['resync' => 'Qayta sinxronlash'],
+    'notifications' => ['synced' => 'Sinxronlandi: :members ta aʼzo.'],
+    'drivers' => ['null' => 'Yoʻq (faqat qayd etadi)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Kutilmoqda', 'linked' => 'Bogʻlangan', 'failed' => 'Muvaffaqiyatsiz'],
+    'operations' => ['course.sync' => 'Kurs', 'enrollment.add' => 'Aʼzo qoʻshish', 'enrollment.remove' => 'Aʼzoni olib tashlash', 'grades.pull' => 'Ballarni olish', 'reconcile' => 'Solishtirish'],
+    'sync_statuses' => ['queued' => 'Navbatda', 'succeeded' => 'Muvaffaqiyatli', 'failed' => 'Muvaffaqiyatsiz', 'skipped' => 'Oʻtkazib yuborilgan'],
+    'portal' => ['open_course' => 'Kursni :platform da ochish'],
+];

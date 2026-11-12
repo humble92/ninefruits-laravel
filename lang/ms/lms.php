@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'Platform LMS', 'plural_label' => 'Platform LMS'],
+        'course_links' => ['label' => 'Pautan kursus', 'plural_label' => 'Pautan kursus'],
+        'sync_logs' => ['label' => 'Log penyegerakan', 'plural_label' => 'Log penyegerakan'],
+    ],
+    'fields' => [
+        'driver' => 'Pemacu',
+        'not_implemented' => 'belum dilaksanakan',
+        'base_url' => 'URL asas',
+        'credentials' => 'Kelayakan akses',
+        'credential_key' => 'Kunci',
+        'credential_value' => 'Nilai',
+        'course_links' => 'Pautan kursus',
+        'should_sync_enrollments' => 'Segerakkan senarai pelajar',
+        'should_pull_grades' => 'Tarik markah akhir',
+        'external_course_id' => 'ID kursus pada platform',
+        'external_url' => 'URL kursus',
+        'last_synced_at' => 'Penyegerakan terakhir',
+        'last_error' => 'Ralat terakhir',
+        'started_at' => 'Dimulakan',
+        'operation' => 'Operasi',
+        'message' => 'Mesej',
+    ],
+    'help' => [
+        'driver' => 'Penyambung yang berkomunikasi dengan platform. "null" merekodkan apa yang akan dihantar tanpa memanggil apa-apa; gunakannya untuk persediaan dan ujian.',
+        'credentials' => 'Token dan rahsia yang diperlukan oleh pemacu (lihat docs/lms-integration-guide.md). Disimpan dalam bentuk tersulit; biarkan kosong semasa menyunting untuk mengekalkan nilai yang disimpan.',
+        'is_active' => 'Platform aktif menerima seksyen yang diterbitkan dan perubahan senarai pelajar sebaik sahaja berlaku, serta penyelarasan setiap malam.',
+        'should_pull_grades' => 'Membolehkan pensyarah memuatkan markah akhir daripada platform ke skrin kemasukan gred sebagai draf.',
+    ],
+    'actions' => ['resync' => 'Segerakkan semula'],
+    'notifications' => ['synced' => 'Disegerakkan: :members ahli.'],
+    'drivers' => ['null' => 'Tiada (rekod sahaja)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Menunggu', 'linked' => 'Dipautkan', 'failed' => 'Gagal'],
+    'operations' => ['course.sync' => 'Kursus', 'enrollment.add' => 'Tambah ahli', 'enrollment.remove' => 'Alih keluar ahli', 'grades.pull' => 'Tarik markah', 'reconcile' => 'Selaraskan'],
+    'sync_statuses' => ['queued' => 'Dalam baris gilir', 'succeeded' => 'Berjaya', 'failed' => 'Gagal', 'skipped' => 'Dilangkau'],
+    'portal' => ['open_course' => 'Buka kursus di :platform'],
+];

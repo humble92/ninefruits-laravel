@@ -1,6 +1,6 @@
 # Ninefruits — 高校教务管理系统
 
-**언어 / Languages / 语言 / ພາສາ**
+**Languages / 언어**
 
 | 语言 | README | 手册 |
 |---|---|---|
@@ -8,10 +8,22 @@
 | English | [README.en.md](README.en.md) | [docs/manual/en/](docs/manual/en/README.md) |
 | 简体中文 | [README.zh_CN.md](README.zh_CN.md)（本文） | [docs/manual/zh_CN/](docs/manual/zh_CN/README.md) |
 | ລາວ | [README.lo.md](README.lo.md) | [docs/manual/lo/](docs/manual/lo/README.md) |
+| Deutsch | [README.de.md](README.de.md) | [docs/manual/de/](docs/manual/de/README.md) |
+| Filipino | [README.fil.md](README.fil.md) | [docs/manual/fil/](docs/manual/fil/README.md) |
+| Français | [README.fr.md](README.fr.md) | [docs/manual/fr/](docs/manual/fr/README.md) |
+| 日本語 | [README.ja.md](README.ja.md) | [docs/manual/ja/](docs/manual/ja/README.md) |
+| Монгол | [README.mn.md](README.mn.md) | [docs/manual/mn/](docs/manual/mn/README.md) |
+| Bahasa Melayu | [README.ms.md](README.ms.md) | [docs/manual/ms/](docs/manual/ms/README.md) |
+| नेपाली | [README.ne.md](README.ne.md) | [docs/manual/ne/](docs/manual/ne/README.md) |
+| Русский | [README.ru.md](README.ru.md) | [docs/manual/ru/](docs/manual/ru/README.md) |
+| ไทย | [README.th.md](README.th.md) | [docs/manual/th/](docs/manual/th/README.md) |
+| Türkçe | [README.tr.md](README.tr.md) | [docs/manual/tr/](docs/manual/tr/README.md) |
+| Oʻzbek | [README.uz.md](README.uz.md) | [docs/manual/uz/](docs/manual/uz/README.md) |
+| Tiếng Việt | [README.vi.md](README.vi.md) | [docs/manual/vi/](docs/manual/vi/README.md) |
 
 要添加其他语言，请参阅[添加语言指南](docs/development/adding-a-language.md)（英文）。
 
-Ninefruits 是一套可在多所高校部署的教务管理系统（Student Information System）。它覆盖教务工作的核心——招生、学籍、培养方案与开课、选课、成绩、课程评价、证明、语言/综合考试、考勤、毕业资格审核、报表以及 LMS 对接基础——界面和文档支持韩语、英语、简体中文和老挝语。
+Ninefruits 是一套可在多所高校部署的教务管理系统（Student Information System）。它覆盖教务工作的核心——招生、学籍、培养方案与开课、选课、成绩、课程评价、证明、语言/综合考试、考勤、毕业资格审核、报表以及 LMS 对接基础——界面和文档支持上表所列的 16 种语言。
 
 ## 一览
 
@@ -103,7 +115,7 @@ printf '\nWWWUSER=%s\nWWWGROUP=%s\n' "$(id -u)" "$(id -g)" >> .env
 ## 文档
 
 - [管理员手册](docs/manual/zh_CN/README.md)（韩语原文：[docs/manual/ko/](docs/manual/ko/README.md)）
-- 运维：[安装](docs/manual/ko/operations/installation.md)、[命令](docs/manual/ko/operations/commands.md)、[定时任务](docs/manual/ko/operations/scheduled-jobs.md)、[备份与恢复](docs/manual/ko/operations/backup-restore.md)、[安全密钥](docs/manual/ko/operations/security-keys.md)、[故障排除](docs/manual/ko/operations/troubleshooting.md)
+- 运维：[安装](docs/manual/zh_CN/operations/installation.md)、[命令](docs/manual/zh_CN/operations/commands.md)、[定时任务](docs/manual/zh_CN/operations/scheduled-jobs.md)、[备份与恢复](docs/manual/zh_CN/operations/backup-restore.md)、[安全密钥](docs/manual/zh_CN/operations/security-keys.md)、[故障排除](docs/manual/zh_CN/operations/troubleshooting.md)
 - [LMS 对接指南](docs/lms-integration-guide.md)
 - [开发规范](docs/development/)
 - 移植历史与设计决策（参考）：[porting/](porting/README.md)
@@ -118,7 +130,7 @@ psql -v migrator_password=... -v runtime_password=... -v reporting_password=... 
 psql -d <database> -f database/sql/roles/prepare_database.sql
 ```
 
-应用以 `app_runtime`（应用行级安全）连接，迁移以 `app_migrator` 连接，BI 工具以 `app_reporting`（读取 reporting 视图）连接。详见[安装手册](docs/manual/ko/operations/installation.md)。
+应用以 `app_runtime`（应用行级安全）连接，迁移以 `app_migrator` 连接，BI 工具以 `app_reporting`（读取 reporting 视图）连接。详见[安装手册](docs/manual/zh_CN/operations/installation.md)。
 
 ## 常用命令
 
@@ -132,7 +144,7 @@ psql -d <database> -f database/sql/roles/prepare_database.sql
 | `sail artisan security:sync-permissions` | 将代码中的权限目录同步到数据库 |
 | `sail artisan i18n:missing` | 检查翻译缺失（用 `i18n:export`/`i18n:import` 与译者协作） |
 
-完整列表见[命令参考](docs/manual/ko/operations/commands.md)。
+完整列表见[命令参考](docs/manual/zh_CN/operations/commands.md)。
 
 ## 许可证
 

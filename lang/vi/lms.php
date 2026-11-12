@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'Nền tảng LMS', 'plural_label' => 'Nền tảng LMS'],
+        'course_links' => ['label' => 'Liên kết khóa học', 'plural_label' => 'Liên kết khóa học'],
+        'sync_logs' => ['label' => 'Nhật ký đồng bộ', 'plural_label' => 'Nhật ký đồng bộ'],
+    ],
+    'fields' => [
+        'driver' => 'Trình kết nối',
+        'not_implemented' => 'chưa được triển khai',
+        'base_url' => 'URL gốc',
+        'credentials' => 'Thông tin xác thực',
+        'credential_key' => 'Khóa',
+        'credential_value' => 'Giá trị',
+        'course_links' => 'Liên kết khóa học',
+        'should_sync_enrollments' => 'Đồng bộ danh sách lớp',
+        'should_pull_grades' => 'Lấy điểm cuối kỳ',
+        'external_course_id' => 'Mã khóa học trên nền tảng',
+        'external_url' => 'URL khóa học',
+        'last_synced_at' => 'Đồng bộ gần nhất',
+        'last_error' => 'Lỗi gần nhất',
+        'started_at' => 'Bắt đầu',
+        'operation' => 'Thao tác',
+        'message' => 'Thông điệp',
+    ],
+    'help' => [
+        'driver' => 'Trình kết nối giao tiếp với nền tảng. "null" chỉ ghi lại những gì sẽ được gửi mà không gọi đến đâu; dùng để chuẩn bị và kiểm thử.',
+        'credentials' => 'Token và khóa bí mật mà trình kết nối cần (xem docs/lms-integration-guide.md). Được lưu dưới dạng mã hóa; để trống khi chỉnh sửa để giữ giá trị đã lưu.',
+        'is_active' => 'Nền tảng đang hoạt động nhận các lớp học phần đã công bố và thay đổi danh sách lớp ngay khi phát sinh, cùng với đối soát hằng đêm.',
+        'should_pull_grades' => 'Cho phép giảng viên tải điểm cuối kỳ của nền tảng vào màn hình nhập điểm dưới dạng bản nháp.',
+    ],
+    'actions' => ['resync' => 'Đồng bộ lại'],
+    'notifications' => ['synced' => 'Đã đồng bộ: :members thành viên.'],
+    'drivers' => ['null' => 'Không có (chỉ ghi lại)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Chờ xử lý', 'linked' => 'Đã liên kết', 'failed' => 'Thất bại'],
+    'operations' => ['course.sync' => 'Khóa học', 'enrollment.add' => 'Thêm thành viên', 'enrollment.remove' => 'Xóa thành viên', 'grades.pull' => 'Lấy điểm', 'reconcile' => 'Đối soát'],
+    'sync_statuses' => ['queued' => 'Trong hàng đợi', 'succeeded' => 'Thành công', 'failed' => 'Thất bại', 'skipped' => 'Bỏ qua'],
+    'portal' => ['open_course' => 'Mở khóa học trên :platform'],
+];

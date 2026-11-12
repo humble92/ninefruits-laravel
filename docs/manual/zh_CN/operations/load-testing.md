@@ -35,4 +35,4 @@ docker run --rm -i --network ninefruits-laravel_sail -v "$PWD":/work -w /work gr
 
 ## 2026-10-23 测试结果
 
-开发用 Sail 容器（内置服务器，无 opcache），100 VU 持续 1 分钟：4 个工作进程 24.7 req/s，16 个工作进程 34.5 req/s，HTTP 失败 0，超额选课 0，PostgreSQL 连接 4 个。单个请求的服务器处理时间约为页面 120 ms、选课 190 ms；100 VU 下的数秒延迟来自工作进程排队。吞吐量随 PHP 工作进程数线性增长，数据库远未到瓶颈，因此**不引入 Octane**，以 php-fpm 工作进程数和应用服务器横向扩展应对。上线前在 php-fpm + opcache 的预发布环境以 200、500 VU 重新测试。详细数据见 [Phase 13 报告](../../../porting/phase-13-report.md) 第 7 节。
+开发用 Sail 容器（内置服务器，无 opcache），100 VU 持续 1 分钟：4 个工作进程 24.7 req/s，16 个工作进程 34.5 req/s，HTTP 失败 0，超额选课 0，PostgreSQL 连接 4 个。单个请求的服务器处理时间约为页面 120 ms、选课 190 ms；100 VU 下的数秒延迟来自工作进程排队。吞吐量随 PHP 工作进程数线性增长，数据库远未到瓶颈，因此**不引入 Octane**，以 php-fpm 工作进程数和应用服务器横向扩展应对。上线前在 php-fpm + opcache 的预发布环境以 200、500 VU 重新测试。详细数据见 [Phase 13 报告](../../../../porting/phase-13-report.md) 第 7 节。

@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS платформ', 'plural_label' => 'LMS платформууд'],
+        'course_links' => ['label' => 'Хичээлийн холбоос', 'plural_label' => 'Хичээлийн холбоосууд'],
+        'sync_logs' => ['label' => 'Синхрончлолын бүртгэл', 'plural_label' => 'Синхрончлолын бүртгэлүүд'],
+    ],
+    'fields' => [
+        'driver' => 'Драйвер',
+        'not_implemented' => 'хараахан хэрэгжүүлээгүй',
+        'base_url' => 'Үндсэн URL',
+        'credentials' => 'Нэвтрэх түлхүүр',
+        'credential_key' => 'Түлхүүр',
+        'credential_value' => 'Утга',
+        'course_links' => 'Хичээлийн холбоосууд',
+        'should_sync_enrollments' => 'Нэрсийн жагсаалтыг синхрончлох',
+        'should_pull_grades' => 'Эцсийн оноог татах',
+        'external_course_id' => 'Платформ дээрх хичээлийн id',
+        'external_url' => 'Хичээлийн URL',
+        'last_synced_at' => 'Сүүлд синхрончилсон',
+        'last_error' => 'Сүүлийн алдаа',
+        'started_at' => 'Эхэлсэн',
+        'operation' => 'Үйлдэл',
+        'message' => 'Мессеж',
+    ],
+    'help' => [
+        'driver' => 'Платформтой холбогдох холбогч. "null" нь юу ч дуудалгүй илгээх байсан зүйлийг бүртгэнэ; бэлтгэх, туршихад ашиглана.',
+        'credentials' => 'Драйверт шаардлагатай токен, нууц түлхүүр (docs/lms-integration-guide.md-г үзнэ үү). Шифрлэн хадгална; засахдаа хадгалсан утгыг үлдээх бол хоосон орхино уу.',
+        'is_active' => 'Идэвхтэй платформ нийтэлсэн бүлэг, нэрсийн жагсаалтын өөрчлөлтийг тухай бүрт нь, мөн шөнийн тулгалтаар хүлээн авна.',
+        'should_pull_grades' => 'Багш нар платформын эцсийн оноог дүн оруулах дэлгэцэд ноорог болгон татах боломжтой.',
+    ],
+    'actions' => ['resync' => 'Дахин синхрончлох'],
+    'notifications' => ['synced' => 'Синхрончиллоо: :members гишүүн.'],
+    'drivers' => ['null' => 'Байхгүй (зөвхөн бүртгэнэ)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Хүлээгдэж буй', 'linked' => 'Холбогдсон', 'failed' => 'Амжилтгүй'],
+    'operations' => ['course.sync' => 'Хичээл', 'enrollment.add' => 'Гишүүн нэмэх', 'enrollment.remove' => 'Гишүүн хасах', 'grades.pull' => 'Оноо татах', 'reconcile' => 'Тулгалт'],
+    'sync_statuses' => ['queued' => 'Дараалалд', 'succeeded' => 'Амжилттай', 'failed' => 'Амжилтгүй', 'skipped' => 'Алгассан'],
+    'portal' => ['open_course' => 'Хичээлийг :platform дээр нээх'],
+];

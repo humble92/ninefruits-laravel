@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS プラットフォーム', 'plural_label' => 'LMS プラットフォーム'],
+        'course_links' => ['label' => 'コース連携', 'plural_label' => 'コース連携'],
+        'sync_logs' => ['label' => '同期ログ', 'plural_label' => '同期ログ'],
+    ],
+    'fields' => [
+        'driver' => 'ドライバー',
+        'not_implemented' => '未実装',
+        'base_url' => 'ベース URL',
+        'credentials' => '認証情報',
+        'credential_key' => 'キー',
+        'credential_value' => '値',
+        'course_links' => 'コース連携',
+        'should_sync_enrollments' => '履修者名簿を同期',
+        'should_pull_grades' => '最終得点を取得',
+        'external_course_id' => 'プラットフォーム上のコース ID',
+        'external_url' => 'コース URL',
+        'last_synced_at' => '最終同期',
+        'last_error' => '最新のエラー',
+        'started_at' => '開始',
+        'operation' => '操作',
+        'message' => 'メッセージ',
+    ],
+    'help' => [
+        'driver' => 'プラットフォームと通信するコネクターです。「null」は実際には呼び出さず、送信内容のみを記録します。準備やテストに使用してください。',
+        'credentials' => 'ドライバーに必要なトークンとシークレットです(docs/lms-integration-guide.md を参照)。暗号化して保存されます。編集時に空欄にすると保存済みの値が維持されます。',
+        'is_active' => '有効なプラットフォームには、公開された開講科目と名簿の変更が随時送信され、毎晩の照合も行われます。',
+        'should_pull_grades' => '教員がプラットフォームの最終得点を成績入力画面に下書きとして読み込めるようにします。',
+    ],
+    'actions' => ['resync' => '再同期'],
+    'notifications' => ['synced' => '同期しました: メンバー :members 名。'],
+    'drivers' => ['null' => 'なし(記録のみ)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => '保留中', 'linked' => '連携済み', 'failed' => '失敗'],
+    'operations' => ['course.sync' => 'コース', 'enrollment.add' => 'メンバー追加', 'enrollment.remove' => 'メンバー削除', 'grades.pull' => '得点取得', 'reconcile' => '照合'],
+    'sync_statuses' => ['queued' => '待機中', 'succeeded' => '成功', 'failed' => '失敗', 'skipped' => 'スキップ'],
+    'portal' => ['open_course' => ':platform でコースを開く'],
+];

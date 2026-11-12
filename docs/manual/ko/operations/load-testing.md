@@ -35,4 +35,4 @@ Sail 단일 php-fpm 기준으로 p95가 기준을 넘으면 먼저 php-fpm 워�
 
 ## 2026-10-23 측정 결과
 
-개발용 Sail 컨테이너(내장 서버, opcache 없음)에서 100 VU로 1분: 워커 4개 24.7 req/s, 워커 16개 34.5 req/s, HTTP 실패 0, 초과 등록 0, PostgreSQL 연결 4개. 요청당 서버 처리 시간은 화면 약 120ms, 등록 약 190ms이고 100 VU에서의 지연은 워커 대기열이다. 처리량이 PHP 워커 수에 비례하고 DB가 병목이 아니므로 **Octane은 도입하지 않고** php-fpm 워커 수와 앱 서버 수평 확장으로 대응한다. 운영 전 php-fpm + opcache 스테이징에서 200·500 VU로 다시 측정한다. 자세한 수치는 [Phase 13 보고서](../../../porting/phase-13-report.md) 7절.
+개발용 Sail 컨테이너(내장 서버, opcache 없음)에서 100 VU로 1분: 워커 4개 24.7 req/s, 워커 16개 34.5 req/s, HTTP 실패 0, 초과 등록 0, PostgreSQL 연결 4개. 요청당 서버 처리 시간은 화면 약 120ms, 등록 약 190ms이고 100 VU에서의 지연은 워커 대기열이다. 처리량이 PHP 워커 수에 비례하고 DB가 병목이 아니므로 **Octane은 도입하지 않고** php-fpm 워커 수와 앱 서버 수평 확장으로 대응한다. 운영 전 php-fpm + opcache 스테이징에서 200·500 VU로 다시 측정한다. 자세한 수치는 [Phase 13 보고서](../../../../porting/phase-13-report.md) 7절.

@@ -93,6 +93,6 @@ In the **Graduation requirements** editor choose the requirement kind **Passed e
 ## Frequently asked questions
 
 - **I need to register a student outside the registration window.** Staff register them under **Registrants > Register a student** on the session.
-- **I want to change the pass score for this session only.** Enter the session's pass score. Results already entered are judged against the new threshold only when entered again.
+- **I want to change the pass score for this session only.** Enter the session's pass score before the results are published. Results already entered are judged again at once from their stored scores (the kind's area minimums still apply). After publication the pass score is locked; use corrections.
 - **I entered a score wrongly.** Before publication, **Enter result** again to overwrite it. After publication, file a **correction request** and have another staff member approve it.
 - **Statistics on absentees.** Filter the registrant list by status.

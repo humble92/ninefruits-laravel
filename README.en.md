@@ -1,6 +1,6 @@
 # Ninefruits — Student Information System
 
-**언어 / Languages / 语言 / ພາສາ**
+**Languages / 언어**
 
 | Language | README | Manual |
 |---|---|---|
@@ -8,10 +8,22 @@
 | English | [README.en.md](README.en.md) (this file) | [docs/manual/en/](docs/manual/en/README.md) |
 | 简体中文 | [README.zh_CN.md](README.zh_CN.md) | [docs/manual/zh_CN/](docs/manual/zh_CN/README.md) |
 | ລາວ | [README.lo.md](README.lo.md) | [docs/manual/lo/](docs/manual/lo/README.md) |
+| Deutsch | [README.de.md](README.de.md) | [docs/manual/de/](docs/manual/de/README.md) |
+| Filipino | [README.fil.md](README.fil.md) | [docs/manual/fil/](docs/manual/fil/README.md) |
+| Français | [README.fr.md](README.fr.md) | [docs/manual/fr/](docs/manual/fr/README.md) |
+| 日本語 | [README.ja.md](README.ja.md) | [docs/manual/ja/](docs/manual/ja/README.md) |
+| Монгол | [README.mn.md](README.mn.md) | [docs/manual/mn/](docs/manual/mn/README.md) |
+| Bahasa Melayu | [README.ms.md](README.ms.md) | [docs/manual/ms/](docs/manual/ms/README.md) |
+| नेपाली | [README.ne.md](README.ne.md) | [docs/manual/ne/](docs/manual/ne/README.md) |
+| Русский | [README.ru.md](README.ru.md) | [docs/manual/ru/](docs/manual/ru/README.md) |
+| ไทย | [README.th.md](README.th.md) | [docs/manual/th/](docs/manual/th/README.md) |
+| Türkçe | [README.tr.md](README.tr.md) | [docs/manual/tr/](docs/manual/tr/README.md) |
+| Oʻzbek | [README.uz.md](README.uz.md) | [docs/manual/uz/](docs/manual/uz/README.md) |
+| Tiếng Việt | [README.vi.md](README.vi.md) | [docs/manual/vi/](docs/manual/vi/README.md) |
 
 To add another language, see [Adding a language](docs/development/adding-a-language.md).
 
-Ninefruits is a student information system that any university can install. It covers the core of academic administration — admissions, student records, curriculum and sections, registration, grades, course evaluation, certificates, language and comprehensive examinations, attendance, degree audits, reports and an LMS integration base — with screens and documents in Korean, English, Simplified Chinese and Lao.
+Ninefruits is a student information system that any university can install. It covers the core of academic administration — admissions, student records, curriculum and sections, registration, grades, course evaluation, certificates, language and comprehensive examinations, attendance, degree audits, reports and an LMS integration base — with screens and documents in the 16 languages listed above.
 
 ## At a glance
 
@@ -103,7 +115,7 @@ The demo is one fictional university (Korean university profile) with students, 
 ## Documentation
 
 - [Administrator manual](docs/manual/en/README.md) (Korean original: [docs/manual/ko/](docs/manual/ko/README.md))
-- Operations: [installation](docs/manual/ko/operations/installation.md), [commands](docs/manual/ko/operations/commands.md), [scheduled jobs](docs/manual/ko/operations/scheduled-jobs.md), [backup and restore](docs/manual/ko/operations/backup-restore.md), [security keys](docs/manual/ko/operations/security-keys.md), [troubleshooting](docs/manual/ko/operations/troubleshooting.md)
+- Operations: [installation](docs/manual/en/operations/installation.md), [commands](docs/manual/en/operations/commands.md), [scheduled jobs](docs/manual/en/operations/scheduled-jobs.md), [backup and restore](docs/manual/en/operations/backup-restore.md), [security keys](docs/manual/en/operations/security-keys.md), [troubleshooting](docs/manual/en/operations/troubleshooting.md)
 - [LMS integration guide](docs/lms-integration-guide.md)
 - [Development conventions](docs/development/)
 - Porting history and design decisions (reference): [porting/](porting/README.md)
@@ -118,7 +130,7 @@ psql -v migrator_password=... -v runtime_password=... -v reporting_password=... 
 psql -d <database> -f database/sql/roles/prepare_database.sql
 ```
 
-The application connects as `app_runtime` (row level security applies), migrations as `app_migrator`, BI tools as `app_reporting` (reporting views). See the [installation manual](docs/manual/ko/operations/installation.md).
+The application connects as `app_runtime` (row level security applies), migrations as `app_migrator`, BI tools as `app_reporting` (reporting views). See the [installation manual](docs/manual/en/operations/installation.md).
 
 ## Everyday commands
 
@@ -132,7 +144,7 @@ The application connects as `app_runtime` (row level security applies), migratio
 | `sail artisan security:sync-permissions` | Sync the permission catalog from code to the database |
 | `sail artisan i18n:missing` | Missing translations (`i18n:export`/`i18n:import` to work with translators) |
 
-The full list is in the [command reference](docs/manual/ko/operations/commands.md).
+The full list is in the [command reference](docs/manual/en/operations/commands.md).
 
 ## License
 

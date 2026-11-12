@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS platformu', 'plural_label' => 'LMS platformları'],
+        'course_links' => ['label' => 'Ders bağlantısı', 'plural_label' => 'Ders bağlantıları'],
+        'sync_logs' => ['label' => 'Eşitleme günlüğü', 'plural_label' => 'Eşitleme günlükleri'],
+    ],
+    'fields' => [
+        'driver' => 'Sürücü',
+        'not_implemented' => 'henüz uygulanmadı',
+        'base_url' => 'Temel URL',
+        'credentials' => 'Kimlik bilgileri',
+        'credential_key' => 'Anahtar',
+        'credential_value' => 'Değer',
+        'course_links' => 'Ders bağlantıları',
+        'should_sync_enrollments' => 'Sınıf listelerini eşitle',
+        'should_pull_grades' => 'Son puanları çek',
+        'external_course_id' => 'Platformdaki ders kimliği',
+        'external_url' => 'Ders URL adresi',
+        'last_synced_at' => 'Son eşitleme',
+        'last_error' => 'Son hata',
+        'started_at' => 'Başlangıç',
+        'operation' => 'İşlem',
+        'message' => 'Mesaj',
+    ],
+    'help' => [
+        'driver' => 'Platformla iletişim kuran bağlayıcı. "null", hiçbir çağrı yapmadan gönderilecek olanı kaydeder; hazırlık ve test için kullanın.',
+        'credentials' => 'Sürücünün ihtiyaç duyduğu belirteçler ve gizli anahtarlar (bkz. docs/lms-integration-guide.md). Şifrelenerek saklanır; düzenlerken kayıtlı olanları korumak için boş bırakın.',
+        'is_active' => 'Etkin platformlar yayımlanan şubeleri ve sınıf listesi değişikliklerini anında, ayrıca gece mutabakatıyla alır.',
+        'should_pull_grades' => 'Öğretim elemanlarının platformdaki son puanları not giriş ekranına taslak olarak yüklemesine olanak tanır.',
+    ],
+    'actions' => ['resync' => 'Yeniden eşitle'],
+    'notifications' => ['synced' => 'Eşitlendi: :members üye.'],
+    'drivers' => ['null' => 'Yok (yalnızca kayıt)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Beklemede', 'linked' => 'Bağlandı', 'failed' => 'Başarısız'],
+    'operations' => ['course.sync' => 'Ders', 'enrollment.add' => 'Üye ekle', 'enrollment.remove' => 'Üye çıkar', 'grades.pull' => 'Puanları çek', 'reconcile' => 'Mutabakat'],
+    'sync_statuses' => ['queued' => 'Sırada', 'succeeded' => 'Başarılı', 'failed' => 'Başarısız', 'skipped' => 'Atlandı'],
+    'portal' => ['open_course' => 'Dersi :platform üzerinde aç'],
+];

@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'แพลตฟอร์ม LMS', 'plural_label' => 'แพลตฟอร์ม LMS'],
+        'course_links' => ['label' => 'การเชื่อมโยงรายวิชา', 'plural_label' => 'การเชื่อมโยงรายวิชา'],
+        'sync_logs' => ['label' => 'บันทึกการซิงค์', 'plural_label' => 'บันทึกการซิงค์'],
+    ],
+    'fields' => [
+        'driver' => 'ไดรเวอร์',
+        'not_implemented' => 'ยังไม่รองรับ',
+        'base_url' => 'URL หลัก',
+        'credentials' => 'ข้อมูลรับรอง',
+        'credential_key' => 'คีย์',
+        'credential_value' => 'ค่า',
+        'course_links' => 'การเชื่อมโยงรายวิชา',
+        'should_sync_enrollments' => 'ซิงค์รายชื่อนักศึกษา',
+        'should_pull_grades' => 'ดึงคะแนนสุดท้าย',
+        'external_course_id' => 'รหัสรายวิชาบนแพลตฟอร์ม',
+        'external_url' => 'URL ของรายวิชา',
+        'last_synced_at' => 'ซิงค์ล่าสุด',
+        'last_error' => 'ข้อผิดพลาดล่าสุด',
+        'started_at' => 'เริ่มเมื่อ',
+        'operation' => 'การดำเนินการ',
+        'message' => 'ข้อความ',
+    ],
+    'help' => [
+        'driver' => 'ตัวเชื่อมต่อที่สื่อสารกับแพลตฟอร์ม "null" จะบันทึกสิ่งที่จะส่งโดยไม่เรียกใช้งานจริง ใช้สำหรับเตรียมการและทดสอบ',
+        'credentials' => 'โทเค็นและข้อมูลลับที่ไดรเวอร์ต้องใช้ (ดู docs/lms-integration-guide.md) จัดเก็บแบบเข้ารหัส เว้นว่างเมื่อแก้ไขเพื่อคงค่าเดิม',
+        'is_active' => 'แพลตฟอร์มที่ใช้งานอยู่จะได้รับกลุ่มเรียนที่เผยแพร่และการเปลี่ยนแปลงรายชื่อทันทีที่เกิดขึ้น รวมถึงการกระทบยอดทุกคืน',
+        'should_pull_grades' => 'ให้อาจารย์ผู้สอนดึงคะแนนสุดท้ายจากแพลตฟอร์มเข้าหน้ากรอกเกรดเป็นฉบับร่างได้',
+    ],
+    'actions' => ['resync' => 'ซิงค์อีกครั้ง'],
+    'notifications' => ['synced' => 'ซิงค์แล้ว: สมาชิก :members คน'],
+    'drivers' => ['null' => 'ไม่มี (บันทึกเท่านั้น)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'รอดำเนินการ', 'linked' => 'เชื่อมโยงแล้ว', 'failed' => 'ล้มเหลว'],
+    'operations' => ['course.sync' => 'รายวิชา', 'enrollment.add' => 'เพิ่มสมาชิก', 'enrollment.remove' => 'ลบสมาชิก', 'grades.pull' => 'ดึงคะแนน', 'reconcile' => 'กระทบยอด'],
+    'sync_statuses' => ['queued' => 'อยู่ในคิว', 'succeeded' => 'สำเร็จ', 'failed' => 'ล้มเหลว', 'skipped' => 'ข้าม'],
+    'portal' => ['open_course' => 'เปิดรายวิชาบน :platform'],
+];

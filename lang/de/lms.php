@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'LMS-Plattform', 'plural_label' => 'LMS-Plattformen'],
+        'course_links' => ['label' => 'Kursverknüpfung', 'plural_label' => 'Kursverknüpfungen'],
+        'sync_logs' => ['label' => 'Synchronisationsprotokoll', 'plural_label' => 'Synchronisationsprotokolle'],
+    ],
+    'fields' => [
+        'driver' => 'Treiber',
+        'not_implemented' => 'noch nicht implementiert',
+        'base_url' => 'Basis-URL',
+        'credentials' => 'Zugangsdaten',
+        'credential_key' => 'Schlüssel',
+        'credential_value' => 'Wert',
+        'course_links' => 'Kursverknüpfungen',
+        'should_sync_enrollments' => 'Teilnehmerlisten synchronisieren',
+        'should_pull_grades' => 'Endpunktzahlen abrufen',
+        'external_course_id' => 'Kurs-ID auf der Plattform',
+        'external_url' => 'Kurs-URL',
+        'last_synced_at' => 'Zuletzt synchronisiert',
+        'last_error' => 'Letzter Fehler',
+        'started_at' => 'Gestartet',
+        'operation' => 'Vorgang',
+        'message' => 'Meldung',
+    ],
+    'help' => [
+        'driver' => 'Der Konnektor, der mit der Plattform kommuniziert. „null“ protokolliert, was gesendet würde, ohne etwas aufzurufen; zum Vorbereiten und Testen.',
+        'credentials' => 'Tokens und Geheimnisse, die der Treiber braucht (siehe docs/lms-integration-guide.md). Werden verschlüsselt gespeichert; beim Bearbeiten leer lassen, um die gespeicherten zu behalten.',
+        'is_active' => 'Aktive Plattformen erhalten veröffentlichte Kurse und Änderungen der Teilnehmerlisten sofort sowie den nächtlichen Abgleich.',
+        'should_pull_grades' => 'Lehrpersonen können die Endpunktzahlen der Plattform als Entwurf in die Noteneingabe laden.',
+    ],
+    'actions' => ['resync' => 'Erneut synchronisieren'],
+    'notifications' => ['synced' => 'Synchronisiert: :members Mitglied(er).'],
+    'drivers' => ['null' => 'Keiner (nur protokollieren)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Ausstehend', 'linked' => 'Verknüpft', 'failed' => 'Fehlgeschlagen'],
+    'operations' => ['course.sync' => 'Kurs', 'enrollment.add' => 'Mitglied hinzufügen', 'enrollment.remove' => 'Mitglied entfernen', 'grades.pull' => 'Punkte abrufen', 'reconcile' => 'Abgleich'],
+    'sync_statuses' => ['queued' => 'In Warteschlange', 'succeeded' => 'Erfolgreich', 'failed' => 'Fehlgeschlagen', 'skipped' => 'Übersprungen'],
+    'portal' => ['open_course' => 'Kurs auf :platform öffnen'],
+];

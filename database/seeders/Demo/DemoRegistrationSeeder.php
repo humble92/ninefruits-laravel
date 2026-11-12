@@ -88,7 +88,7 @@ class DemoRegistrationSeeder extends Seeder
 
             if ($type->is_regular) {
                 CreditLimitPolicy::query()->create([
-                    'name' => ['en' => 'Academic warning', 'ko' => '학사경고', 'zh_CN' => '学业警告', 'lo' => 'ເຕືອນທາງວິຊາການ'],
+                    'name' => ['en' => 'Academic warning', 'ko' => '학사경고', 'zh_CN' => '学业警告', 'lo' => 'ເຕືອນທາງວິຊາການ', 'de' => 'Studienwarnung', 'fil' => 'Academic warning', 'fr' => 'Avertissement académique', 'ja' => '学業警告', 'mn' => 'Академик сануулга', 'ms' => 'Amaran akademik', 'ne' => 'शैक्षिक चेतावनी', 'ru' => 'Академическое предупреждение', 'th' => 'รอพินิจ', 'tr' => 'Akademik uyarı', 'uz' => 'Akademik ogohlantirish', 'vi' => 'Cảnh báo học vụ'],
                     'term_type_id' => $type->id,
                     'eligibility' => new TargetCriteria(academicStandings: [AcademicStanding::Warning->value]),
                     'max_credits' => 12,

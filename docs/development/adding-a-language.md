@@ -2,7 +2,7 @@
 
 Korean 한국어: [adding-a-language.ko.md](adding-a-language.ko.md)
 
-Ninefruits ships in Korean, English, Simplified Chinese and Lao. Nothing in the code lists the languages: a language exists when `lang/{locale}/` exists and the locale is enabled in the institution settings. This page is the whole workflow for adding one more, written for a developer or a translator who has never worked on the project. Budget: two to four days for the UI strings and the manual with machine-assisted translation, plus a native review.
+Ninefruits ships in 16 languages: Korean, English, Simplified Chinese, Lao, German, Filipino, French, Japanese, Mongolian, Malay, Nepali, Russian, Thai, Turkish, Uzbek and Vietnamese. Nothing in the code lists the languages: a language exists when `lang/{locale}/` exists and the locale is enabled in the institution settings. This page is the whole workflow for adding one more, written for a developer or a translator who has never worked on the project. Budget: two to four days for the UI strings and the manual with machine-assisted translation, plus a native review.
 
 ## 0. Pick the locale code
 
@@ -30,7 +30,7 @@ mkdir -p lang/lo
 Then:
 
 - `lang/{locale}.json`: strings of Laravel and Filament themselves (validation defaults, "Save", pagination). Copy `lang/ko.json`, translate the values. The keys are the English strings.
-- Filament's own panel strings (Dashboard, Search, Sign out, table pagination, action buttons) come from the Filament packages, which ship many languages but not all. If the admin panel still shows English words in the new language, publish and translate them under `lang/vendor/filament*/{locale}/` (`php artisan vendor:publish --tag=filament-translations`, then translate the published files). Lao does not have them yet.
+- Filament's own panel strings (Dashboard, Search, Sign out, table pagination, action buttons) come from the Filament packages, which ship many languages but not all. If the admin panel still shows English words in the new language, publish and translate them under `lang/vendor/filament*/{locale}/` (`php artisan vendor:publish --tag=filament-translations`, then translate the published files). Lao does not have them yet; the twelve languages added on 2026-11-11 are all covered by Filament.
 - Check: `./vendor/bin/sail artisan i18n:missing lo --strict` must report `0 missing`. CI runs this for every directory under `lang/`, so a new language cannot be merged half done.
 - Glossary: `docs/development/naming.md` section 6 lists the domain terms (student record, term, section, enrollment …). Decide the translation of each term once, before translating, and write it down for the manual.
 
@@ -92,4 +92,4 @@ Certificates, transcripts and attendance sheets are rendered by Gotenberg (Chrom
 - [ ] `./vendor/bin/sail composer check` passes (Pint, PHPStan, naming, translations, tests)
 - [ ] A native speaker reviewed the UI strings and at least the first manual chapters; note the reviewer in the pull request
 
-Lao was added on 2026-10-23 as the first language after the original three; its pull request is the worked example.
+Lao was added on 2026-10-23 as the first language after the original three; its pull request is the worked example. Twelve more followed together on 2026-11-11 (settings migration `2026_11_11_000010_add_twelve_locales.php`); their UI strings and manuals are machine-assisted translations still awaiting native review.

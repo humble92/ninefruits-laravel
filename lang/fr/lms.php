@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'Plateforme LMS', 'plural_label' => 'Plateformes LMS'],
+        'course_links' => ['label' => 'Lien de cours', 'plural_label' => 'Liens de cours'],
+        'sync_logs' => ['label' => 'Journal de synchronisation', 'plural_label' => 'Journaux de synchronisation'],
+    ],
+    'fields' => [
+        'driver' => 'Pilote',
+        'not_implemented' => 'pas encore implémenté',
+        'base_url' => 'URL de base',
+        'credentials' => 'Identifiants',
+        'credential_key' => 'Clé',
+        'credential_value' => 'Valeur',
+        'course_links' => 'Liens de cours',
+        'should_sync_enrollments' => 'Synchroniser les listes d’étudiants',
+        'should_pull_grades' => 'Récupérer les scores finaux',
+        'external_course_id' => 'ID du cours sur la plateforme',
+        'external_url' => 'URL du cours',
+        'last_synced_at' => 'Dernière synchronisation',
+        'last_error' => 'Dernière erreur',
+        'started_at' => 'Début',
+        'operation' => 'Opération',
+        'message' => 'Message',
+    ],
+    'help' => [
+        'driver' => 'Le connecteur qui communique avec la plateforme. « null » enregistre ce qui serait envoyé sans rien appeler ; utilisez-le pour préparer et tester.',
+        'credentials' => 'Jetons et secrets nécessaires au pilote (voir docs/lms-integration-guide.md). Stockés chiffrés ; laissez vide lors de la modification pour conserver les valeurs enregistrées.',
+        'is_active' => 'Les plateformes actives reçoivent les groupes publiés et les changements de liste au fil de l’eau, ainsi que la réconciliation nocturne.',
+        'should_pull_grades' => 'Permet aux enseignants de charger les scores finaux de la plateforme dans l’écran de saisie des notes, comme brouillon.',
+    ],
+    'actions' => ['resync' => 'Synchroniser à nouveau'],
+    'notifications' => ['synced' => 'Synchronisé : :members membre(s).'],
+    'drivers' => ['null' => 'Aucun (enregistrement seul)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'En attente', 'linked' => 'Lié', 'failed' => 'Échec'],
+    'operations' => ['course.sync' => 'Cours', 'enrollment.add' => 'Ajouter un membre', 'enrollment.remove' => 'Retirer un membre', 'grades.pull' => 'Récupérer les scores', 'reconcile' => 'Réconcilier'],
+    'sync_statuses' => ['queued' => 'En file d’attente', 'succeeded' => 'Réussi', 'failed' => 'Échec', 'skipped' => 'Ignoré'],
+    'portal' => ['open_course' => 'Ouvrir le cours sur :platform'],
+];

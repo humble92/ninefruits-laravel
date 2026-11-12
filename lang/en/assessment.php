@@ -48,7 +48,6 @@ return [
         'allows_external' => 'Results from an outside body (TOPIK, HSK, ...) can be recorded with an evidence file.',
         'component_code' => 'Column name in the results CSV, e.g. LISTENING.',
         'min_score' => 'Below this the student fails whatever the total.',
-        'session_pass_score' => 'Leave empty to use the kind\'s pass score. Changing it before publication judges every entered result again; after publication it is fixed.',
         'publish' => 'Students see their results from now on. Results entered later are visible at once.',
         'import' => 'CSV with a header row: student_number, a column per area code (or total), optionally passed (Y/N), absent (Y) and note. Rows of students not registered are skipped.',
         'decision_automatic' => 'Decided from the scores: total at or above :score and every area at or above its minimum.',

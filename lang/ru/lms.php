@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'Платформа LMS', 'plural_label' => 'Платформы LMS'],
+        'course_links' => ['label' => 'Связь с курсом', 'plural_label' => 'Связи с курсами'],
+        'sync_logs' => ['label' => 'Журнал синхронизации', 'plural_label' => 'Журналы синхронизации'],
+    ],
+    'fields' => [
+        'driver' => 'Драйвер',
+        'not_implemented' => 'пока не реализован',
+        'base_url' => 'Базовый URL',
+        'credentials' => 'Учётные данные',
+        'credential_key' => 'Ключ',
+        'credential_value' => 'Значение',
+        'course_links' => 'Связи с курсами',
+        'should_sync_enrollments' => 'Синхронизировать списки групп',
+        'should_pull_grades' => 'Загружать итоговые баллы',
+        'external_course_id' => 'ID курса на платформе',
+        'external_url' => 'URL курса',
+        'last_synced_at' => 'Последняя синхронизация',
+        'last_error' => 'Последняя ошибка',
+        'started_at' => 'Начало',
+        'operation' => 'Операция',
+        'message' => 'Сообщение',
+    ],
+    'help' => [
+        'driver' => 'Коннектор, взаимодействующий с платформой. «null» записывает, что было бы отправлено, ничего не вызывая; используйте его для подготовки и тестирования.',
+        'credentials' => 'Токены и секреты, необходимые драйверу (см. docs/lms-integration-guide.md). Хранятся в зашифрованном виде; при редактировании оставьте пустыми, чтобы сохранить текущие.',
+        'is_active' => 'Активные платформы получают опубликованные группы и изменения списков сразу, а также при ночной сверке.',
+        'should_pull_grades' => 'Позволяет преподавателям загружать итоговые баллы с платформы на экран ввода оценок в виде черновика.',
+    ],
+    'actions' => ['resync' => 'Синхронизировать снова'],
+    'notifications' => ['synced' => 'Синхронизировано участников: :members.'],
+    'drivers' => ['null' => 'Нет (только запись)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Ожидает', 'linked' => 'Связано', 'failed' => 'Ошибка'],
+    'operations' => ['course.sync' => 'Курс', 'enrollment.add' => 'Добавить участника', 'enrollment.remove' => 'Удалить участника', 'grades.pull' => 'Загрузить баллы', 'reconcile' => 'Сверка'],
+    'sync_statuses' => ['queued' => 'В очереди', 'succeeded' => 'Успешно', 'failed' => 'Ошибка', 'skipped' => 'Пропущено'],
+    'portal' => ['open_course' => 'Открыть курс в :platform'],
+];

@@ -2,7 +2,7 @@
 
 English: [adding-a-language.md](adding-a-language.md)
 
-Ninefruits는 한국어, 영어, 중국어(간체), 라오스어로 제공된다. 코드 어디에도 언어 목록은 없다. `lang/{locale}/` 디렉터리가 있고 기관 설정에서 그 로케일을 켜면 언어가 생긴다. 이 문서는 언어 하나를 더 추가하는 전체 절차다. 프로젝트를 처음 보는 개발자나 번역가를 대상으로 쓴다. 소요: 기계 번역을 보조로 쓰면 UI 문자열과 매뉴얼에 2~4일, 그리고 원어민 검수.
+Ninefruits는 16개 언어로 제공된다: 한국어, 영어, 중국어(간체), 라오스어, 독일어, 필리핀어, 프랑스어, 일본어, 몽골어, 말레이어, 네팔어, 러시아어, 태국어, 튀르키예어, 우즈베크어, 베트남어. 코드 어디에도 언어 목록은 없다. `lang/{locale}/` 디렉터리가 있고 기관 설정에서 그 로케일을 켜면 언어가 생긴다. 이 문서는 언어 하나를 더 추가하는 전체 절차다. 프로젝트를 처음 보는 개발자나 번역가를 대상으로 쓴다. 소요: 기계 번역을 보조로 쓰면 UI 문자열과 매뉴얼에 2~4일, 그리고 원어민 검수.
 
 ## 0. 로케일 코드 정하기
 
@@ -30,7 +30,7 @@ mkdir -p lang/lo
 그다음:
 
 - `lang/{locale}.json`: Laravel과 Filament 자체 문자열(검증 기본 메시지, "저장", 페이지 이동). `lang/ko.json`을 복사해 값을 번역한다. 키는 영문 문장이다.
-- Filament 패널 자체 문구(Dashboard, Search, Sign out, 표 페이지 이동, 액션 버튼)는 Filament 패키지에서 오며 많은 언어를 제공하지만 전부는 아니다. 새 언어에서 관리 화면에 영어가 남으면 `lang/vendor/filament*/{locale}/`에 번역을 둔다(`php artisan vendor:publish --tag=filament-translations` 후 번역). 라오어는 아직 없다.
+- Filament 패널 자체 문구(Dashboard, Search, Sign out, 표 페이지 이동, 액션 버튼)는 Filament 패키지에서 오며 많은 언어를 제공하지만 전부는 아니다. 새 언어에서 관리 화면에 영어가 남으면 `lang/vendor/filament*/{locale}/`에 번역을 둔다(`php artisan vendor:publish --tag=filament-translations` 후 번역). 라오어는 아직 없다. 2026-11-11에 추가한 12개 언어는 모두 Filament가 제공한다.
 - 검사: `./vendor/bin/sail artisan i18n:missing lo --strict`가 `0 missing`이어야 한다. CI가 `lang/` 아래 모든 디렉터리에 이 검사를 돌리므로 반쯤 된 언어는 병합되지 않는다.
 - 용어집: `docs/development/naming.md` 6절에 도메인 용어(학적, 학기, 개설강좌, 수강 …)가 있다. 번역을 시작하기 전에 용어별 번역을 한 번 정해 적어 두고 매뉴얼에도 같은 말을 쓴다.
 
@@ -92,4 +92,4 @@ python3 tools/screenshots.py lo docs/screenshots/lo
 - [ ] `./vendor/bin/sail composer check` 통과(Pint, PHPStan, 명명, 번역, 테스트)
 - [ ] 원어민이 UI 문자열과 최소한 매뉴얼 앞부분을 검수했고 풀 리퀘스트에 검수자를 적음
 
-라오스어는 2026-10-23에 처음 세 언어 다음으로 추가됐다. 그 풀 리퀘스트가 실제 예시다.
+라오스어는 2026-10-23에 처음 세 언어 다음으로 추가됐다. 그 풀 리퀘스트가 실제 예시다. 2026-11-11에는 12개 언어를 한꺼번에 추가했다(설정 마이그레이션 `2026_11_11_000010_add_twelve_locales.php`). 그 UI 문자열과 매뉴얼은 기계 번역을 보조로 쓴 것이며 원어민 검수를 기다린다.

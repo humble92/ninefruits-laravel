@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'resources' => [
+        'platforms' => ['label' => 'Platform ng LMS', 'plural_label' => 'Mga platform ng LMS'],
+        'course_links' => ['label' => 'Link ng asignatura', 'plural_label' => 'Mga link ng asignatura'],
+        'sync_logs' => ['label' => 'Log ng sync', 'plural_label' => 'Mga log ng sync'],
+    ],
+    'fields' => [
+        'driver' => 'Driver',
+        'not_implemented' => 'hindi pa naipapatupad',
+        'base_url' => 'Base URL',
+        'credentials' => 'Mga kredensyal',
+        'credential_key' => 'Key',
+        'credential_value' => 'Halaga',
+        'course_links' => 'Mga link ng asignatura',
+        'should_sync_enrollments' => 'I-sync ang mga roster',
+        'should_pull_grades' => 'Kunin ang mga pinal na iskor',
+        'external_course_id' => 'ID ng asignatura sa platform',
+        'external_url' => 'URL ng asignatura',
+        'last_synced_at' => 'Huling na-sync',
+        'last_error' => 'Huling error',
+        'started_at' => 'Nagsimula',
+        'operation' => 'Operasyon',
+        'message' => 'Mensahe',
+    ],
+    'help' => [
+        'driver' => 'Ang connector na nakikipag-ugnayan sa platform. Itinatala ng "null" ang ipapadala sana nang walang tinatawagan; gamitin ito para maghanda at mag-test.',
+        'credentials' => 'Mga token at secret na kailangan ng driver (tingnan ang docs/lms-integration-guide.md). Naka-encrypt na iniimbak; iwanang blangko kapag nag-e-edit para panatilihin ang mga nakaimbak.',
+        'is_active' => 'Tumatanggap ang mga aktibong platform ng mga nakalathalang seksiyon at mga pagbabago sa roster habang nangyayari ang mga ito, at ng gabi-gabing reconcile.',
+        'should_pull_grades' => 'Pinapayagan ang mga instruktor na kunin ang mga pinal na iskor ng platform sa screen ng pagpasok ng marka bilang draft.',
+    ],
+    'actions' => ['resync' => 'I-sync muli'],
+    'notifications' => ['synced' => 'Na-sync: :members miyembro.'],
+    'drivers' => ['null' => 'Wala (nagtatala lamang)', 'moodle' => 'Moodle', 'openedx' => 'Open edX'],
+    'link_statuses' => ['pending' => 'Nakabinbin', 'linked' => 'Naka-link', 'failed' => 'Nabigo'],
+    'operations' => ['course.sync' => 'Asignatura', 'enrollment.add' => 'Magdagdag ng miyembro', 'enrollment.remove' => 'Mag-alis ng miyembro', 'grades.pull' => 'Kunin ang mga iskor', 'reconcile' => 'Reconcile'],
+    'sync_statuses' => ['queued' => 'Nakapila', 'succeeded' => 'Nagtagumpay', 'failed' => 'Nabigo', 'skipped' => 'Nilaktawan'],
+    'portal' => ['open_course' => 'Buksan ang asignatura sa :platform'],
+];

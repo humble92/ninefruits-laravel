@@ -375,7 +375,7 @@ Every command runs as `php artisan {command}`. In the development environment, `
 
 ### `pdf:sample`
 
-- Purpose: renders a table mixing Korean, Chinese, Lao and English to PDF to check the fonts and the connection to the PDF service (Gotenberg).
+- Purpose: renders a table mixing Hangul, CJK, Lao, Thai, Devanagari, Cyrillic and Latin script to PDF to check the fonts and the connection to the PDF service (Gotenberg).
 - Arguments: `{path=pdf-sample.pdf}` (relative to the local disk `storage/app/private`).
 - Audit: not recorded
 - On failure: for a connection error, check `GOTENBERG_URL` and the state of the Gotenberg container.
