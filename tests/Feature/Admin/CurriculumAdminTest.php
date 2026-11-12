@@ -60,11 +60,11 @@ it('creates a section and explains a room conflict on the meetings tab', functio
     $course = Course::query()->whereDoesntHave('versions', fn ($version) => $version->whereNotNull('effective_end_date'))->where('is_active', true)->first();
 
     Livewire::actingAs($this->manager)->test(CreateSection::class)
-        ->fillForm(['term_session_id' => $this->section->term->fullTermSession()->id, 'course_id' => $course->id, 'section_code' => '99', 'capacity' => 30, 'org_unit_id' => $course->org_unit_id])
+        ->fillForm(['term_session_id' => $this->section->term->fullTermSession()->id, 'course_id' => $course->id, 'section_code' => 'NEW', 'capacity' => 30, 'org_unit_id' => $course->org_unit_id])
         ->call('create')
         ->assertHasNoFormErrors();
 
-    $created = Section::query()->where('section_code', '99')->sole();
+    $created = Section::query()->where('section_code', 'NEW')->sole();
 
     Livewire::actingAs($this->manager)->test(MeetingsRelationManager::class, ['ownerRecord' => $created, 'pageClass' => EditSection::class])
         ->callTableAction('create', data: ['weekday' => $taken->weekday, 'start_time' => substr($taken->start_time, 0, 5), 'end_time' => substr($taken->end_time, 0, 5), 'room_id' => $taken->room_id])

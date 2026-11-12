@@ -123,7 +123,7 @@ it('reproduces the other legacy checks with the default rule set', function () {
     expect($refusedFor($full))->toBe([RuleCode::Capacity]);
 
     // Already registered for the course (any section).
-    $sameCourse = Section::factory()->published()->inTerm($term)->forCourse($first->course)->create(['section_code' => '02']);
+    $sameCourse = Section::factory()->published()->inTerm($term)->forCourse($first->course)->create(['section_code' => 'DUP']);
     expect($refusedFor($sameCourse))->toBe([RuleCode::DuplicateCourse]);
 
     // Retake: allowed and marked (legacy SSC_RAPPLY).
