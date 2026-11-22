@@ -34,3 +34,6 @@ Thumbs.db
 
 # Local Claude Code settings
 /.claude/settings.local.json
+
+# Youtube videos
+docs/videos

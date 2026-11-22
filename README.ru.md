@@ -1,5 +1,9 @@
 # Ninefruits — система управления учебным процессом
 
+[![Ninefruits course sections · Play the English introduction (2 min 45 sec)](docs/screenshots/video-intro-en.jpg)](https://youtu.be/b24PHZ74-II)
+
+[▶ Watch the Ninefruits introduction (English)](https://youtu.be/b24PHZ74-II)
+
 **Языки / 언어**
 
 | Язык | README | Руководство |
