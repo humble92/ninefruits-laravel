@@ -76,3 +76,57 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan horizon:terminate        # workers restart with the new code
 php artisan up
 ```
+
+## 7. Veb-server (Nginx)
+
+php-fpm oldiga Nginx qoʻying. Quyidagisi namuna: manzil, yoʻllar, sertifikatlar va php-fpm soketini serveringizga moslab oʻzgartiring.
+
+```nginx
+log_format sis '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent '
+               '"$http_referer" "$http_user_agent" rt=$request_time rid=$request_id';
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name sis.example.edu;
+    root /var/www/sis/public;
+    index index.php;
+
+    ssl_certificate     /etc/ssl/sis/fullchain.pem;
+    ssl_certificate_key /etc/ssl/sis/privkey.pem;
+
+    access_log /var/log/nginx/sis.access.log sis;
+    client_max_body_size 32m;     # same as post_max_size in php.ini
+    server_tokens off;
+
+    # Only when PHP does not answer. The application's own error pages pass through.
+    error_page 502 503 504 /errors/unavailable.html;
+    location = /errors/unavailable.html {
+        internal;
+        ssi on;                    # puts $request_id on the page
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/run/php/php8.5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param HTTP_X_REQUEST_ID $request_id;   # replaces a client-sent X-Request-Id
+        internal;
+    }
+
+    location ~ \.php$ { return 404; }
+    location ~ /\.(?!well-known) { deny all; }
+}
+```
+
+- **Xato sahifasi:** `public/errors/unavailable.html` — PHP javob bermaganda (502, 503, 504) Nginx koʻrsatadigan statik sahifa. U build fayllari va maʼlumotlar bazasisiz ochiladi, matni esa brauzer tiliga qarab almashadi (qoʻllab-quvvatlanmaydigan tillarda inglizcha). `fastcgi_intercept_errors` standart qiymatda (off) qolgani uchun ilovaning oʻzi yuborgan xato sahifalari (500, `php artisan down` paytidagi 503 va h.k.) oʻzgarishsiz yetib boradi.
+- **Maʼlumot raqami:** `ssi on` Nginx'ning `$request_id` qiymatini sahifaga qoʻyadi. Xuddi shu qiymat ilovaga `X-Request-Id` sifatida uzatiladi, shuning uchun Nginx kirish jurnali (`rid=`), ilova jurnallari va audit yozuvlarini bitta raqam bilan qidirish mumkin ([nosozliklarni bartaraf etish](troubleshooting.md)). Mijoz yuborgan `X-Request-Id` shu qiymat bilan almashtiriladi.
+- **Nginx alohida ilova serveriga proksi qilganda:** `proxy_set_header X-Request-Id $request_id;` dan foydalaning va `proxy_intercept_errors` ni standart qiymatda (off) qoldiring. `error_page` va uning `location` bloki oʻzgarishsiz qoladi.
+- **Matnni oʻzgartirganda:** `lang/*/errors.php` dagi `unavailable` va `reference` ni tahrirlasangiz, ushbu fayldagi JSON ni ham tahrirlang. Ikkalasi mos kelmasa, test (`ErrorPagesTest`) muvaffaqiyatsiz tugaydi.

@@ -76,3 +76,57 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan horizon:terminate        # workers restart with the new code
 php artisan up
 ```
+
+## 7. เว็บเซิร์ฟเวอร์ (Nginx)
+
+วาง Nginx ไว้หน้า php-fpm ด้านล่างเป็นตัวอย่าง ให้เปลี่ยนที่อยู่ เส้นทาง ใบรับรอง และ socket ของ php-fpm ให้ตรงกับเซิร์ฟเวอร์
+
+```nginx
+log_format sis '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent '
+               '"$http_referer" "$http_user_agent" rt=$request_time rid=$request_id';
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name sis.example.edu;
+    root /var/www/sis/public;
+    index index.php;
+
+    ssl_certificate     /etc/ssl/sis/fullchain.pem;
+    ssl_certificate_key /etc/ssl/sis/privkey.pem;
+
+    access_log /var/log/nginx/sis.access.log sis;
+    client_max_body_size 32m;     # same as post_max_size in php.ini
+    server_tokens off;
+
+    # Only when PHP does not answer. The application's own error pages pass through.
+    error_page 502 503 504 /errors/unavailable.html;
+    location = /errors/unavailable.html {
+        internal;
+        ssi on;                    # puts $request_id on the page
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/run/php/php8.5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param HTTP_X_REQUEST_ID $request_id;   # replaces a client-sent X-Request-Id
+        internal;
+    }
+
+    location ~ \.php$ { return 404; }
+    location ~ /\.(?!well-known) { deny all; }
+}
+```
+
+- **หน้าข้อผิดพลาด:** `public/errors/unavailable.html` เป็นหน้าสแตติกที่ Nginx แสดงเมื่อ PHP ไม่ตอบสนอง (502, 503, 504) ไม่ต้องใช้ไฟล์ build หรือฐานข้อมูล และข้อความจะเปลี่ยนตามภาษาของเบราว์เซอร์ (ภาษาที่ไม่รองรับจะเป็นภาษาอังกฤษ) หน้าข้อผิดพลาดที่แอปส่งเอง (500, 503 ระหว่าง `php artisan down` ฯลฯ) จะผ่านไปตามเดิม เพราะ `fastcgi_intercept_errors` ยังเป็นค่าเริ่มต้น (off)
+- **หมายเลขอ้างอิง:** `ssi on` จะใส่ `$request_id` ของ Nginx ลงในหน้า ค่าเดียวกันนี้ส่งให้แอปเป็น `X-Request-Id` จึงค้นหา access log ของ Nginx (`rid=`) ล็อกของแอป และบันทึกการตรวจสอบได้ด้วยหมายเลขเดียว ([การแก้ไขปัญหา](troubleshooting.md)) `X-Request-Id` ที่ไคลเอนต์ส่งมาจะถูกแทนที่ด้วยค่านี้
+- **เมื่อ Nginx ทำ proxy ไปยังเซิร์ฟเวอร์แอปที่แยกกัน:** ใช้ `proxy_set_header X-Request-Id $request_id;` และปล่อย `proxy_intercept_errors` เป็นค่าเริ่มต้น (off) คง `error_page` และ `location` ของมันไว้ตามเดิม
+- **เมื่อเปลี่ยนข้อความ:** หากแก้ `unavailable` และ `reference` ใน `lang/*/errors.php` ให้แก้ JSON ในไฟล์นี้ด้วย หากทั้งสองไม่ตรงกัน การทดสอบ (`ErrorPagesTest`) จะล้มเหลว

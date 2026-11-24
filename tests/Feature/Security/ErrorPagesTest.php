@@ -77,3 +77,23 @@ it('replaces the English Livewire page-expired prompt in the portal and the admi
     $this->actingAs($staff)->get('/admin')->assertOk()
         ->assertSee('interceptRequest', false)->assertSee($prompt, false);
 });
+
+it('keeps the web server error page in step with the translations', function () {
+    $html = (string) file_get_contents(public_path('errors/unavailable.html'));
+    preg_match('#<script type="application/json" id="messages">(.*?)</script>#s', $html, $match);
+    $messages = json_decode($match[1] ?? '', true, flags: JSON_THROW_ON_ERROR);
+    $locales = array_map('basename', glob(lang_path('*'), GLOB_ONLYDIR) ?: []);
+
+    expect(array_keys($messages))->toEqualCanonicalizing($locales);
+    foreach ($locales as $locale) {
+        expect($messages[$locale])->toBe([
+            'title' => __('errors.unavailable.title', locale: $locale),
+            'message' => __('errors.unavailable.message', locale: $locale),
+            'reference' => __('errors.reference', locale: $locale),
+        ]);
+    }
+
+    // Self-contained (the app and its build may be down) and the reference comes from Nginx.
+    expect($html)->toContain('<!--# echo var="request_id" default="" -->')
+        ->not->toMatch('#(src|href)=#');
+});

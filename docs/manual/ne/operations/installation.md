@@ -76,3 +76,57 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan horizon:terminate        # workers restart with the new code
 php artisan up
 ```
+
+## 7. वेब सर्भर (Nginx)
+
+php-fpm अगाडि Nginx राख्नुहोस्। तलको उदाहरण मात्र हो: ठेगाना, पथ, प्रमाणपत्र र php-fpm सकेट आफ्नो सर्भर अनुसार बदल्नुहोस्।
+
+```nginx
+log_format sis '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent '
+               '"$http_referer" "$http_user_agent" rt=$request_time rid=$request_id';
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name sis.example.edu;
+    root /var/www/sis/public;
+    index index.php;
+
+    ssl_certificate     /etc/ssl/sis/fullchain.pem;
+    ssl_certificate_key /etc/ssl/sis/privkey.pem;
+
+    access_log /var/log/nginx/sis.access.log sis;
+    client_max_body_size 32m;     # same as post_max_size in php.ini
+    server_tokens off;
+
+    # Only when PHP does not answer. The application's own error pages pass through.
+    error_page 502 503 504 /errors/unavailable.html;
+    location = /errors/unavailable.html {
+        internal;
+        ssi on;                    # puts $request_id on the page
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/run/php/php8.5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param HTTP_X_REQUEST_ID $request_id;   # replaces a client-sent X-Request-Id
+        internal;
+    }
+
+    location ~ \.php$ { return 404; }
+    location ~ /\.(?!well-known) { deny all; }
+}
+```
+
+- **त्रुटि पृष्ठ:** `public/errors/unavailable.html` PHP ले जवाफ नदिँदा (502, 503, 504) Nginx ले देखाउने स्थिर पृष्ठ हो। यसलाई build फाइल वा डाटाबेस चाहिँदैन, र यसको पाठ ब्राउजरको भाषाअनुसार बदलिन्छ (समर्थन नभएका भाषामा अंग्रेजी)। `fastcgi_intercept_errors` पूर्वनिर्धारित (off) मै रहने भएकाले एप आफैंले पठाएका त्रुटि पृष्ठहरू (500, `php artisan down` बेलाको 503 आदि) जस्ताको तस्तै पुग्छन्।
+- **सन्दर्भ नम्बर:** `ssi on` ले Nginx को `$request_id` पृष्ठमा राख्छ। उही मान `X-Request-Id` का रूपमा एपमा पठाइन्छ, त्यसैले Nginx access log (`rid=`), एपका लग र अडिट रेकर्ड एउटै नम्बरले खोज्न सकिन्छ ([समस्या समाधान](troubleshooting.md))। क्लाइन्टले पठाएको `X-Request-Id` यही मानले प्रतिस्थापित हुन्छ।
+- **Nginx ले छुट्टै एप सर्भरमा proxy गर्दा:** `proxy_set_header X-Request-Id $request_id;` प्रयोग गर्नुहोस् र `proxy_intercept_errors` पूर्वनिर्धारित (off) मै छोड्नुहोस्। `error_page` र यसको `location` जस्ताको तस्तै राख्नुहोस्।
+- **पाठ बदल्दा:** `lang/*/errors.php` मा `unavailable` र `reference` सम्पादन गरे यस फाइलभित्रको JSON पनि सँगै सम्पादन गर्नुहोस्। दुई मेल नखाएमा परीक्षण (`ErrorPagesTest`) असफल हुन्छ।

@@ -76,3 +76,57 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan horizon:terminate        # workers restart with the new code
 php artisan up
 ```
+
+## 7. Serveur web (Nginx)
+
+Placez Nginx devant php-fpm. Ce qui suit est un exemple : adaptez l’adresse, les chemins, les certificats et le socket php-fpm à votre serveur.
+
+```nginx
+log_format sis '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent '
+               '"$http_referer" "$http_user_agent" rt=$request_time rid=$request_id';
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name sis.example.edu;
+    root /var/www/sis/public;
+    index index.php;
+
+    ssl_certificate     /etc/ssl/sis/fullchain.pem;
+    ssl_certificate_key /etc/ssl/sis/privkey.pem;
+
+    access_log /var/log/nginx/sis.access.log sis;
+    client_max_body_size 32m;     # same as post_max_size in php.ini
+    server_tokens off;
+
+    # Only when PHP does not answer. The application's own error pages pass through.
+    error_page 502 503 504 /errors/unavailable.html;
+    location = /errors/unavailable.html {
+        internal;
+        ssi on;                    # puts $request_id on the page
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/run/php/php8.5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param HTTP_X_REQUEST_ID $request_id;   # replaces a client-sent X-Request-Id
+        internal;
+    }
+
+    location ~ \.php$ { return 404; }
+    location ~ /\.(?!well-known) { deny all; }
+}
+```
+
+- **Page d’erreur :** `public/errors/unavailable.html` est la page statique que Nginx affiche quand PHP ne répond pas (502, 503, 504). Elle ne dépend ni des fichiers de build ni de la base de données, et son texte suit la langue du navigateur (anglais pour les langues non prises en charge). Les pages d’erreur envoyées par l’application elle-même (500, 503 pendant `php artisan down`, etc.) passent telles quelles, car `fastcgi_intercept_errors` reste à sa valeur par défaut (off).
+- **Numéro de référence :** `ssi on` insère le `$request_id` de Nginx dans la page. La même valeur est transmise à l’application comme `X-Request-Id` : le journal d’accès Nginx (`rid=`), les journaux de l’application et les enregistrements d’audit se recherchent avec un seul numéro ([dépannage](troubleshooting.md)). Un `X-Request-Id` envoyé par le client est remplacé par cette valeur.
+- **Quand Nginx relaie vers un serveur d’application distinct :** utilisez `proxy_set_header X-Request-Id $request_id;` et laissez `proxy_intercept_errors` à sa valeur par défaut (off). Conservez `error_page` et sa `location`.
+- **Quand vous modifiez le texte :** si vous changez `unavailable` et `reference` dans `lang/*/errors.php`, modifiez aussi le JSON de ce fichier. Le test (`ErrorPagesTest`) échoue si les deux divergent.
