@@ -14,4 +14,4 @@
 | PDF yaratish muvaffaqiyatsiz | `php artisan pdf:sample`, Gotenberg holati, `GOTENBERG_URL` |
 | Navbat vazifalari tiqilib qolgan | `/horizon` da muvaffaqiyatsiz vazifalarni tekshiring, `php artisan horizon:status` |
 
-Soʻrovlar boʻyicha kuzatuv: `X-Request-Id` javob sarlavhasi qiymati yordamida jurnallar, faoliyat jurnali, maʼlumot oʻzgarishlari va xavfsizlik hodisalarini birgalikda qidirish mumkin.
+Soʻrovlar boʻyicha kuzatuv: `X-Request-Id` javob sarlavhasi qiymati yordamida jurnallar, faoliyat jurnali, maʼlumot oʻzgarishlari va xavfsizlik hodisalarini birgalikda qidirish mumkin. Xuddi shu qiymat brauzerdagi xato sahifalarida **maʼlumot raqami**, JSON xato javoblarida esa `request_id` sifatida koʻrinadi, shuning uchun foydalanuvchi aytgan raqam bilan qidiring. Xato sahifalarida istisno tafsilotlari hech qachon koʻrsatilmaydi; ularni faqat jurnallarda koʻring.

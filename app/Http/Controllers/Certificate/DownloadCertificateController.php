@@ -29,6 +29,7 @@ class DownloadCertificateController
                 && Gate::allows('viewAny', CertificateIssue::class);
 
             return response()->view('errors.notice', [
+                'icon' => 'search',
                 'title' => __('errors.certificate_pdf.title'),
                 'message' => __('errors.certificate_pdf.message'),
                 'linkUrl' => $canOpenLedger ? CertificateIssueResource::getUrl('index', panel: 'admin') : route('portal.dashboard'),

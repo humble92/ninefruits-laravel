@@ -14,4 +14,4 @@
 | PDF-Erzeugung schlägt fehl | `php artisan pdf:sample`, der Zustand von Gotenberg, `GOTENBERG_URL` |
 | Queue-Jobs bleiben hängen | Fehlgeschlagene Jobs unter `/horizon` prüfen, `php artisan horizon:status` |
 
-Nachverfolgung einzelner Requests: Mit dem Wert des Response-Headers `X-Request-Id` können Sie die Logs, das Aktivitätsprotokoll, die Datenänderungen und die Sicherheitsereignisse gemeinsam durchsuchen.
+Nachverfolgung einzelner Requests: Mit dem Wert des Response-Headers `X-Request-Id` können Sie die Logs, das Aktivitätsprotokoll, die Datenänderungen und die Sicherheitsereignisse gemeinsam durchsuchen. Derselbe Wert erscheint auf den Fehlerseiten im Browser als **Referenznummer** und in JSON-Fehlerantworten als `request_id`; suchen Sie also mit der Nummer, die der Benutzer meldet. Fehlerseiten zeigen nie Details der Ausnahme; diese stehen nur in den Logs.

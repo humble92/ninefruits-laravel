@@ -14,4 +14,4 @@
 | Penjanaan PDF gagal | `php artisan pdf:sample`, status Gotenberg, `GOTENBERG_URL` |
 | Tugas baris gilir tersekat | Semak tugas yang gagal dalam `/horizon`, `php artisan horizon:status` |
 
-Pengesanan bagi setiap permintaan: dengan nilai pengepala respons `X-Request-Id` anda boleh mencari log, log aktiviti, perubahan data dan peristiwa keselamatan sekali gus.
+Pengesanan bagi setiap permintaan: dengan nilai pengepala respons `X-Request-Id` anda boleh mencari log, log aktiviti, perubahan data dan peristiwa keselamatan sekali gus. Nilai yang sama dipaparkan sebagai **nombor rujukan** pada halaman ralat pelayar dan sebagai `request_id` dalam respons ralat JSON, jadi cari dengan nombor yang dilaporkan oleh pengguna. Halaman ralat tidak pernah memaparkan butiran pengecualian; baca butiran itu dalam log.

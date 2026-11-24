@@ -6,6 +6,7 @@
     <title>{{ $title ?? config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    <x-livewire-session-expired />
 </head>
 <body class="min-h-screen bg-zinc-50 text-zinc-900 antialiased">
     <header class="border-b border-zinc-200 bg-white">

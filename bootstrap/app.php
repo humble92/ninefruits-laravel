@@ -9,8 +9,11 @@ use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Support\Facades\Context;
+use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -46,4 +49,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // The same reference the browser error page shows, so a report can be matched to the logs.
+        $exceptions->respond(function (Response $response): Response {
+            $requestId = Context::get('request_id');
+
+            if ($response instanceof JsonResponse && is_string($requestId) && is_array($data = $response->getData(true))) {
+                $response->setData([...$data, 'request_id' => $requestId]);
+            }
+
+            return $response;
+        });
     })->create();
