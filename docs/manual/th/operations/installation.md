@@ -130,3 +130,4 @@ server {
 - **หมายเลขอ้างอิง:** `ssi on` จะใส่ `$request_id` ของ Nginx ลงในหน้า ค่าเดียวกันนี้ส่งให้แอปเป็น `X-Request-Id` จึงค้นหา access log ของ Nginx (`rid=`) ล็อกของแอป และบันทึกการตรวจสอบได้ด้วยหมายเลขเดียว ([การแก้ไขปัญหา](troubleshooting.md)) `X-Request-Id` ที่ไคลเอนต์ส่งมาจะถูกแทนที่ด้วยค่านี้
 - **เมื่อ Nginx ทำ proxy ไปยังเซิร์ฟเวอร์แอปที่แยกกัน:** ใช้ `proxy_set_header X-Request-Id $request_id;` และปล่อย `proxy_intercept_errors` เป็นค่าเริ่มต้น (off) คง `error_page` และ `location` ของมันไว้ตามเดิม
 - **เมื่อเปลี่ยนข้อความ:** หากแก้ `unavailable` และ `reference` ใน `lang/*/errors.php` ให้แก้ JSON ในไฟล์นี้ด้วย หากทั้งสองไม่ตรงกัน การทดสอบ (`ErrorPagesTest`) จะล้มเหลว
+- **เวอร์ชัน Nginx:** `http2 on;` ต้องใช้ Nginx 1.25.1 ขึ้นไป ในเวอร์ชันที่เก่ากว่า (เช่น 1.18 ใน Ubuntu 22.04) ให้ลบบรรทัดนี้ออกแล้วเขียน `listen 443 ssl http2;` แทน

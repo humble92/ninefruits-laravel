@@ -130,3 +130,4 @@ server {
 - **सन्दर्भ नम्बर:** `ssi on` ले Nginx को `$request_id` पृष्ठमा राख्छ। उही मान `X-Request-Id` का रूपमा एपमा पठाइन्छ, त्यसैले Nginx access log (`rid=`), एपका लग र अडिट रेकर्ड एउटै नम्बरले खोज्न सकिन्छ ([समस्या समाधान](troubleshooting.md))। क्लाइन्टले पठाएको `X-Request-Id` यही मानले प्रतिस्थापित हुन्छ।
 - **Nginx ले छुट्टै एप सर्भरमा proxy गर्दा:** `proxy_set_header X-Request-Id $request_id;` प्रयोग गर्नुहोस् र `proxy_intercept_errors` पूर्वनिर्धारित (off) मै छोड्नुहोस्। `error_page` र यसको `location` जस्ताको तस्तै राख्नुहोस्।
 - **पाठ बदल्दा:** `lang/*/errors.php` मा `unavailable` र `reference` सम्पादन गरे यस फाइलभित्रको JSON पनि सँगै सम्पादन गर्नुहोस्। दुई मेल नखाएमा परीक्षण (`ErrorPagesTest`) असफल हुन्छ।
+- **Nginx संस्करण:** `http2 on;` का लागि Nginx 1.25.1 वा पछिको संस्करण चाहिन्छ। पुराना संस्करणमा (जस्तै Ubuntu 22.04 को 1.18) यो लाइन हटाएर `listen 443 ssl http2;` लेख्नुहोस्।
