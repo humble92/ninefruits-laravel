@@ -241,7 +241,7 @@ it('shows results to the student only once published, and external results at on
     expect(AssessmentResult::query()->count())->toBe(2);
 
     $this->actingAs($this->student)->get(route('assessments.evidence', $external))->assertOk();
-    $this->actingAs($stranger)->get(route('assessments.evidence', $external))->assertForbidden();
+    $this->actingAs($stranger)->get(route('assessments.evidence', $external))->assertNotFound();
     Livewire::actingAs($this->student)->test(MyAssessments::class)->assertSee('TOPIK 5')->assertSee('80.0');
 
     $context->forUser($this->staff->id);

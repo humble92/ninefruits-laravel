@@ -189,6 +189,7 @@ class GradeEntry extends Component
         $counts = $enrollments->countBy(fn (Enrollment $enrollment) => $enrollment->grade_status->value)->all();
         $canEnter = app(SaveGrades::class)->canEnter($this->section, $this->user());
         $byStaff = $this->section->isInScopeOf($this->user(), Permission::GradesManage);
+        $isSectionInstructor = $this->section->isTaughtBy($this->user());
 
         return view('livewire.portal.grade-entry', [
             'enrollments' => $enrollments,
@@ -199,7 +200,8 @@ class GradeEntry extends Component
             'relative' => $relative = $this->section->evaluation_method === EvaluationMethod::Relative && $this->section->version->grading_basis === GradingBasis::Graded,
             'distribution' => $relative ? app(GradeDistributionCheck::class)->forSection($this->section) : null,
             'methodRequest' => EvaluationMethodRequest::query()->where('section_id', $this->section->id)->pending()->first(),
-            'canRequestMethod' => $this->section->isTaughtBy($this->user()) && ($counts['submitted'] ?? 0) + ($counts['finalized'] ?? 0) === 0,
+            'isSectionInstructor' => $isSectionInstructor,
+            'canRequestMethod' => $isSectionInstructor && ($counts['submitted'] ?? 0) + ($counts['finalized'] ?? 0) === 0,
             'otherMethod' => $this->section->evaluation_method === EvaluationMethod::Absolute ? EvaluationMethod::Relative : EvaluationMethod::Absolute,
             'exceptionBy' => $this->section->grade_exception_at === null ? null : User::query()->find($this->section->grade_exception_by_id)?->email,
             'editable' => fn (Enrollment $enrollment) => $canEnter && $enrollment->status === EnrollmentStatus::Enrolled

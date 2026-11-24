@@ -153,14 +153,39 @@ it('issues from the student record page, lists the ledger, and lets the holder d
     Livewire::actingAs($this->officer)->test(ListCertificateIssues::class)->assertCanSeeTableRecords([$issue])
         ->callTableAction('revoke', $issue, ['reason' => 'Mistake'])->assertHasNoTableActionErrors();
     expect($issue->refresh()->status)->toBe(CertificateIssueStatus::Revoked);
+    $other = User::factory()->create(['person_id' => StudentRecord::factory()->create()->person_id, 'locale' => 'ko']);
 
     // Staff keep the file for the record; the holder cannot download a revoked certificate.
-    $this->actingAs($this->officer)->get(route('certificates.download', $issue))->assertOk();
-    $this->actingAs($student)->get(route('certificates.download', $issue))->assertForbidden();
-
-    $other = User::factory()->create(['person_id' => StudentRecord::factory()->create()->person_id]);
-    $this->actingAs($other)->get(route('certificates.download', $issue))->assertForbidden();
+    app(DatabaseSessionContext::class)->useBaseline([]);
+    $url = route('certificates.download', $issue);
+    $this->actingAs($this->officer)->get($url)->assertOk();
+    $this->actingAs($student)->get($url)->assertForbidden()->assertSee(__('errors.forbidden.title'));
+    $this->getJson($url)->assertForbidden()->assertJsonStructure(['message']);
+    $hidden = $this->actingAs($other)->get($url)->assertNotFound()
+        ->assertSee(__('errors.not_found.message', locale: 'ko'))->assertDontSee($issue->serial_number);
+    $missing = $this->get(route('certificates.download', PHP_INT_MAX))->assertNotFound();
+    expect($hidden->getContent())->toBe($missing->getContent());
+    $this->getJson($url)->assertNotFound()->assertJsonStructure(['message']);
     Livewire::actingAs($other)->test(MyCertificates::class)->assertDontSee($issue->serial_number);
+});
+
+it('shows a browser notice when an authorized certificate has no PDF file', function () {
+    $issue = $this->issue->handle($this->record, $this->enrollment, 'en', $this->officer);
+    $media = $issue->getFirstMedia(CertificateIssue::PDF_COLLECTION);
+    $student = User::factory()->create(['person_id' => $this->record->person_id]);
+    $url = route('certificates.download', $issue);
+
+    $pdf = $this->actingAs($this->officer)->get($url)->assertOk()->assertStreamed()->assertHeader('Content-Type', 'application/pdf');
+    expect($pdf->streamedContent())->toStartWith('%PDF-');
+
+    Storage::disk($media->disk)->delete($media->getPathRelativeToRoot());
+    $this->get($url)->assertOk()->assertSee(__('errors.certificate_pdf.message'))
+        ->assertSee(CertificateIssueResource::getUrl('index', panel: 'admin'))->assertHeaderMissing('Content-Disposition');
+    $this->getJson($url)->assertNotFound()->assertJsonStructure(['message']);
+
+    $issue->clearMediaCollection(CertificateIssue::PDF_COLLECTION);
+    $this->actingAs($student)->get($url)->assertOk()->assertSee(__('errors.certificate_pdf.message'))
+        ->assertSee(route('portal.dashboard'))->assertHeaderMissing('Content-Disposition');
 });
 
 it('hides other students\' issues at the database level', function () {

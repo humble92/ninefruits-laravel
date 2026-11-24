@@ -1,6 +1,13 @@
+@use('App\Domain\Security\Enums\Permission')
+@use('App\Filament\Admin\Resources\Evaluation\Sections\SectionEvaluationResource')
+
 <div class="space-y-6">
     <div>
-        <a href="{{ route('portal.teaching', ['termId' => $section->term_id]) }}" class="text-sm underline">{{ __('offering.teaching.title') }}</a>
+        @if ($section->isTaughtBy(auth()->user()))
+            <a href="{{ route('portal.teaching', ['termId' => $section->term_id]) }}" class="text-sm underline">{{ __('offering.teaching.title') }}</a>
+        @elseif (auth()->user()->can(Permission::AdminPanelAccess->value) && SectionEvaluationResource::canAccess())
+            <a href="{{ SectionEvaluationResource::getUrl('index', ['filters' => ['term_id' => ['value' => $section->term_id]]], panel: 'admin') }}" class="text-sm underline">{{ SectionEvaluationResource::getPluralModelLabel() }}</a>
+        @endif
         <h1 class="text-2xl font-semibold">{{ __('evaluation.results.title') }}: {{ $section->label() }} {{ $section->version->title }}</h1>
         <p class="text-sm text-zinc-600">
             {{ $section->term->name }} · {{ __('evaluation.results.responses', ['responses' => $result->responses, 'expected' => $result->expected, 'rate' => $result->ratePercent]) }}

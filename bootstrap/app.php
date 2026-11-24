@@ -5,10 +5,12 @@ use App\Http\Middleware\EnforceMfaPolicy;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\SetDatabaseSessionContext;
 use App\Http\Middleware\SetLocale;
+use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,6 +27,13 @@ return Application::configure(basePath: dirname(__DIR__))
             SetDatabaseSessionContext::class,
             SetLocale::class,
         ]);
+
+        // Apply account requirements and the user's locale and database context before resolving records.
+        $middleware->prependToPriorityList(SubstituteBindings::class, EnsureEmailIsVerified::class);
+        $middleware->prependToPriorityList(EnsureEmailIsVerified::class, EnforceMfaPolicy::class);
+        $middleware->prependToPriorityList(EnforceMfaPolicy::class, SetLocale::class);
+        $middleware->prependToPriorityList(SetLocale::class, SetDatabaseSessionContext::class);
+        $middleware->prependToPriorityList(SetDatabaseSessionContext::class, EnsureUserIsActive::class);
 
         $middleware->alias([
             'mfa' => EnforceMfaPolicy::class,

@@ -8,11 +8,13 @@ use App\Filament\Admin\Resources\Admissions\Applications\ApplicationResource;
 use App\Filament\Admin\Resources\Admissions\Applications\Pages\ListApplications;
 use App\Filament\Admin\Resources\Admissions\Cycles\AdmissionCycleResource;
 use App\Filament\Admin\Resources\Admissions\Cycles\Pages\CreateAdmissionCycle;
+use App\Filament\Admin\Resources\People\PersonResource;
 use App\Models\Admission\AdmissionCycle;
 use App\Models\Admission\Application;
 use App\Models\Institution\LookupValue;
 use App\Models\Organization\Program;
 use App\Models\User;
+use App\Support\Database\DatabaseSessionContext;
 use Database\Seeders\Demo\DemoAdmissionSeeder;
 use Database\Seeders\Demo\DemoPeopleSeeder;
 use Database\Seeders\Demo\DemoReferenceSeeder;
@@ -42,6 +44,20 @@ it('renders the admission pages', function () {
     foreach ($pages as $url) {
         $this->actingAs($this->manager)->get($url)->assertOk();
     }
+});
+
+it('links to the applicant profile only for staff who can open the people resource', function () {
+    $application = Application::query()->where('status', ApplicationStatus::Submitted)->firstOrFail();
+    $reviewer = User::factory()->withPermissions([Permission::AdminPanelAccess, Permission::ApplicationsView])->create();
+    $applicationUrl = ApplicationResource::getUrl('view', ['record' => $application]);
+    $personUrl = PersonResource::getUrl('view', ['record' => $application->person_id]);
+
+    $this->actingAs($reviewer)->get($applicationUrl)->assertOk()
+        ->assertSee($application->person->displayName())->assertDontSee($personUrl);
+    $this->get($personUrl)->assertForbidden();
+
+    $this->actingAs($this->manager)->get($applicationUrl)->assertOk()->assertSee($personUrl);
+    $this->get($personUrl)->assertOk();
 });
 
 it('creates a cycle with programs and documents', function () {
@@ -83,10 +99,16 @@ it('shows open cycles publicly and the applicant their applications', function (
 
     $applicant = User::query()->where('email', 'admitted@demo.test')->sole();
     $application = Application::query()->where('person_id', $applicant->person_id)->sole();
+    $other = Application::query()->where('person_id', '!=', $applicant->person_id)->firstOrFail();
+    app(DatabaseSessionContext::class)->useBaseline([]);
 
-    $this->actingAs($applicant)->get('/portal/applications')->assertOk()->assertSee(ApplicationStatus::Admitted->label());
-    $this->actingAs($applicant)->get('/portal/applications/'.$application->id)->assertOk()->assertSee(__('admissions.portal.accept'));
+    $detailUrl = route('portal.applications.show', $application);
+    $this->actingAs($applicant)->get('/portal/applications')->assertOk()
+        ->assertSee(ApplicationStatus::Admitted->label())->assertSee($detailUrl);
+    $this->get($detailUrl)->assertOk()->assertSee(__('admissions.portal.accept'));
+    $this->get(route('portal.applications.show', $other))->assertNotFound();
 
-    $other = Application::query()->where('person_id', '!=', $applicant->person_id)->first();
-    $this->actingAs($applicant)->get('/portal/applications/'.$other->id)->assertNotFound();
+    setSecuritySettings(['mfa_enforcement' => MfaEnforcement::RequiredForAll, 'mfa_grace_period_days' => 0]);
+    $this->get($detailUrl)->assertRedirect(route('portal.security'));
+    $this->get(route('portal.applications.show', $other))->assertRedirect(route('portal.security'));
 });

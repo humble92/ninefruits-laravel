@@ -25,6 +25,7 @@ use App\Models\Person\StudentRecord;
 use App\Models\Registration\Enrollment;
 use App\Models\Term\Term;
 use App\Models\User;
+use App\Support\Database\DatabaseSessionContext;
 use App\Support\Setup\DemoOptions;
 use Database\Seeders\Demo\DemoAccountSeeder;
 use Database\Seeders\Demo\DemoCurriculumSeeder;
@@ -71,14 +72,23 @@ it('seeds grades, term records and a change request, and renders the grading pag
     $record = TermRecord::query()->first()->studentRecord;
 
     foreach ([SectionGradeResource::getUrl('index'), GradeChangeRequestResource::getUrl('index'), TermRecordResource::getUrl('index'),
-        ManageGradingSettings::getUrl(), route('portal.grades.entry', $section), route('transcripts.show', $record)] as $url) {
+        ManageGradingSettings::getUrl()] as $url) {
         $this->actingAs($this->manager)->get($url)->assertOk();
     }
 
+    $staffReturnUrl = SectionGradeResource::getUrl('index', ['filters' => ['term_id' => ['value' => $section->term_id]]]);
+    $this->get(route('portal.grades.entry', $section))->assertOk()->assertSee($staffReturnUrl)
+        ->assertDontSee(route('portal.teaching', ['termId' => $section->term_id]));
+    $this->get($staffReturnUrl)->assertOk();
+
     $student = User::query()->where('email', 'student@demo.test')->sole();
+    $otherRecord = StudentRecord::query()->where('person_id', '!=', $student->person_id)->firstOrFail();
+
+    app(DatabaseSessionContext::class)->useBaseline([]);
+    $this->get(route('transcripts.show', $record))->assertOk();
     $this->actingAs($student)->get(route('portal.grades'))->assertOk();
     $this->actingAs($student)->get(route('portal.grades.transcript'))->assertOk();
-    $this->actingAs($student)->get(route('transcripts.show', $record))->assertForbidden();
+    $this->get(route('transcripts.show', $otherRecord))->assertNotFound();
 });
 
 it('finalizes a submitted section and approves the pending change request as someone else', function () {
@@ -118,6 +128,10 @@ it('lets the instructor enter grades in the portal and the student see final one
         ->whereHas('session', fn ($query) => $query->where('is_full_term', true))->orderBy('id')->first();
     $enrollment = $section->enrollments()->where('status', 'enrolled')->first();
     $section->forceFill(['evaluation_method' => EvaluationMethod::Absolute])->save();
+
+    $teachingUrl = route('portal.teaching', ['termId' => $section->term_id]);
+    $this->actingAs($instructor)->get(route('portal.grades.entry', $section))->assertOk()->assertSee($teachingUrl);
+    $this->get($teachingUrl)->assertOk();
 
     // Absolute evaluation: the score shows its grade right away.
     Livewire::actingAs($instructor)->test(GradeEntry::class, ['section' => $section])

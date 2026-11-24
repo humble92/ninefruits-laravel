@@ -103,9 +103,9 @@ class AdminPanelProvider extends PanelProvider
                 EnsureUserIsActive::class,
                 ShareErrorsFromSession::class,
                 PreventRequestForgery::class,
-                SubstituteBindings::class,
                 SetDatabaseSessionContext::class,
                 SetLocale::class,
+                SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])

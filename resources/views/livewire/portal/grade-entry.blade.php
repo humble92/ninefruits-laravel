@@ -1,6 +1,13 @@
+@use('App\Domain\Security\Enums\Permission')
+@use('App\Filament\Admin\Resources\Grading\Sections\SectionGradeResource')
+
 <div class="space-y-6">
     <div>
-        <a href="{{ route('portal.teaching', ['termId' => $section->term_id]) }}" class="text-sm underline">{{ __('offering.teaching.title') }}</a>
+        @if ($isSectionInstructor)
+            <a href="{{ route('portal.teaching', ['termId' => $section->term_id]) }}" class="text-sm underline">{{ __('offering.teaching.title') }}</a>
+        @elseif (auth()->user()->can(Permission::AdminPanelAccess->value) && SectionGradeResource::canAccess())
+            <a href="{{ SectionGradeResource::getUrl('index', ['filters' => ['term_id' => ['value' => $section->term_id]]], panel: 'admin') }}" class="text-sm underline">{{ SectionGradeResource::getPluralModelLabel() }}</a>
+        @endif
         <h1 class="text-2xl font-semibold">{{ __('grading.entry.title') }}: {{ $section->label() }} {{ $section->version->title }}</h1>
         <p class="text-sm text-zinc-600">
             {{ $section->term->name }} · {{ __('grading.entry.counts', ['none' => $counts['none'] ?? 0, 'draft' => $counts['draft'] ?? 0, 'submitted' => $counts['submitted'] ?? 0, 'finalized' => $counts['finalized'] ?? 0]) }}

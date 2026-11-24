@@ -6,7 +6,9 @@ use App\Domain\Evaluation\Services\EvaluationResults;
 use App\Domain\Evaluation\Services\EvaluationTasks;
 use App\Domain\Evaluation\Settings\EvaluationSettings;
 use App\Domain\Registration\Enums\EnrollmentStatus;
+use App\Domain\Security\Enums\Permission;
 use App\Domain\Term\Enums\TermWindowType;
+use App\Filament\Admin\Resources\Evaluation\Sections\SectionEvaluationResource;
 use App\Livewire\Portal\Evaluations;
 use App\Livewire\Portal\MyGrades;
 use App\Models\Evaluation\EvaluationAnswer;
@@ -159,8 +161,15 @@ it('shows results only when published and with enough responses, reversing negat
         ->and($result->comments[$this->comment->id])->toBe(['Clear and kind'])
         ->and($result->overallMean)->toBe(4.0);
 
-    $this->actingAs($this->teacher)->get(route('portal.evaluations.results', $this->section))->assertOk()->assertSee('Clear and kind');
-    $this->actingAs($firstStudent)->get(route('portal.evaluations.results', $this->section))->assertForbidden();
+    $resultUrl = route('portal.evaluations.results', $this->section);
+    $teachingUrl = route('portal.teaching', ['termId' => $this->section->term_id]);
+    $this->actingAs($this->teacher)->get($resultUrl)->assertOk()->assertSee('Clear and kind')->assertSee($teachingUrl);
+    $this->actingAs($firstStudent)->get($resultUrl)->assertForbidden();
+
+    $staff = User::factory()->withPermissions([Permission::AdminPanelAccess, Permission::EvaluationsView])->create();
+    $staffReturnUrl = SectionEvaluationResource::getUrl('index', ['filters' => ['term_id' => ['value' => $this->section->term_id]]], panel: 'admin');
+    $this->actingAs($staff)->get($resultUrl)->assertOk()->assertSee($staffReturnUrl)->assertDontSee($teachingUrl);
+    $this->get($staffReturnUrl)->assertOk();
 });
 
 it('lets the student evaluate from the portal', function () {

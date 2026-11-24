@@ -105,7 +105,8 @@ class ApplicationResource extends Resource
             Section::make(__('admissions.sections.applicant'))->columns(2)->schema([
                 TextEntry::make('person_name')->label(__('people.fields.name'))
                     ->state(fn (Application $record) => $record->person->displayName().' ('.$record->person->romanizedName().')')
-                    ->url(fn (Application $record) => PersonResource::canView($record->person) ? PersonResource::getUrl('view', ['record' => $record->person]) : null),
+                    ->url(fn (Application $record) => PersonResource::canAccess() && PersonResource::canView($record->person)
+                        ? PersonResource::getUrl('view', ['record' => $record->person]) : null),
                 TextEntry::make('person.birth_date')->label(__('people.fields.birth_date'))->date()->placeholder('-'),
                 TextEntry::make('person.email')->label(__('people.fields.contact_email'))->placeholder('-'),
                 TextEntry::make('person.phone')->label(__('people.fields.phone'))->placeholder('-'),
