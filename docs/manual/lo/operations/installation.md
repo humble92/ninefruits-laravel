@@ -130,3 +130,4 @@ server {
 - **ເລກອ້າງອີງ:** `ssi on` ຈະໃສ່ `$request_id` ຂອງ Nginx ລົງໃນໜ້າ. ຄ່າດຽວກັນນີ້ຖືກສົ່ງໃຫ້ແອັບເປັນ `X-Request-Id`, ສະນັ້ນສາມາດຄົ້ນຫາ access log ຂອງ Nginx (`rid=`), log ຂອງແອັບ ແລະ ບັນທຶກການກວດສອບດ້ວຍເລກດຽວ ([ການແກ້ໄຂບັນຫາ](troubleshooting.md)). `X-Request-Id` ທີ່ client ສົ່ງມາຈະຖືກແທນດ້ວຍຄ່ານີ້.
 - **ເມື່ອ Nginx ເຮັດ proxy ໄປຫາເຊີບເວີແອັບແຍກຕ່າງຫາກ:** ໃຊ້ `proxy_set_header X-Request-Id $request_id;` ແລະ ປ່ອຍ `proxy_intercept_errors` ເປັນຄ່າເລີ່ມຕົ້ນ (off). ໃຫ້ຄົງ `error_page` ແລະ `location` ຂອງມັນໄວ້ຕາມເດີມ.
 - **ເມື່ອປ່ຽນຂໍ້ຄວາມ:** ຖ້າແກ້ `unavailable` ແລະ `reference` ໃນ `lang/*/errors.php`, ໃຫ້ແກ້ JSON ໃນໄຟລ໌ນີ້ພ້ອມກັນ. ຖ້າສອງບ່ອນບໍ່ກົງກັນ ການທົດສອບ (`ErrorPagesTest`) ຈະລົ້ມເຫຼວ.
+- **ລຸ້ນ Nginx:** `http2 on;` ຕ້ອງໃຊ້ Nginx 1.25.1 ຂຶ້ນໄປ. ໃນລຸ້ນທີ່ຕໍ່າກວ່ານັ້ນ (ເຊັ່ນ 1.18 ໃນ Ubuntu 22.04) ໃຫ້ລຶບແຖວນີ້ອອກ ແລ້ວຂຽນ `listen 443 ssl http2;` ແທນ.

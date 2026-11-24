@@ -130,3 +130,4 @@ server {
 - **참조 번호:** `ssi on`이 Nginx의 `$request_id`를 페이지에 넣는다. 같은 값을 `X-Request-Id`로 앱에 넘기므로 Nginx 접근 로그(`rid=`), 앱 로그, 감사 기록을 한 번호로 찾을 수 있다([문제 해결](troubleshooting.md)). 클라이언트가 보낸 `X-Request-Id`는 이 값으로 대체된다.
 - **Nginx가 다른 앱 서버로 프록시할 때:** `proxy_set_header X-Request-Id $request_id;`를 쓰고 `proxy_intercept_errors`는 기본값(off)으로 둔다. `error_page`와 그 `location`은 그대로 쓴다.
 - **문구를 바꿀 때:** `lang/*/errors.php`의 `unavailable`과 `reference`를 고치면 이 파일 안의 JSON도 함께 고친다. 둘이 어긋나면 테스트(`ErrorPagesTest`)가 실패한다.
+- **Nginx 버전:** `http2 on;`은 Nginx 1.25.1 이상에서 쓴다. 그보다 낮은 버전(예: Ubuntu 22.04의 1.18)에서는 이 줄을 지우고 `listen 443 ssl http2;`로 쓴다.

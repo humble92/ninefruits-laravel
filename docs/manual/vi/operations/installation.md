@@ -130,3 +130,4 @@ server {
 - **Mã tham chiếu:** `ssi on` chèn `$request_id` của Nginx vào trang. Cùng giá trị đó được chuyển cho ứng dụng dưới dạng `X-Request-Id`, nên có thể tìm access log của Nginx (`rid=`), log ứng dụng và bản ghi kiểm toán bằng một mã ([xử lý sự cố](troubleshooting.md)). `X-Request-Id` do client gửi sẽ bị thay bằng giá trị này.
 - **Khi Nginx làm proxy tới một máy chủ ứng dụng riêng:** dùng `proxy_set_header X-Request-Id $request_id;` và để `proxy_intercept_errors` ở giá trị mặc định (off). Giữ nguyên `error_page` và `location` của nó.
 - **Khi đổi nội dung:** nếu sửa `unavailable` và `reference` trong `lang/*/errors.php`, hãy sửa cả JSON trong file này. Kiểm thử (`ErrorPagesTest`) sẽ thất bại khi hai nơi không khớp.
+- **Phiên bản Nginx:** `http2 on;` cần Nginx 1.25.1 trở lên. Với phiên bản cũ hơn (ví dụ 1.18 trên Ubuntu 22.04), hãy xóa dòng đó và viết `listen 443 ssl http2;` thay thế.

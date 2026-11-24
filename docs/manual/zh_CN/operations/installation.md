@@ -130,3 +130,4 @@ server {
 - **参考编号：** `ssi on` 会把 Nginx 的 `$request_id` 写入页面。同一个值以 `X-Request-Id` 传给应用，因此可以用一个编号同时检索 Nginx 访问日志（`rid=`）、应用日志和审计记录（[故障排查](troubleshooting.md)）。客户端发送的 `X-Request-Id` 会被这个值替换。
 - **Nginx 代理到独立的应用服务器时：** 使用 `proxy_set_header X-Request-Id $request_id;`，并让 `proxy_intercept_errors` 保持默认值（off）。`error_page` 及其 `location` 保持不变。
 - **修改文字时：** 修改 `lang/*/errors.php` 中的 `unavailable` 和 `reference` 时，也要同时修改此文件中的 JSON。两者不一致时测试（`ErrorPagesTest`）会失败。
+- **Nginx 版本：** `http2 on;` 需要 Nginx 1.25.1 或更高版本。较低版本（例如 Ubuntu 22.04 的 1.18）请删除这一行，改写为 `listen 443 ssl http2;`。

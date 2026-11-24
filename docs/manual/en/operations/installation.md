@@ -130,3 +130,4 @@ server {
 - **Reference number:** `ssi on` puts Nginx's `$request_id` on the page. The same value goes to the application as `X-Request-Id`, so the Nginx access log (`rid=`), the application logs and the audit records can be searched with one number ([troubleshooting](troubleshooting.md)). An `X-Request-Id` sent by the client is replaced by this value.
 - **When Nginx proxies to a separate application server:** use `proxy_set_header X-Request-Id $request_id;` and leave `proxy_intercept_errors` at its default (off). Keep `error_page` and its `location` as they are.
 - **When you change the text:** if you edit `unavailable` and `reference` in `lang/*/errors.php`, edit the JSON in this file as well. The test (`ErrorPagesTest`) fails when the two drift apart.
+- **Nginx version:** `http2 on;` needs Nginx 1.25.1 or later. On older versions (for example 1.18 on Ubuntu 22.04) remove that line and write `listen 443 ssl http2;` instead.

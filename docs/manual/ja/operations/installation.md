@@ -130,3 +130,4 @@ server {
 - **参照番号:** `ssi on` が Nginx の `$request_id` をページに埋め込みます。同じ値を `X-Request-Id` としてアプリに渡すため、Nginx のアクセスログ（`rid=`）、アプリのログ、監査記録を一つの番号で検索できます（[トラブルシューティング](troubleshooting.md)）。クライアントが送った `X-Request-Id` はこの値に置き換えられます。
 - **Nginx が別のアプリサーバーへプロキシする場合:** `proxy_set_header X-Request-Id $request_id;` を使い、`proxy_intercept_errors` は既定値（off）のままにします。`error_page` とその `location` はそのまま使います。
 - **文言を変えるとき:** `lang/*/errors.php` の `unavailable` と `reference` を直したら、このファイル内の JSON も一緒に直します。両者がずれるとテスト（`ErrorPagesTest`）が失敗します。
+- **Nginx のバージョン:** `http2 on;` には Nginx 1.25.1 以降が必要です。それより古いバージョン（例: Ubuntu 22.04 の 1.18）では、この行を削除して `listen 443 ssl http2;` と書きます。
