@@ -14,4 +14,4 @@
 | La génération des PDF échoue | `php artisan pdf:sample`, état de Gotenberg, `GOTENBERG_URL` |
 | Les tâches de file d’attente sont bloquées | Vérifiez les tâches en échec dans `/horizon`, `php artisan horizon:status` |
 
-Traçage par requête : la valeur de l’en-tête de réponse `X-Request-Id` permet de rechercher conjointement dans les journaux, le journal d’activité, les modifications de données et les événements de sécurité.
+Traçage par requête : la valeur de l’en-tête de réponse `X-Request-Id` permet de rechercher conjointement dans les journaux, le journal d’activité, les modifications de données et les événements de sécurité. La même valeur apparaît comme **référence** sur les pages d’erreur du navigateur et comme `request_id` dans les réponses d’erreur JSON : recherchez donc avec le numéro que l’utilisateur vous communique. Les pages d’erreur n’affichent jamais le détail de l’exception, qui se lit uniquement dans les journaux.

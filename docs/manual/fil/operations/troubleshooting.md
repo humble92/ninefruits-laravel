@@ -14,4 +14,4 @@
 | Bumibigo ang pagbuo ng PDF | `php artisan pdf:sample`, ang katayuan ng Gotenberg, `GOTENBERG_URL` |
 | Naiipit ang mga queue job | Suriin ang mga bigong job sa `/horizon`, `php artisan horizon:status` |
 
-Pagsubaybay bawat request: gamit ang halaga ng response header na `X-Request-Id`, maaari mong hanapin nang sabay-sabay ang mga log, ang log ng aktibidad, ang mga pagbabago ng datos at ang mga pangyayaring pangseguridad.
+Pagsubaybay bawat request: gamit ang halaga ng response header na `X-Request-Id`, maaari mong hanapin nang sabay-sabay ang mga log, ang log ng aktibidad, ang mga pagbabago ng datos at ang mga pangyayaring pangseguridad. Lumalabas ang parehong halaga bilang **reference number** sa mga error page ng browser at bilang `request_id` sa mga JSON error response, kaya hanapin gamit ang numerong iniulat ng user. Hindi kailanman ipinapakita ng mga error page ang detalye ng exception; tingnan ang mga iyon sa mga log.

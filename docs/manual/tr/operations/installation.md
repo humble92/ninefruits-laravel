@@ -76,3 +76,57 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan horizon:terminate        # workers restart with the new code
 php artisan up
 ```
+
+## 7. Web sunucusu (Nginx)
+
+php-fpm'in önüne Nginx koyun. Aşağıdaki bir örnektir: adresi, yolları, sertifikaları ve php-fpm soketini sunucunuza göre değiştirin.
+
+```nginx
+log_format sis '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent '
+               '"$http_referer" "$http_user_agent" rt=$request_time rid=$request_id';
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name sis.example.edu;
+    root /var/www/sis/public;
+    index index.php;
+
+    ssl_certificate     /etc/ssl/sis/fullchain.pem;
+    ssl_certificate_key /etc/ssl/sis/privkey.pem;
+
+    access_log /var/log/nginx/sis.access.log sis;
+    client_max_body_size 32m;     # same as post_max_size in php.ini
+    server_tokens off;
+
+    # Only when PHP does not answer. The application's own error pages pass through.
+    error_page 502 503 504 /errors/unavailable.html;
+    location = /errors/unavailable.html {
+        internal;
+        ssi on;                    # puts $request_id on the page
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/run/php/php8.5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param HTTP_X_REQUEST_ID $request_id;   # replaces a client-sent X-Request-Id
+        internal;
+    }
+
+    location ~ \.php$ { return 404; }
+    location ~ /\.(?!well-known) { deny all; }
+}
+```
+
+- **Hata sayfası:** `public/errors/unavailable.html`, PHP yanıt vermediğinde (502, 503, 504) Nginx'in gösterdiği statik sayfadır. Derleme dosyalarına ve veritabanına ihtiyaç duymaz; metni tarayıcı diline göre değişir (desteklenmeyen dillerde İngilizce). `fastcgi_intercept_errors` varsayılan değerinde (off) kaldığı için uygulamanın kendisinin gönderdiği hata sayfaları (500, `php artisan down` sırasındaki 503 vb.) olduğu gibi iletilir.
+- **Referans numarası:** `ssi on`, Nginx'in `$request_id` değerini sayfaya yerleştirir. Aynı değer uygulamaya `X-Request-Id` olarak iletilir; böylece Nginx erişim günlüğü (`rid=`), uygulama günlükleri ve denetim kayıtları tek bir numarayla aranabilir ([sorun giderme](troubleshooting.md)). İstemcinin gönderdiği `X-Request-Id` bu değerle değiştirilir.
+- **Nginx ayrı bir uygulama sunucusuna proxy yaptığında:** `proxy_set_header X-Request-Id $request_id;` kullanın ve `proxy_intercept_errors` değerini varsayılanda (off) bırakın. `error_page` ve ilgili `location` olduğu gibi kalır.
+- **Metni değiştirirken:** `lang/*/errors.php` içindeki `unavailable` ve `reference` değerlerini düzenlerseniz bu dosyadaki JSON'u da düzenleyin. İkisi birbirinden ayrılırsa test (`ErrorPagesTest`) başarısız olur.

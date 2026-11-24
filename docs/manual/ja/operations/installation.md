@@ -76,3 +76,57 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 php artisan horizon:terminate        # workers restart with the new code
 php artisan up
 ```
+
+## 7. Web サーバー（Nginx）
+
+php-fpm の前に Nginx を置きます。以下は例です。アドレス、パス、証明書、php-fpm ソケットはサーバーに合わせて変更してください。
+
+```nginx
+log_format sis '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent '
+               '"$http_referer" "$http_user_agent" rt=$request_time rid=$request_id';
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name sis.example.edu;
+    root /var/www/sis/public;
+    index index.php;
+
+    ssl_certificate     /etc/ssl/sis/fullchain.pem;
+    ssl_certificate_key /etc/ssl/sis/privkey.pem;
+
+    access_log /var/log/nginx/sis.access.log sis;
+    client_max_body_size 32m;     # same as post_max_size in php.ini
+    server_tokens off;
+
+    # Only when PHP does not answer. The application's own error pages pass through.
+    error_page 502 503 504 /errors/unavailable.html;
+    location = /errors/unavailable.html {
+        internal;
+        ssi on;                    # puts $request_id on the page
+        add_header Cache-Control "no-store" always;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/run/php/php8.5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param HTTP_X_REQUEST_ID $request_id;   # replaces a client-sent X-Request-Id
+        internal;
+    }
+
+    location ~ \.php$ { return 404; }
+    location ~ /\.(?!well-known) { deny all; }
+}
+```
+
+- **エラーページ:** `public/errors/unavailable.html` は、PHP が応答しないとき（502、503、504）に Nginx が表示する静的ページです。ビルドファイルやデータベースなしで表示され、文言はブラウザの言語に合わせて切り替わります（未対応の言語は英語）。`fastcgi_intercept_errors` が既定値（off）のままなので、アプリ自身が返すエラー画面（500、`php artisan down` 中の 503 など）はそのまま届きます。
+- **参照番号:** `ssi on` が Nginx の `$request_id` をページに埋め込みます。同じ値を `X-Request-Id` としてアプリに渡すため、Nginx のアクセスログ（`rid=`）、アプリのログ、監査記録を一つの番号で検索できます（[トラブルシューティング](troubleshooting.md)）。クライアントが送った `X-Request-Id` はこの値に置き換えられます。
+- **Nginx が別のアプリサーバーへプロキシする場合:** `proxy_set_header X-Request-Id $request_id;` を使い、`proxy_intercept_errors` は既定値（off）のままにします。`error_page` とその `location` はそのまま使います。
+- **文言を変えるとき:** `lang/*/errors.php` の `unavailable` と `reference` を直したら、このファイル内の JSON も一緒に直します。両者がずれるとテスト（`ErrorPagesTest`）が失敗します。

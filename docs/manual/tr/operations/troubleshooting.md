@@ -14,4 +14,4 @@
 | PDF üretimi başarısız | `php artisan pdf:sample`, Gotenberg durumu, `GOTENBERG_URL` |
 | Kuyruk işleri takılı kaldı | `/horizon` içinde başarısız işleri kontrol edin, `php artisan horizon:status` |
 
-İstek bazında izleme: `X-Request-Id` yanıt başlığının değeriyle günlüklerde, işlem günlüğünde, veri değişikliklerinde ve güvenlik olaylarında birlikte arama yapabilirsiniz.
+İstek bazında izleme: `X-Request-Id` yanıt başlığının değeriyle günlüklerde, işlem günlüğünde, veri değişikliklerinde ve güvenlik olaylarında birlikte arama yapabilirsiniz. Aynı değer tarayıcı hata sayfalarında **referans numarası**, JSON hata yanıtlarında ise `request_id` olarak görünür; bu yüzden kullanıcının bildirdiği numarayla arayın. Hata sayfaları istisna ayrıntılarını hiçbir zaman göstermez; bunlar yalnızca günlüklerde okunur.

@@ -14,4 +14,4 @@
 | PDF generation fails | `php artisan pdf:sample`, the Gotenberg status, `GOTENBERG_URL` |
 | Queue jobs are stuck | Check failed jobs in `/horizon`, `php artisan horizon:status` |
 
-Per-request tracing: with the value of the `X-Request-Id` response header you can search the logs, the activity log, the data changes and the security events together.
+Per-request tracing: with the value of the `X-Request-Id` response header you can search the logs, the activity log, the data changes and the security events together. The same value appears as the **reference** on browser error pages and as `request_id` in JSON error responses, so search with the number the user reports. Error pages never show exception details; read those in the logs.

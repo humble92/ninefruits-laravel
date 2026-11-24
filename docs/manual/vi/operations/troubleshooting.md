@@ -14,4 +14,4 @@
 | Tạo PDF thất bại | `php artisan pdf:sample`, trạng thái của Gotenberg, `GOTENBERG_URL` |
 | Tác vụ hàng đợi bị treo | Kiểm tra tác vụ thất bại trong `/horizon`, `php artisan horizon:status` |
 
-Truy vết theo từng yêu cầu: với giá trị của header phản hồi `X-Request-Id`, bạn có thể tìm đồng thời trong log, nhật ký hoạt động, thay đổi dữ liệu và sự kiện bảo mật.
+Truy vết theo từng yêu cầu: với giá trị của header phản hồi `X-Request-Id`, bạn có thể tìm đồng thời trong log, nhật ký hoạt động, thay đổi dữ liệu và sự kiện bảo mật. Cùng giá trị này hiển thị là **mã tham chiếu** trên trang lỗi của trình duyệt và là `request_id` trong phản hồi lỗi JSON, vì vậy hãy tìm bằng mã mà người dùng báo lại. Trang lỗi không bao giờ hiển thị chi tiết ngoại lệ; chỉ xem chi tiết đó trong log.

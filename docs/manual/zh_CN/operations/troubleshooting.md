@@ -14,4 +14,4 @@
 | PDF 生成失败 | `php artisan pdf:sample`、Gotenberg 状态、`GOTENBERG_URL` |
 | 队列任务停滞 | 在 `/horizon` 中检查失败任务，`php artisan horizon:status` |
 
-按请求追踪：用响应头 `X-Request-Id` 的值可以同时检索日志、业务审计、数据变更记录和安全事件。
+按请求追踪：用响应头 `X-Request-Id` 的值可以同时检索日志、业务审计、数据变更记录和安全事件。 同一个值会作为**参考编号**显示在浏览器错误页面上，并作为 `request_id` 出现在 JSON 错误响应中，因此可直接用用户提供的编号检索。错误页面不显示异常内容，详细信息只在日志中查看。

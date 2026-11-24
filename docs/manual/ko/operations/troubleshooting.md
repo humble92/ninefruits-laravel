@@ -14,4 +14,4 @@
 | PDF 생성 실패 | `php artisan pdf:sample`, Gotenberg 상태, `GOTENBERG_URL` |
 | 큐 작업이 멈춤 | `/horizon`에서 실패 작업 확인, `php artisan horizon:status` |
 
-요청 단위 추적: 응답 헤더 `X-Request-Id` 값으로 로그, 업무 감사, 데이터 변경 기록, 보안 이벤트를 함께 검색할 수 있다.
+요청 단위 추적: 응답 헤더 `X-Request-Id` 값으로 로그, 업무 감사, 데이터 변경 기록, 보안 이벤트를 함께 검색할 수 있다. 같은 값이 브라우저 오류 화면에는 **참조 번호**로, JSON 오류 응답에는 `request_id`로 표시되므로 사용자가 알려 준 번호로 바로 찾으면 된다. 오류 화면에는 예외 내용이 나오지 않는다. 자세한 내용은 로그에서만 본다.

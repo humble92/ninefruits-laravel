@@ -164,7 +164,9 @@ it('issues from the student record page, lists the ledger, and lets the holder d
     $hidden = $this->actingAs($other)->get($url)->assertNotFound()
         ->assertSee(__('errors.not_found.message', locale: 'ko'))->assertDontSee($issue->serial_number);
     $missing = $this->get(route('certificates.download', PHP_INT_MAX))->assertNotFound();
-    expect($hidden->getContent())->toBe($missing->getContent());
+    // Same page apart from the per-request reference number.
+    $withoutReference = fn ($response) => str_replace((string) $response->headers->get('X-Request-Id'), '', (string) $response->getContent());
+    expect($withoutReference($hidden))->toBe($withoutReference($missing));
     $this->getJson($url)->assertNotFound()->assertJsonStructure(['message']);
     Livewire::actingAs($other)->test(MyCertificates::class)->assertDontSee($issue->serial_number);
 });
