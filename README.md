@@ -1,8 +1,8 @@
 # Ninefruits — 대학 학사 행정 시스템
 
-[![Ninefruits 개설강좌 화면 · 한국어 소개 영상 재생 (2분 53초)](docs/screenshots/video-intro-ko.jpg)](https://youtu.be/QQEEvzZ47F8)
+[![Ninefruits 개설강좌 화면 · 한국어 소개 영상 재생 (2분 53초)](docs/screenshots/video-intro-ko.jpg)](https://www.youtube.com/watch?v=QQEEvzZ47F8&list=PLWSK3KjIc2HM)
 
-[▶ Ninefruits 소개 영상 보기 (한국어)](https://youtu.be/QQEEvzZ47F8)
+[▶ Ninefruits 소개 영상 보기 (한국어)](https://www.youtube.com/watch?v=QQEEvzZ47F8&list=PLWSK3KjIc2HM)
 
 **Languages / 언어**
 

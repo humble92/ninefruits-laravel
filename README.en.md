@@ -1,8 +1,8 @@
 # Ninefruits — Student Information System
 
-[![Ninefruits course sections · Play the English introduction (2 min 45 sec)](docs/screenshots/video-intro-en.jpg)](https://youtu.be/b24PHZ74-II)
+[![Ninefruits course sections · Play the English introduction (2 min 45 sec)](docs/screenshots/video-intro-en.jpg)](https://www.youtube.com/watch?v=b24PHZ74-II&list=PLT_ZEG8rIRCE&pp=sAgC)
 
-[▶ Watch the Ninefruits introduction (English)](https://youtu.be/b24PHZ74-II)
+[▶ Watch the Ninefruits introduction (English)](https://www.youtube.com/watch?v=b24PHZ74-II&list=PLT_ZEG8rIRCE&pp=sAgC)
 
 **Languages / 언어**
 
