@@ -55,7 +55,7 @@ class CreateInstructor extends CreateRecord
                 'employee_number' => $data['employee_number'],
                 'org_unit_id' => $data['org_unit_id'],
                 'employment_type' => $data['employment_type'],
-                'academic_title' => $data['academic_title'] ?? null,
+                'academic_title_id' => $data['academic_title_id'] ?? null,
                 'hire_date' => $data['hire_date'] ?? null,
                 'end_date' => $data['end_date'] ?? null,
             ]);

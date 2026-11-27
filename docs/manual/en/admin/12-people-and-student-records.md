@@ -62,6 +62,8 @@ The same rules exist in the database (row level security), so queries outside th
 
 Under **Instructors > New instructor**, choose an existing person or enter a new one (`Manage instructors` permission). Once the end date has passed, the instructor leaves the current instructor list (default filter) and the advisor selector.
 
+Define title codes and localized names under **Reference data → Code Lists → Academic title**. Select a title on the instructor form. Title name changes appear for every instructor using that code.
+
 ## Loading many at once with CSV
 
 Use **Import CSV** at the top of the student record and instructor lists. Column formats are in [chapter 9](09-csv-import.md#students-and-instructors).

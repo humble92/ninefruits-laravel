@@ -110,6 +110,7 @@ return [
         'statement' => 'Açıklama',
     ],
     'help' => [
+        'academic_title_codes' => 'Akademik unvan listesinden etkin bir kod seçin.',
         'romanized' => 'Pasaporttaki gibi Latin harfleriyle resmî ad. Diğer dillerde yazılışını aşağıya ekleyin.',
         'encrypted' => 'Şifrelenerek saklanır. Maskeli gösterilir; açık gösterilmesi kayda alınır.',
         'national_id_keep' => 'Kayıtlı değeri korumak için boş bırakın. Değiştirmek için yeni değeri girin.',

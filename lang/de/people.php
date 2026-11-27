@@ -110,6 +110,7 @@ return [
         'statement' => 'Begründung',
     ],
     'help' => [
+        'academic_title_codes' => 'Wählen Sie einen aktiven Code aus der Liste der akademischen Positionen.',
         'romanized' => 'Amtlicher Name in lateinischen Buchstaben wie im Reisepass. Den Namen in anderen Schriften unten hinzufügen.',
         'encrypted' => 'Wird verschlüsselt gespeichert. Maskiert angezeigt; das Aufdecken wird protokolliert.',
         'national_id_keep' => 'Leer lassen, um den gespeicherten Wert zu behalten. Geben Sie einen neuen Wert ein, um ihn zu ersetzen.',

@@ -110,6 +110,7 @@ return [
         'statement' => 'Pernyataan',
     ],
     'help' => [
+        'academic_title_codes' => 'Pilih kod aktif daripada senarai kod gelaran akademik.',
         'romanized' => 'Nama sah dalam huruf Rumi, seperti dalam pasport. Tambah nama yang ditulis dalam bahasa lain di bawah.',
         'encrypted' => 'Disimpan dalam bentuk tersulit. Dipaparkan secara bertopeng; pendedahan direkodkan.',
         'national_id_keep' => 'Biarkan kosong untuk mengekalkan nilai yang disimpan. Masukkan nilai baharu untuk menggantikannya.',

@@ -110,6 +110,7 @@ return [
         'statement' => 'Trình bày',
     ],
     'help' => [
+        'academic_title_codes' => 'Chọn mã đang hoạt động trong danh sách mã chức danh.',
         'romanized' => 'Họ tên pháp lý bằng chữ Latinh, như trong hộ chiếu. Thêm họ tên viết bằng các ngôn ngữ khác ở bên dưới.',
         'encrypted' => 'Được lưu dưới dạng mã hóa. Hiển thị ở dạng che; mỗi lần xem đầy đủ đều được ghi nhật ký.',
         'national_id_keep' => 'Để trống để giữ giá trị đã lưu. Nhập giá trị mới để thay thế.',

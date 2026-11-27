@@ -110,6 +110,7 @@ return [
         'statement' => 'Asoslash',
     ],
     'help' => [
+        'academic_title_codes' => 'Akademik lavozimlar ro‘yxatidan faol kodni tanlang.',
         'romanized' => 'Pasportdagi kabi lotin harflaridagi rasmiy ism. Boshqa tillarda yozilgan ismni quyida qoʻshing.',
         'encrypted' => 'Shifrlangan holda saqlanadi. Yashirilgan holda koʻrsatiladi; ochib koʻrish qayd etiladi.',
         'national_id_keep' => 'Saqlangan qiymatni qoldirish uchun boʻsh qoldiring. Almashtirish uchun yangi qiymat kiriting.',

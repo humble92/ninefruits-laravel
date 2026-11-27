@@ -110,6 +110,7 @@ return [
         'statement' => 'Lettre de motivation',
     ],
     'help' => [
+        'academic_title_codes' => 'Sélectionnez un code actif dans la liste des titres universitaires.',
         'romanized' => 'Nom légal en caractères latins, tel qu’il figure sur le passeport. Ajoutez ci-dessous le nom tel qu’il s’écrit dans d’autres langues.',
         'encrypted' => 'Stocké chiffré. Affiché masqué ; tout affichage en clair est journalisé.',
         'national_id_keep' => 'Laissez vide pour conserver la valeur enregistrée. Saisissez une nouvelle valeur pour la remplacer.',

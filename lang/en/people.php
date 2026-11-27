@@ -110,6 +110,7 @@ return [
         'statement' => 'Statement',
     ],
     'help' => [
+        'academic_title_codes' => 'Manage the available titles under Reference data → Code Lists → Academic title.',
         'romanized' => 'Legal name in Latin letters, as in the passport. Add the name as written in other languages below.',
         'encrypted' => 'Stored encrypted. Shown masked; revealing it is logged.',
         'national_id_keep' => 'Leave empty to keep the stored value. Enter a new value to replace it.',

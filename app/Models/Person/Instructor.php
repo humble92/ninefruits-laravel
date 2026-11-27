@@ -3,8 +3,7 @@
 namespace App\Models\Person;
 
 use App\Domain\Person\Enums\EmploymentType;
-use App\Models\Concerns\HasTranslatableAttributes;
-use App\Models\Contracts\Translatable;
+use App\Models\Institution\LookupValue;
 use App\Models\Organization\OrgUnit;
 use Carbon\CarbonImmutable;
 use Database\Factories\Person\InstructorFactory;
@@ -22,23 +21,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $employee_number
  * @property int $org_unit_id
  * @property EmploymentType $employment_type
- * @property string|null $academic_title
+ * @property int|null $academic_title_id
  * @property CarbonImmutable|null $hire_date
  * @property CarbonImmutable|null $end_date
  * @property-read Person $person
  * @property-read OrgUnit $orgUnit
+ * @property-read LookupValue|null $academicTitle
  */
-class Instructor extends Model implements Translatable
+class Instructor extends Model
 {
     /** @use HasFactory<InstructorFactory> */
-    use HasFactory, HasTranslatableAttributes;
+    use HasFactory;
 
-    /** @var list<string> */
-    public array $translatable = ['academic_title'];
+    public const string ACADEMIC_TITLE_LOOKUP = 'academic_title';
 
-    protected $fillable = ['person_id', 'employee_number', 'org_unit_id', 'employment_type', 'academic_title', 'hire_date', 'end_date'];
+    protected $fillable = ['person_id', 'employee_number', 'org_unit_id', 'employment_type', 'academic_title_id', 'hire_date', 'end_date'];
 
-    protected $attributes = ['academic_title' => null, 'hire_date' => null, 'end_date' => null];
+    protected $attributes = ['academic_title_id' => null, 'hire_date' => null, 'end_date' => null];
 
     protected function casts(): array
     {
@@ -63,6 +62,12 @@ class Instructor extends Model implements Translatable
     public function orgUnit(): BelongsTo
     {
         return $this->belongsTo(OrgUnit::class);
+    }
+
+    /** @return BelongsTo<LookupValue, $this> */
+    public function academicTitle(): BelongsTo
+    {
+        return $this->belongsTo(LookupValue::class);
     }
 
     /**

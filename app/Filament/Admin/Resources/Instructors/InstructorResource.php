@@ -8,7 +8,7 @@ use App\Filament\Admin\Resources\Instructors\Pages\CreateInstructor;
 use App\Filament\Admin\Resources\Instructors\Pages\EditInstructor;
 use App\Filament\Admin\Resources\Instructors\Pages\ListInstructors;
 use App\Filament\Admin\Resources\Reference\OrgUnits\OrgUnitResource;
-use App\Filament\Admin\Support\TranslatableFields;
+use App\Models\Institution\LookupValue;
 use App\Models\Person\Instructor;
 use App\Models\Person\Person;
 use BackedEnum;
@@ -59,7 +59,13 @@ class InstructorResource extends Resource
             Select::make('org_unit_id')->label(__('reference.fields.org_unit'))->options(fn () => OrgUnitResource::unitOptions())->searchable()->required(),
             Select::make('employment_type')->label(__('people.fields.employment_type'))
                 ->options(collect(EmploymentType::cases())->mapWithKeys(fn (EmploymentType $type) => [$type->value => $type->label()]))->required(),
-            TranslatableFields::make('academic_title', __('people.fields.academic_title'), required: false),
+            Select::make('academic_title_id')->label(__('people.fields.academic_title'))
+                ->helperText(__('people.help.academic_title_codes'))
+                ->options(fn (?Instructor $record) => LookupValue::query()->ofType(Instructor::ACADEMIC_TITLE_LOOKUP)
+                    ->where(fn (Builder $query) => $query->where('is_active', true)
+                        ->when($record?->academic_title_id !== null, fn (Builder $query) => $query->orWhereKey($record?->academic_title_id)))
+                    ->orderBy('sort_order')->orderBy('code')->get()
+                    ->mapWithKeys(fn (LookupValue $title) => [$title->id => $title->name.' ('.$title->code.')']))->searchable(),
             DatePicker::make('hire_date')->label(__('people.fields.hire_date')),
             DatePicker::make('end_date')->label(__('people.fields.end_date'))->afterOrEqual('hire_date'),
         ];
@@ -73,14 +79,14 @@ class InstructorResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['person', 'orgUnit']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['person', 'orgUnit', 'academicTitle']))
             ->columns([
                 TextColumn::make('employee_number')->label(__('people.fields.employee_number'))->searchable()->sortable(),
                 TextColumn::make('name')->label(__('people.fields.name'))->state(fn (Instructor $record) => $record->person->displayName())
                     ->searchable(query: fn (Builder $query, string $search) => $query->whereHas('person', fn (Builder $person) => Person::constrainToSearch($person, $search))),
                 TextColumn::make('orgUnit.name')->label(__('reference.fields.org_unit')),
                 TextColumn::make('employment_type')->label(__('people.fields.employment_type'))->formatStateUsing(fn (EmploymentType $state) => $state->label()),
-                TextColumn::make('academic_title')->label(__('people.fields.academic_title'))->placeholder('-'),
+                TextColumn::make('academicTitle.name')->label(__('people.fields.academic_title'))->placeholder('-'),
                 TextColumn::make('end_date')->label(__('people.fields.end_date'))->date()->placeholder('-'),
             ])
             ->filters([

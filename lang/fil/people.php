@@ -110,6 +110,7 @@ return [
         'statement' => 'Pahayag',
     ],
     'help' => [
+        'academic_title_codes' => 'Pumili ng aktibong code mula sa listahan ng mga akademikong titulo.',
         'romanized' => 'Legal na pangalan sa mga titik Latin, gaya ng nasa pasaporte. Idagdag sa ibaba ang pangalan ayon sa pagkakasulat sa ibang wika.',
         'encrypted' => 'Naka-encrypt na iniimbak. Ipinapakitang naka-mask; itinatala ang pagpapakita nito.',
         'national_id_keep' => 'Iwanang blangko para panatilihin ang nakaimbak na halaga. Maglagay ng bagong halaga para palitan ito.',

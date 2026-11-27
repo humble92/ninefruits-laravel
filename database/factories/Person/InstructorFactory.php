@@ -25,7 +25,6 @@ class InstructorFactory extends Factory
             'employee_number' => 'F'.fake()->unique()->numerify('#####'),
             'org_unit_id' => OrgUnit::factory(),
             'employment_type' => EmploymentType::FullTime,
-            'academic_title' => ['en' => 'Professor', 'ko' => '교수', 'zh_CN' => '教授'],
             'hire_date' => fake()->dateTimeBetween('-20 years', '-1 year')->format('Y-m-d'),
         ];
     }

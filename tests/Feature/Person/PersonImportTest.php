@@ -2,6 +2,7 @@
 
 use App\Domain\Person\Enums\EmploymentType;
 use App\Domain\Person\Enums\StudentStatus;
+use App\Models\Institution\LookupType;
 use App\Models\Organization\Program;
 use App\Models\Person\Instructor;
 use App\Models\Person\Person;
@@ -86,17 +87,37 @@ it('attaches a readmission to the existing person by national id', function () {
         ->and(Person::query()->count())->toBe(1);
 });
 
-it('imports instructors with translated titles', function () {
-    importPeople('instructors', peopleCsv($this->directory, [
-        ['employee_number', 'org_unit', 'employment_type', 'academic_title_en', 'academic_title_ko', 'family_name', 'given_name'],
-        ['F00001', $this->program->orgUnit->code, 'full_time', 'Professor', '교수', 'Choi', 'Yuna'],
-    ]))->assertSuccessful();
+it('imports instructor titles by code and rejects codes from other lists', function () {
+    $title = LookupType::query()->where('code', Instructor::ACADEMIC_TITLE_LOOKUP)->sole()->values()->create([
+        'code' => 'professor',
+        'name' => ['en' => 'Professor', 'ko' => '교수'],
+    ]);
+    LookupType::query()->where('code', 'ethnicity')->sole()->values()->create([
+        'code' => 'wrong_list',
+        'name' => ['en' => 'Other list value'],
+    ]);
 
-    $instructor = Instructor::query()->where('employee_number', 'F00001')->sole();
+    importPeople('instructors', peopleCsv($this->directory, [
+        ['employee_number', 'org_unit', 'employment_type', 'academic_title', 'family_name', 'given_name'],
+        ['F00001', $this->program->orgUnit->code, 'full_time', 'professor', 'Choi', 'Yuna'],
+        ['F00002', $this->program->orgUnit->code, 'full_time', 'wrong_list', 'Rejected', 'Instructor'],
+    ]))->assertExitCode(2);
+
+    $instructor = Instructor::query()->with('academicTitle')->where('employee_number', 'F00001')->sole();
 
     expect($instructor->employment_type)->toBe(EmploymentType::FullTime)
-        ->and($instructor->getTranslations('academic_title'))->toBe(['en' => 'Professor', 'ko' => '교수'])
-        ->and($instructor->person->family_name)->toBe('Choi');
+        ->and($instructor->academic_title_id)->toBe($title->id)
+        ->and($instructor->academicTitle?->getTranslations('name'))->toBe(['en' => 'Professor', 'ko' => '교수'])
+        ->and($instructor->person->family_name)->toBe('Choi')
+        ->and(Instructor::query()->where('employee_number', 'F00002')->exists())->toBeFalse()
+        ->and(Person::query()->where('family_name', 'Rejected')->exists())->toBeFalse();
+
+    importPeople('instructors', peopleCsv($this->directory, [
+        ['employee_number', 'academic_title'],
+        ['F00001', ''],
+    ]))->assertSuccessful();
+
+    expect($instructor->refresh()->academic_title_id)->toBe($title->id);
 });
 
 it('leaves no person behind when the database rejects a row', function () {
