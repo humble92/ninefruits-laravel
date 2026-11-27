@@ -81,7 +81,7 @@ services:
         networks:
             - sail
     gotenberg:
-        image: 'gotenberg/gotenberg:8'
+        image: 'gotenberg/gotenberg:9.10.2-chromium'
         ports:
             - '${FORWARD_GOTENBERG_PORT:-3000}:3000'
         networks:

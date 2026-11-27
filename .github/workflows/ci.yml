@@ -67,7 +67,7 @@ jobs:
         image: redis:8-alpine
         ports: ['6379:6379']
       gotenberg:
-        image: gotenberg/gotenberg:8
+        image: gotenberg/gotenberg:9.10.2-chromium
         ports: ['3000:3000']
     env:
       DB_HOST: 127.0.0.1
