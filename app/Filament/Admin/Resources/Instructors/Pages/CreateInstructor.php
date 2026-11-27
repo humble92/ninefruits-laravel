@@ -14,6 +14,7 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,13 +32,9 @@ class CreateInstructor extends CreateRecord
                     ->default('new')->inline()->live(),
                 Select::make('person_id')->label(__('people.fields.person'))
                     ->searchable()
-                    ->getSearchResultsUsing(function (string $search) {
-                        /** @var User $user */
-                        $user = Auth::user();
-
-                        return Person::query()->visibleTo($user)->notMerged()->whereDoesntHave('instructor')->search($search)->limit(20)->get()
-                            ->mapWithKeys(fn (Person $person) => [$person->id => $person->displayName()]);
-                    })
+                    ->getSearchResultsUsing(fn (string $search) => $this->eligiblePeople()->search($search)->limit(20)->get()
+                        ->mapWithKeys(fn (Person $person) => [$person->id => $person->displayName()]))
+                    ->getOptionLabelUsing(fn (string $value): ?string => $this->eligiblePeople()->find($value)?->displayName())
                     ->visible(fn (Get $get) => $get('person_mode') === 'existing')
                     ->required(fn (Get $get) => $get('person_mode') === 'existing'),
                 Group::make(PersonForm::components('new_person.'))->visible(fn (Get $get) => $get('person_mode') === 'new'),
@@ -50,7 +47,7 @@ class CreateInstructor extends CreateRecord
     {
         return DB::transaction(function () use ($data) {
             $person = $data['person_mode'] === 'existing'
-                ? Person::query()->findOrFail($data['person_id'])
+                ? $this->eligiblePeople()->findOrFail($data['person_id'])
                 : Person::query()->create(PersonForm::toAttributes((array) $data['new_person']));
 
             return Instructor::query()->create([
@@ -63,5 +60,14 @@ class CreateInstructor extends CreateRecord
                 'end_date' => $data['end_date'] ?? null,
             ]);
         });
+    }
+
+    /** @return Builder<Person> */
+    private function eligiblePeople(): Builder
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return Person::query()->visibleTo($user)->notMerged()->whereDoesntHave('instructor');
     }
 }

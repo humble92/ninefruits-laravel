@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,8 +42,13 @@ class RegisterStudentRecord extends CreateRecord
                     ->default('new')->inline()->live(),
                 Select::make('person_id')->label(__('people.fields.person'))
                     ->searchable()
-                    ->getSearchResultsUsing(fn (string $search) => Person::query()->visibleTo($this->actor())->notMerged()->search($search)->limit(20)->get()
-                        ->mapWithKeys(fn (Person $person) => [$person->id => $person->displayName().' ('.($person->birth_date?->toDateString() ?? '-').')']))
+                    ->getSearchResultsUsing(fn (string $search) => $this->eligiblePeople()->search($search)->limit(20)->get()
+                        ->mapWithKeys(fn (Person $person) => [$person->id => $this->personOptionLabel($person)]))
+                    ->getOptionLabelUsing(function (string $value): ?string {
+                        $person = $this->eligiblePeople()->find($value);
+
+                        return $person ? $this->personOptionLabel($person) : null;
+                    })
                     ->visible(fn (Get $get) => $get('person_mode') === 'existing')
                     ->required(fn (Get $get) => $get('person_mode') === 'existing'),
                 Group::make(PersonForm::components('new_person.'))
@@ -69,7 +75,7 @@ class RegisterStudentRecord extends CreateRecord
     protected function handleRecordCreation(array $data): Model
     {
         $person = $data['person_mode'] === 'existing'
-            ? Person::query()->visibleTo($this->actor())->findOrFail($data['person_id'])
+            ? $this->eligiblePeople()->findOrFail($data['person_id'])
             : Person::query()->create(PersonForm::toAttributes((array) $data['new_person']));
 
         return app(RegisterStudent::class)->handle($person, Program::query()->findOrFail($data['program_id']), [
@@ -87,6 +93,17 @@ class RegisterStudentRecord extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return StudentRecordResource::getUrl('view', ['record' => $this->getRecord()]);
+    }
+
+    /** @return Builder<Person> */
+    private function eligiblePeople(): Builder
+    {
+        return Person::query()->visibleTo($this->actor())->notMerged();
+    }
+
+    private function personOptionLabel(Person $person): string
+    {
+        return $person->displayName().' ('.($person->birth_date?->toDateString() ?? '-').')';
     }
 
     private function actor(): User

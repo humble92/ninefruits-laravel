@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 
 class PersonForm
 {
@@ -51,10 +52,14 @@ class PersonForm
                 Select::make($prefix.'ethnicity_id')->label(__('people.fields.ethnicity'))
                     ->options(fn () => LookupValue::query()->ofType('ethnicity')->where('is_active', true)->orderBy('sort_order')->get()->mapWithKeys(fn (LookupValue $value) => [$value->id => $value->name])),
                 TextInput::make($prefix.'national_id_input')->label(__('people.fields.national_id'))
-                    ->helperText(fn (?Person $record) => $record?->national_id_encrypted !== null ? __('people.help.national_id_keep') : __('people.help.encrypted'))
+                    ->helperText(fn (?Model $record) => $record instanceof Person && $record->national_id_encrypted !== null
+                        ? __('people.help.national_id_keep')
+                        : __('people.help.encrypted'))
                     ->password()->revealable()->maxLength(64)->dehydrated(fn (?string $state) => filled($state)),
                 TextInput::make($prefix.'passport_number_input')->label(__('people.fields.passport_number'))
-                    ->helperText(fn (?Person $record) => $record?->passport_number_encrypted !== null ? __('people.help.national_id_keep') : __('people.help.encrypted'))
+                    ->helperText(fn (?Model $record) => $record instanceof Person && $record->passport_number_encrypted !== null
+                        ? __('people.help.national_id_keep')
+                        : __('people.help.encrypted'))
                     ->password()->revealable()->maxLength(64)->dehydrated(fn (?string $state) => filled($state)),
             ]),
             Section::make(__('people.sections.contact'))->columns(2)->schema([
