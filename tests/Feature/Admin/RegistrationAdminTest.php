@@ -132,8 +132,10 @@ it('places and releases a hold and grants an override', function () {
 });
 
 it('prepares a rule set by copying and edits a rule with its parameters', function () {
-    $term = Term::factory()->published()->between(now()->addYear()->toDateString(), now()->addYear()->addMonths(4)->toDateString())->create();
-    $source = RegistrationRuleSet::query()->first();
+    $source = RegistrationRuleSet::query()->with('term')->firstOrFail();
+    $term = Term::factory()->published()
+        ->between($source->term->start_date->toDateString(), $source->term->end_date->toDateString())
+        ->create(['academic_year_id' => $source->term->academic_year_id]);
 
     Livewire::actingAs($this->manager)->test(ListRegistrationRuleSets::class)
         ->callAction('prepare', ['term_id' => $term->id, 'copy_from_id' => $source->id]);
