@@ -8,6 +8,7 @@ use App\Domain\Security\Services\AuthorizationService;
 use App\Models\Concerns\HasEffectivePeriod;
 use App\Models\Concerns\HasTranslatableAttributes;
 use App\Models\Contracts\Translatable;
+use App\Models\Person\YearLevelRule;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Database\Factories\Organization\ProgramFactory;
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property CarbonImmutable|null $effective_end_date
  * @property bool $allows_second_major
  * @property bool $allows_minor
+ * @property int|null $year_level_rule_id
+ * @property-read YearLevelRule|null $yearLevelRule
  * @property-read OrgUnit $orgUnit
  */
 class Program extends Model implements Translatable
@@ -39,9 +42,9 @@ class Program extends Model implements Translatable
     /** @var list<string> */
     public array $translatable = ['name', 'degree_title'];
 
-    protected $fillable = ['code', 'name', 'degree_title', 'degree_level', 'org_unit_id', 'standard_duration_years', 'effective_start_date', 'effective_end_date', 'allows_second_major', 'allows_minor'];
+    protected $fillable = ['code', 'name', 'degree_title', 'degree_level', 'org_unit_id', 'standard_duration_years', 'effective_start_date', 'effective_end_date', 'allows_second_major', 'allows_minor', 'year_level_rule_id'];
 
-    protected $attributes = ['degree_title' => null, 'standard_duration_years' => null, 'effective_end_date' => null, 'allows_second_major' => false, 'allows_minor' => false];
+    protected $attributes = ['degree_title' => null, 'standard_duration_years' => null, 'effective_end_date' => null, 'allows_second_major' => false, 'allows_minor' => false, 'year_level_rule_id' => null];
 
     protected function casts(): array
     {
@@ -61,6 +64,12 @@ class Program extends Model implements Translatable
     public function orgUnit(): BelongsTo
     {
         return $this->belongsTo(OrgUnit::class);
+    }
+
+    /** @return BelongsTo<YearLevelRule, $this> */
+    public function yearLevelRule(): BelongsTo
+    {
+        return $this->belongsTo(YearLevelRule::class);
     }
 
     /**

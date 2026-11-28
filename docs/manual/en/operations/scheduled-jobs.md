@@ -31,3 +31,5 @@ Each phase adds to this table. The registrations live in `routes/console.php`. T
 | Scheduler heartbeat | Every minute | Writes the last run time to the cache. `system:health-check` treats more than 5 minutes without one as a failure |
 
 While a queue job runs, the DB actor is recorded as `system:job:{class}`.
+
+**`students:apply-year-levels`** checks for due runs every minute. If a due run is still scheduled, check the scheduler logs.

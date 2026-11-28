@@ -379,3 +379,11 @@
 - 인수: `{path=pdf-sample.pdf}` (로컬 디스크 `storage/app/private` 기준).
 - 감사: 기록 안 함
 - 실패 시: 연결 오류면 `GOTENBERG_URL`과 Gotenberg 컨테이너 상태를 확인한다.
+
+### `students:apply-year-levels`
+
+예약 시각이 지난 승인된 진급 작업을 반영합니다. 같은 명령을 다시 실행해도 완료된 작업은 다시 적용되지 않습니다.
+
+```bash
+php artisan students:apply-year-levels
+```

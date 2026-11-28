@@ -9,6 +9,7 @@ use App\Filament\Admin\Support\SafeDeleteAction;
 use App\Filament\Admin\Support\TranslatableFields;
 use App\Models\Organization\OrgUnit;
 use App\Models\Organization\Program;
+use App\Models\Person\YearLevelRule;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
@@ -50,6 +51,9 @@ class ProgramResource extends ReferenceResource
                 ->preload()
                 ->required(),
             TextInput::make('standard_duration_years')->label(__('reference.fields.standard_duration_years'))->numeric()->minValue(0.5)->maxValue(10),
+            Select::make('year_level_rule_id')->label(__('progression.rule'))
+                ->options(fn () => YearLevelRule::query()->get()->mapWithKeys(fn (YearLevelRule $rule) => [$rule->id => $rule->name]))
+                ->placeholder(__('progression.inherit')),
             DatePicker::make('effective_start_date')->label(__('reference.fields.effective_start_date'))->required()->default(now()),
             DatePicker::make('effective_end_date')->label(__('reference.fields.effective_end_date'))->afterOrEqual('effective_start_date'),
             Toggle::make('allows_second_major')->label(__('reference.fields.allows_second_major')),

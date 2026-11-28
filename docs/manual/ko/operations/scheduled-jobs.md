@@ -31,3 +31,5 @@ Phase마다 이 표에 추가한다. 등록 내용은 `routes/console.php`. 시�
 | 스케줄러 심장박동 | 매분 | 캐시에 마지막 실행 시각을 적는다. `system:health-check`가 5분 넘게 없으면 실패로 본다 |
 
 큐 작업은 실행 중 DB 수행자가 `system:job:{클래스}`로 기록된다.
+
+**`students:apply-year-levels`**는 매분 예약을 확인합니다. 반영 시각이 지났는데 작업이 예약 상태에 머물면 스케줄러 로그를 확인합니다.

@@ -149,8 +149,13 @@ it('assigns a role scoped to an org unit from the picker', function () {
 
     Livewire::actingAs($this->manager)
         ->test(RoleAssignmentsRelationManager::class, ['ownerRecord' => $user, 'pageClass' => ViewUser::class])
-        ->callAction(TestAction::make('assign')->table(), ['role_id' => $role->id, 'scope_type' => 'org_unit', 'scope_id' => $unit->id, 'reason' => 'Department assistant'])
-        ->assertHasNoActionErrors();
+        // Submit on a separate request so Livewire hydrates the mounted action state first.
+        ->mountAction(TestAction::make('assign')->table())
+        ->setActionData(['role_id' => $role->id, 'scope_type' => 'org_unit', 'scope_id' => $unit->id, 'reason' => 'Department assistant'])
+        ->assertActionMounted(TestAction::make('assign')->table())
+        ->callMountedAction()
+        ->assertHasNoActionErrors()
+        ->assertNotified(__('admin.role_assignments.notifications.assigned'));
 
     $assignment = $user->roleAssignments()->sole();
 

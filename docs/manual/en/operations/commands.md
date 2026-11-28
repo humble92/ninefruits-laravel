@@ -379,3 +379,11 @@ Every command runs as `php artisan {command}`. In the development environment, `
 - Arguments: `{path=pdf-sample.pdf}` (relative to the local disk `storage/app/private`).
 - Audit: not recorded
 - On failure: for a connection error, check `GOTENBERG_URL` and the state of the Gotenberg container.
+
+### `students:apply-year-levels`
+
+Applies approved progression runs whose scheduled time has arrived. Re-running the command does not apply a completed run again.
+
+```bash
+php artisan students:apply-year-levels
+```
