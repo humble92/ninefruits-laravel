@@ -6,6 +6,7 @@ use App\Domain\Institution\Settings\InstitutionSettings;
 use App\Domain\Person\Actions\ManageYearLevels;
 use App\Filament\Admin\NavigationGroup;
 use App\Filament\Admin\Support\ShowsActionErrors;
+use App\Models\Organization\Program;
 use App\Models\Person\YearLevelChange;
 use App\Models\Person\YearLevelRun;
 use App\Models\Term\Term;
@@ -31,6 +32,14 @@ class YearLevelProgression extends Page
     #[Url]
     public ?int $run = null;
 
+    #[Url(as: 'program')]
+    public ?int $reviewProgram = null;
+
+    public function updatedReviewProgram(): void
+    {
+        $this->resetPage();
+    }
+
     public static function getNavigationLabel(): string
     {
         return __('progression.title');
@@ -50,7 +59,7 @@ class YearLevelProgression extends Page
     {
         abort_unless(static::canAccess(), 403);
 
-        return $this->run === null ? null : YearLevelRun::query()->with('term')->findOrFail($this->run);
+        return $this->run === null ? null : YearLevelRun::query()->with(['term', 'program'])->findOrFail($this->run);
     }
 
     /** @return LengthAwarePaginator<int, YearLevelRun> */
@@ -58,7 +67,7 @@ class YearLevelProgression extends Page
     {
         abort_unless(static::canAccess(), 403);
 
-        return YearLevelRun::query()->with('term')->latest('id')->paginate(25);
+        return YearLevelRun::query()->with(['term', 'program'])->latest('id')->paginate(25);
     }
 
     /** @return LengthAwarePaginator<int, YearLevelChange> */
@@ -66,7 +75,21 @@ class YearLevelProgression extends Page
     {
         abort_unless(static::canAccess(), 403);
 
-        return $run->changes()->with(['studentRecord', 'program'])->orderBy('id')->paginate(50);
+        $program = $this->reviewProgram ?? null;
+
+        return $run->changes()->with(['studentRecord', 'program'])
+            ->when($run->program_id === null && $program !== null, fn ($query) => $query->where('program_id', $program))
+            ->orderBy('id')->paginate(50);
+    }
+
+    /** @return array<int, string> */
+    public function reviewPrograms(YearLevelRun $run): array
+    {
+        abort_unless(static::canAccess(), 403);
+
+        return Program::query()->whereIn('id', $run->changes()->select('program_id')->getQuery())
+            ->orderBy('code')->get()
+            ->mapWithKeys(fn (Program $program) => [$program->id => $program->code.' · '.$program->name])->all();
     }
 
     protected function getHeaderActions(): array
@@ -76,10 +99,19 @@ class YearLevelProgression extends Page
                 Action::make('preview')->label(__('progression.preview'))->schema([
                     Select::make('term_id')->label(__('progression.target_term'))->required()->searchable()
                         ->options(fn () => Term::query()->orderByDesc('start_date')->pluck('code', 'id')),
+                    Select::make('program_id')->label(__('progression.program'))
+                        ->searchable()->placeholder(__('progression.all_programs'))->exists('programs', 'id')
+                        ->options(fn () => Program::query()->orderBy('code')->get()
+                            ->mapWithKeys(fn (Program $program) => [$program->id => $program->code.' · '.$program->name])),
                     DatePicker::make('cutoff_date')->label(__('progression.cutoff'))->maxDate(fn () => today(app(InstitutionSettings::class)->timezone))->required(),
                 ])->action(function (array $data, ManageYearLevels $levels): void {
                     $run = ShowsActionErrors::run(
-                        fn () => $levels->preview((int) $data['term_id'], CarbonImmutable::parse($data['cutoff_date']), auth()->user()),
+                        fn () => $levels->preview(
+                            (int) $data['term_id'],
+                            CarbonImmutable::parse($data['cutoff_date']),
+                            auth()->user(),
+                            filled($data['program_id'] ?? null) ? (int) $data['program_id'] : null,
+                        ),
                     );
                     $this->redirect(static::getUrl(['run' => $run->id]));
                 }),

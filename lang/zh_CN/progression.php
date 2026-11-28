@@ -19,6 +19,8 @@ return [
     'back' => '返回任务列表',
     'student' => '学号',
     'program' => '专业',
+    'all_programs' => '全部专业',
+    'review_program' => '专业筛选（仅影响显示）',
     'measured' => '计算总值',
     'change' => '年级变更',
     'outcome' => '结果',

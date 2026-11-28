@@ -14,4 +14,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => 'विचाराधीन',
     ],
+    'all_programs' => 'सबै कार्यक्रम',
+    'review_program' => 'कार्यक्रम फिल्टर (प्रदर्शन मात्र)',
 ]);

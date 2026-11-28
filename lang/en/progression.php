@@ -19,6 +19,8 @@ return [
     'back' => 'Back to runs',
     'student' => 'Student number',
     'program' => 'Program',
+    'all_programs' => 'All programs',
+    'review_program' => 'Program filter (display only)',
     'measured' => 'Calculated total',
     'change' => 'Year-level change',
     'outcome' => 'Result',

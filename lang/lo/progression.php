@@ -27,4 +27,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => 'ລໍຖ້າພິຈາລະນາ',
     ],
+    'all_programs' => 'ທຸກຫຼັກສູດ',
+    'review_program' => 'ກັ່ນຕອງຫຼັກສູດ (ສະແດງເທົ່ານັ້ນ)',
 ]);

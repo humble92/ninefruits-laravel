@@ -104,3 +104,39 @@ it('renders both progression screens and saves a rule through the settings form'
         ->callMountedAction()->assertHasNoActionErrors();
     expect($run->fresh()->scheduled_at->utc()->format('Y-m-d H:i'))->toBe('2035-01-26 01:00');
 });
+
+it('creates a run for one program and filters the display of a whole-school run', function () {
+    $this->travelTo(CarbonImmutable::parse('2035-01-25 09:00:00'));
+    setSecuritySettings(['mfa_enforcement' => MfaEnforcement::Disabled]);
+    Filament::setCurrentPanel('admin');
+    $staff = User::factory()->withPermissions([Permission::AdminPanelAccess, Permission::StudentRecordsManage, Permission::InstitutionSettingsManage])->create();
+    $action = app(ManageYearLevels::class);
+    $action->saveRule(null, ['name' => ['en' => 'Credits'], 'basis' => 'credits', 'thresholds' => [['minimum' => 24]], 'is_default' => true], $staff);
+    $term = Term::factory()->between('2035-03-02', '2035-06-30')->create();
+    $closed = Term::factory()->between('2034-09-01', '2034-12-31')->create();
+    $first = StudentRecord::factory()->create();
+    $other = StudentRecord::factory()->create();
+    foreach ([$first, $other] as $student) {
+        TermRecord::query()->create([
+            'student_record_id' => $student->id, 'term_id' => $closed->id, 'earned_credits' => 24,
+            'attempted_credits' => 24, 'cumulative_earned_credits' => 24, 'calculated_at' => now(),
+        ])->forceFill(['closed_at' => now()])->save();
+    }
+
+    Livewire::actingAs($staff)->test(YearLevelProgression::class)->mountAction('preview')
+        ->set('mountedActions.0.data', ['term_id' => $term->id, 'cutoff_date' => '2035-01-20', 'program_id' => $first->program_id])
+        ->callMountedAction()->assertHasNoActionErrors();
+
+    $scoped = YearLevelRun::query()->where('term_id', $term->id)->sole();
+    expect($scoped->program_id)->toBe($first->program_id)
+        ->and($scoped->changes()->sole()->student_record_id)->toBe($first->id);
+    $action->cancel($scoped->id, $staff);
+
+    $all = $action->preview($term->id, CarbonImmutable::parse('2035-01-20'), $staff);
+    Livewire::actingAs($staff)->withQueryParams(['run' => $all->id])->test(YearLevelProgression::class)
+        ->assertSee($first->student_number)->assertSee($other->student_number)
+        ->set('reviewProgram', $first->program_id)
+        ->assertSee($first->student_number)->assertDontSee($other->student_number)
+        ->set('reviewProgram', '')->assertSee($other->student_number);
+    expect($all->changes()->count())->toBe(2);
+});

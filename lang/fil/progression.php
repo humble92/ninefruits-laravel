@@ -12,4 +12,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => 'Nakabinbin',
     ],
+    'all_programs' => 'Lahat ng programa',
+    'review_program' => 'Salain ayon sa programa (display lamang)',
 ]);

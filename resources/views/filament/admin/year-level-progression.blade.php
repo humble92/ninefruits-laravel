@@ -4,11 +4,24 @@
     @endif
     @if ($run = $this->selectedRun())
         <x-filament::link :href="$this->getUrl()">{{ __('progression.back') }}</x-filament::link>
-        <p>{{ $run->term->code }} · {{ __('progression.cutoff') }} {{ $run->cutoff_date->toDateString() }} · {{ __('progression.statuses.' . $run->status) }}
+        <p>{{ $run->term->code }} · {{ $run->program?->code ?? __('progression.all_programs') }} · {{ __('progression.cutoff') }} {{ $run->cutoff_date->toDateString() }} · {{ __('progression.statuses.' . $run->status) }}
             @if ($run->scheduled_at)
                 · {{ __('progression.scheduled_at') }} {{ $run->scheduled_at->setTimezone(app(\App\Domain\Institution\Settings\InstitutionSettings::class)->timezone)->format('Y-m-d H:i T') }}
             @endif
         </p>
+        @if ($run->program_id === null)
+            <div>
+                <label for="review-program">{{ __('progression.review_program') }}</label>
+                <x-filament::input.wrapper>
+                    <x-filament::input.select id="review-program" wire:model.live="reviewProgram">
+                        <option value="">{{ __('progression.all_programs') }}</option>
+                        @foreach ($this->reviewPrograms($run) as $id => $label)
+                            <option value="{{ $id }}">{{ $label }}</option>
+                        @endforeach
+                    </x-filament::input.select>
+                </x-filament::input.wrapper>
+            </div>
+        @endif
         @php($items = $this->changes($run))
         <div class="overflow-x-auto">
             <table class="w-full text-start text-sm">
@@ -46,7 +59,7 @@
                 @forelse ($items as $item)
                     <li>
                         <x-filament::link :href="$this->getUrl(['run' => $item->id])">{{ $item->term->code }} · #{{ $item->id }}</x-filament::link>
-                        · {{ __('progression.statuses.' . $item->status) }}
+                        · {{ $item->program?->code ?? __('progression.all_programs') }} · {{ __('progression.statuses.' . $item->status) }}
                     </li>
                 @empty
                     <li>{{ __('progression.no_runs') }}</li>

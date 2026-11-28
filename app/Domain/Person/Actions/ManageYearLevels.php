@@ -70,11 +70,11 @@ class ManageYearLevels
         });
     }
 
-    public function preview(int $termId, CarbonImmutable $cutoff, User $staff): YearLevelRun
+    public function preview(int $termId, CarbonImmutable $cutoff, User $staff, ?int $programId = null): YearLevelRun
     {
         abort_unless($this->canManage($staff), 403);
 
-        return DB::transaction(function () use ($termId, $cutoff, $staff): YearLevelRun {
+        return DB::transaction(function () use ($termId, $cutoff, $staff, $programId): YearLevelRun {
             $term = Term::query()->lockForUpdate()->findOrFail($termId);
             if ($cutoff->toDateString() >= $term->start_date->toDateString() || $cutoff->toDateString() > today(app(InstitutionSettings::class)->timezone)->toDateString()) {
                 $this->invalid('invalid_cutoff');
@@ -87,8 +87,9 @@ class ManageYearLevels
             if ($default === null) {
                 $this->invalid('missing_default');
             }
-            $run = YearLevelRun::query()->create(['term_id' => $termId, 'cutoff_date' => $cutoff]);
+            $run = YearLevelRun::query()->create(['term_id' => $termId, 'cutoff_date' => $cutoff, 'program_id' => $programId]);
             StudentRecord::query()->with('program')
+                ->when($programId !== null, fn ($query) => $query->where('program_id', $programId))
                 ->where('status', StudentStatus::Enrolled)
                 ->whereDate('admission_date', '<=', $cutoff)
                 ->chunkById(500, function ($records) use ($cutoff, $run, $rules, $default): void {

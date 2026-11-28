@@ -13,4 +13,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => 'Beklemede',
     ],
+    'all_programs' => 'Tüm programlar',
+    'review_program' => 'Program filtresi (yalnızca görünüm)',
 ]);

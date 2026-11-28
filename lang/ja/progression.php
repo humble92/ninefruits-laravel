@@ -14,4 +14,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => '承認待ち',
     ],
+    'all_programs' => 'すべてのプログラム',
+    'review_program' => 'プログラムで絞り込み（表示のみ）',
 ]);

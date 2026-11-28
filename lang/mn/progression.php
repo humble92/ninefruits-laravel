@@ -14,4 +14,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => 'Хүлээгдэж буй',
     ],
+    'all_programs' => 'Бүх хөтөлбөр',
+    'review_program' => 'Хөтөлбөрийн шүүлтүүр (зөвхөн харагдац)',
 ]);

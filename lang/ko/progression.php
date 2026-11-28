@@ -19,6 +19,8 @@ return [
     'back' => '진급 작업 목록',
     'student' => '학번',
     'program' => '프로그램',
+    'all_programs' => '모든 프로그램',
+    'review_program' => '프로그램 필터 (화면에만 적용)',
     'measured' => '산정값',
     'change' => '학년 변경',
     'outcome' => '처리 결과',

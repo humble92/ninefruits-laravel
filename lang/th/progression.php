@@ -14,4 +14,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => 'รอพิจารณา',
     ],
+    'all_programs' => 'ทุกหลักสูตร',
+    'review_program' => 'ตัวกรองหลักสูตร (เฉพาะการแสดงผล)',
 ]);

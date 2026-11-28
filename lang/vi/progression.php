@@ -14,4 +14,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => 'Chờ duyệt',
     ],
+    'all_programs' => 'Tất cả chương trình',
+    'review_program' => 'Bộ lọc chương trình (chỉ để hiển thị)',
 ]);

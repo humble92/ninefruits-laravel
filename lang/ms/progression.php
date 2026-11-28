@@ -13,4 +13,6 @@ return array_replace_recursive(require __DIR__.'/../en/progression.php', [
     'outcomes' => [
         'pending' => 'Menunggu',
     ],
+    'all_programs' => 'Semua program',
+    'review_program' => 'Penapis program (paparan sahaja)',
 ]);
